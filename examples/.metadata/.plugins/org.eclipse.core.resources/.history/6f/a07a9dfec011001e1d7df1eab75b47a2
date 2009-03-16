@@ -1,0 +1,30 @@
+package org.openPyro.aurora.skinClasses{
+	import com.cimians.openPyro.aurora.AuroraButtonSkin;
+	import com.cimians.openPyro.controls.Button;
+	import com.cimians.openPyro.core.UIControl;
+	import com.cimians.openPyro.painters.GradientFillPainter;
+
+	public class HDividerSkin extends UIControl 
+	{
+		public function HDividerSkin()
+		{
+			super();
+		}
+		
+		private var closeButton:Button;
+		override protected function createChildren():void{
+			this.backgroundPainter = new GradientFillPainter([0x999999, 0xffffff, 0x999999]);
+			closeButton = new Button()
+			closeButton.skin = new AuroraButtonSkin()
+			closeButton.percentWidth=100;
+			closeButton.height = 70;
+			addChild(closeButton);
+		}
+		
+		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			closeButton.y = (unscaledHeight-70)/2
+		}
+		
+	}
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="com.adobe.flexbuilder.feature.core.osx:3.0.214193"/>
+		<item value="com.adobe.flexbuilder.feature.standalone.osx:3.0.214193"/>
+		<item value="org.eclipse.cvs:1.0.1.R33x_r20070802-7C79_9_KKG-mDM9e3H5D"/>
+		<item value="org.eclipse.emf.common.ui:2.3.1.v200802051830"/>
+		<item value="org.eclipse.emf.common:2.3.1.v200802051830"/>
+		<item value="org.eclipse.emf.ecore.edit:2.3.1.v200802051830"/>
+		<item value="org.eclipse.emf.ecore:2.3.2.v200802051830"/>
+		<item value="org.eclipse.emf.edit.ui:2.3.1.v200802051830"/>
+		<item value="org.eclipse.emf.edit:2.3.2.v200802051830"/>
+		<item value="org.eclipse.gef:3.3.2.v20080129"/>
+		<item value="org.eclipse.jdt:3.3.2.r33x_r20080129-7o7jE7_EDhYDiyVEnjb1pFd7ZGD7"/>
+		<item value="org.eclipse.platform:3.3.1.R33x_r20070911-_19UEkpF-B7Uh2hKy75y"/>
+		<item value="org.eclipse.rcp:3.3.1.R33x_r20070802-8y8eE8sEV3Fz0z0GlHJrXvTAUS"/>
+		<item value="org.eclipse.wst:2.0.2.v200802150100-7C-7C8k0JWR293WFMOOObjNnnqho"/>
+		<item value="org.eclipse.xsd.edit:2.3.0.v200802051830"/>
+		<item value="org.eclipse.xsd:2.3.2.v200802051830"/>
+		<item value="org.tigris.subversion.subclipse:1.2.4"/>
+	</list>
+	<section name="CleanDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="382"/>
+		<item key="DIALOG_HEIGHT" value="372"/>
+		<item key="DIALOG_Y_ORIGIN" value="161"/>
+		<item key="TOGGLE_SELECTED" value="false"/>
+		<item key="DIALOG_WIDTH" value="516"/>
+	</section>
+	<section name="ResourceNavigator">
+		<item key="ResourceWorkingSetFilter.STORE_WORKING_SET" value=""/>
+		<item key="ResourceViewer.STORE_SORT_TYPE" value="1"/>
+	</section>
+	<section name="org.eclipse.ui.views.problem">
+	</section>
+</section>
