@@ -1,4 +1,9 @@
 package org.openPyro.core{
+	import flash.display.DisplayObject;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	
 	import org.openPyro.controls.ScrollBar;
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.skins.IScrollableContainerSkin;
@@ -6,10 +11,6 @@ package org.openPyro.core{
 	import org.openPyro.layout.AbsoluteLayout;
 	import org.openPyro.layout.IContainerMeasurementHelper;
 	import org.openPyro.layout.ILayout;
-	
-	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 
 	/**
 	 * UIContainers extend UIControls and introduce
@@ -504,15 +505,16 @@ package org.openPyro.core{
 			_verticalScrollBar.incrementalScrollDelta = _verticalScrollIncrement;
 			_verticalScrollBar.name = "vscrollbar_"+this.name;
 			_verticalScrollBar.width = 15;
-			_verticalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
-				mouseOverDisabled = true;
-			})
+			_verticalScrollBar.addEventListener(Event.ADDED_TO_STAGE, function():void{
+				_verticalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
+					mouseOverDisabled = true;
+				})
+				_verticalScrollBar.stage.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
+					mouseOverDisabled = false;
+				})
+			});
 			_verticalScrollBar.addEventListener(PyroEvent.SIZE_VALIDATED, onVerticalScrollBarSizeValidated);
 			_verticalScrollBar.addEventListener(PyroEvent.UPDATE_COMPLETE, onVScrollBarUpdateComplete);
-			_verticalScrollBar.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
-				mouseOverDisabled = false;
-			})
-			
 			_verticalScrollBar.skin = IScrollableContainerSkin(_skin).verticalScrollBarSkin;
 			_verticalScrollBar.addEventListener(ScrollEvent.SCROLL, onVerticalScroll)
 			_verticalScrollBar.doOnAdded()
@@ -539,12 +541,16 @@ package org.openPyro.core{
 			_horizontalScrollBar.incrementalScrollDelta = _horizontalScrollIncrement
 			_horizontalScrollBar.name = "hscrollbar_"+this.name;
 			_horizontalScrollBar.height = 15;
-			_horizontalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
-				mouseOverDisabled = true;
-			})
-			_horizontalScrollBar.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
-				mouseOverDisabled = false;
-			})
+			
+			_horizontalScrollBar.addEventListener(Event.ADDED_TO_STAGE, function(event:Event):void{
+				_horizontalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
+					mouseOverDisabled = true;
+				});
+				_horizontalScrollBar.stage.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
+					mouseOverDisabled = false;
+				});			
+			});
+			
 			_horizontalScrollBar.addEventListener(PyroEvent.SIZE_VALIDATED, onHorizontalScrollBarSizeValidated)
 			_horizontalScrollBar.addEventListener(ScrollEvent.SCROLL, onHorizontalScroll);
 			_horizontalScrollBar.parentContainer = this;
@@ -552,9 +558,6 @@ package org.openPyro.core{
 			_horizontalScrollBar.skin = IScrollableContainerSkin(_skin).horizontalScrollBarSkin;	
 			_horizontalScrollBar.visible = false;
 			$addChild(_horizontalScrollBar);
-			_horizontalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
-				mouseOverDisabled = false;
-			})	
 		}
 		
 		protected function onHorizontalScrollBarSizeValidated(event:PyroEvent):void
