@@ -1,24 +1,27 @@
 package org.openPyro.controls.treeClasses
 {
-	import org.openPyro.collections.XMLNodeDescriptor;
-	import org.openPyro.controls.events.TreeEvent;
-	import org.openPyro.controls.listClasses.DefaultListRenderer;
-	import org.openPyro.layout.HLayout;
-	import org.openPyro.painters.TrianglePainter;
-	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 	
+	import org.openPyro.collections.XMLNodeDescriptor;
+	import org.openPyro.controls.events.TreeEvent;
+	import org.openPyro.controls.listClasses.DefaultListRenderer;
+	import org.openPyro.layout.HLayout;
+	import org.openPyro.painters.TrianglePainter;
+	
 	[Event(name="rotatorClick", type="org.openPyro.controls.events.TreeEvent")]
 
 	public class DefaultTreeItemRenderer extends DefaultListRenderer
 	{
 		
-		[Embed(source="../../../../assets/folder.png")]
-		protected var folderIconClass:Class
+		/*
+		The Folder Symbol is embedded in the graphic_assets.swc 
+		generated from the graphics_assets.fla	
+		*/
+		protected var folderIconClass:Class = folderSymbol;
 		
 		public function DefaultTreeItemRenderer()
 		{

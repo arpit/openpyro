@@ -1,5 +1,8 @@
 package org.openPyro.aurora
 {
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	
 	import org.openPyro.controls.Button;
 	import org.openPyro.controls.events.ButtonEvent;
 	import org.openPyro.core.UIControl;
@@ -7,14 +10,14 @@ package org.openPyro.aurora
 	import org.openPyro.painters.GradientFillPainter;
 	import org.openPyro.painters.Stroke;
 	
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	
 	public class AuroraCheckBoxSkin extends AuroraPainterButtonSkin
 	{
 		
-		[Embed(source="/assets/graphic_assets.swf", symbol="checkIcon")]
-		private var TickGraphic:Class
+		/*
+		The Folder Symbol is embedded in the graphic_assets.swc 
+		generated from the graphics_assets.fla	
+		*/
+		private var TickGraphic:Class = checkIconSymbol;
 		
 		public function AuroraCheckBoxSkin()
 		{
