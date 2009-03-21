@@ -1,5 +1,11 @@
+examples/.metadata/*
+examples/OpenPyroBuilder/*
+examples/OpenPyroExample/bin-debug/*
+bin/
+
 .classpath
 .project
 .settings
+
 target
 .DS_Store

@@ -1,14 +1,16 @@
 package
 {
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.openPyro.aurora.AuroraButtonSkin;
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.Button;
 	import org.openPyro.controls.List;
 	import org.openPyro.controls.events.ListEvent;
-	
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import org.openPyro.controls.listClasses.DefaultListRenderer;
+	import org.openPyro.core.ClassFactory;
 
 	public class TestSimpleList extends Sprite
 	{
@@ -24,16 +26,20 @@ package
 		private function init(event:Event):void{
 			this.removeEventListener(Event.ENTER_FRAME, init)
 			list = new List();
+			
+			var cf:ClassFactory = new ClassFactory(DefaultListRenderer);
+			cf.properties = {percentUnusedWidth:100, height:25};
+			list.itemRenderer = cf;
 			list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick)
 			list.skin = new AuroraContainerSkin()
 			
 			list.width = 200
-			list.height = 600
+			list.height = 200
 			list.x = list.y = 10;
 			addChild(list);
 			
 			var dp:Array = new Array()
-			for(var i:int=0; i< 1000; i++){
+			for(var i:int=0; i< 40; i++){
 				dp.push("label_"+i)
 			}
 			
