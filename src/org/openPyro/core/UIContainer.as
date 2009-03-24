@@ -478,7 +478,7 @@ package org.openPyro.core{
 		
 		protected function checkNeedsVScrollBar():void
 		{
-			//_contentHeight = this._layout.getMaxHeight(this.layoutChildren);
+			_contentHeight = this._layout.getMaxHeight(this.layoutChildren);
 			if(_contentHeight > this.height){
 				needsVerticalScrollBar = true
 			}
