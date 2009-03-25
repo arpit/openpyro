@@ -15,7 +15,7 @@ package
 			addChild(image);
 			image.width = 300
 			image.height = 100
-			image.source = "http://img.villagephotos.com/p/2004-7/785459/calvin.jpg"
+			image.source = "assets/calvin.jpg"
 			
 			
 		}
