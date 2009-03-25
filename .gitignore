@@ -3,6 +3,7 @@ examples/OpenPyroBuilder/*
 examples/OpenPyroExample/bin-debug/*
 bin/
 
+.metadata
 .classpath
 .project
 .settings
