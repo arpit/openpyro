@@ -1,22 +1,20 @@
 package
 {
+	import flash.display.Sprite;
+	import flash.events.*;
+	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.List;
 	import org.openPyro.controls.ScrollBar;
 	import org.openPyro.core.*;
 	import org.openPyro.events.PyroEvent;
+	import org.openPyro.examples.DimensionMarkerSkin;
+	import org.openPyro.examples.HaloTrackSkin;
+	import org.openPyro.examples.SimpleButtonSkin;
 	import org.openPyro.layout.*;
 	import org.openPyro.painters.FillPainter;
 	import org.openPyro.painters.GradientFillPainter;
 	import org.openPyro.utils.GlobalTimer;
-	import org.openPyro.examples.HaloTrackSkin;
-	import org.openPyro.examples.SimpleButtonSkin;
-	
-	import flash.display.Sprite;
-	import flash.events.*;
-	
-	import net.comcast.logging.Logger;
-	import net.comcast.logging.consoles.LogBookConsole;
 	
 	[SWF(frameRate="30", backgroundColor="#8899aa")]
 	public class TestList extends Sprite
@@ -29,9 +27,6 @@ package
 		{
 			stage.scaleMode = "noScale"
 			stage.align = "TL"
-			
-			Logger.addConsole(new LogBookConsole('_test'))
-			Logger.debug(this, "Init")
 			
 			//testSimpleChildren()
 			//testSimpleScroll()
@@ -168,7 +163,8 @@ package
 		private function createShape(color:uint):UIControl
 		{
 			var spacer:UIControl = new UIControl();
-			spacer.setSize("60%","100%")
+			spacer.setSize("60%","100%");
+			spacer.skin = new DimensionMarkerSkin();
 			spacer.backgroundPainter = new FillPainter(color);
 			return spacer;
 		}
@@ -260,8 +256,6 @@ import flash.display.Sprite;
 import flash.display.Graphics;
 import org.openPyro.core.UIControl;
 import flash.text.TextField;
-import net.comcast.logging.Logger;
-import net.comcast.logging.consoles.TraceConsole;
 import org.openPyro.core.IDataRenderer;
 import flash.events.MouseEvent;	
 
@@ -270,8 +264,6 @@ internal class Renderer extends UIControl implements IDataRenderer{
 	private var txt:TextField;
 	
 	public function Renderer(){
-		
-		//Logger.addConsole(new TraceConsole());
 		
 		txt = new TextField()
 		//txt.border=true;
