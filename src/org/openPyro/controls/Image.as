@@ -24,7 +24,7 @@ package org.openPyro.controls
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
 			addChild(_loader);
-			
+			_loader.visible = false;
 			if(!_loaderContext)
 			{
 				_loaderContext = new LoaderContext(true);
@@ -178,8 +178,11 @@ package org.openPyro.controls
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			if(_loader && _loader.content && _scaleToFit){
-				scaleImageContent()
+			if(_loader && _loader.content){
+				_loader.visible = true;
+				if(_scaleToFit){
+					scaleImageContent();
+				}
 			}
 			_loader.x = _padding.left
 			_loader.y = _padding.top;
