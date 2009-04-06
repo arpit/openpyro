@@ -65,12 +65,6 @@ package org.openPyro.controls
 			this.invalidateSize()
 		}
 
-		override public function validateSize():void
-		{
-			super.validateSize();
-			value = _value;
-		}
-
 		public function set thumbButton(button:Button):void
 		{
 			if(_thumbButton){
@@ -270,6 +264,9 @@ package org.openPyro.controls
 		override public function validateSize():void
 		{
 			super.validateSize();
+			// TODO: How often is validateSize called? 
+			// Should this be wrapped in
+			// if ((_direction == Direction.HORIZONTAL && thumbButtonX < 0) || (_direction == Direction.VERTICAL && thumbButtonY < 0)) 
 			positionThumb(_value);
 		}
 
