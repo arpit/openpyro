@@ -259,10 +259,14 @@ package org.openPyro.controls
 				this._thumbButton.y = this.thumbButtonY; 
 				this._thumbButton.x = this.thumbButtonX;
 			}
-        
-		
 		}
-		
+
+		override public function validateSize():void
+		{
+			super.validateSize();
+			positionThumb(_value);
+		}
+
 		public function get value():Number{
 			return _value;
 		}
@@ -270,6 +274,12 @@ package org.openPyro.controls
 		public function set value(v:Number):void{
 			_value = v;
 			if(!thumbButton) return;
+			positionThumb(v);
+			dispatchEvent(new SliderEvent(SliderEvent.CHANGE));
+		}
+		
+		private function positionThumb(v:Number):void
+		{
 			if(_direction == Direction.HORIZONTAL)
 			{
 				_thumbButton.x = v*(this.width-_thumbButton.width)/(_maximum-_minimum) ;
@@ -280,7 +290,6 @@ package org.openPyro.controls
 				_thumbButton.y = v*(this.height-_thumbButton.height)/(_maximum-_minimum) ;
 				thumbButtonY = _thumbButton.y;
 			}
-			dispatchEvent(new SliderEvent(SliderEvent.CHANGE));
 		}
 		
 		public function set thumbButtonHeight(value:Number):void
