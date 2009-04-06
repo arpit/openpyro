@@ -245,7 +245,7 @@ package org.openPyro.core{
 		 */ 
 		public function set layout(l:ILayout):void
 		{
-			if(_layout == l) return
+			if(_layout == l) return;
 			layoutInvalidated = true;
 			_layout = l;
 			_layout.container = this;
@@ -268,7 +268,7 @@ package org.openPyro.core{
 			for(var i:uint=0; i<this.contentPane.numChildren; i++)
 			{
 				var child:MeasurableControl = contentPane.getChildAt(i) as MeasurableControl
-				if(!child || !child.includeInLayout) continue
+				if(!child || !child.includeInLayout) continue;
 				children.push(child);
 			}
 			return children;

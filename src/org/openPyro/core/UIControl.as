@@ -138,12 +138,12 @@ package org.openPyro.core{
 		 * dimensions are based on its own)
 		 */ 
 		override public function set measuredWidth(w:Number):void{
-			if(w  == _measuredWidth) return
+			if(w  == _measuredWidth) return;
 			_dimensionsChanged = true;
 			_measuredWidth = w;
 			for(var i:uint=0; i<this.numChildren; i++){
 				var child:UIControl = this.getChildAt(i) as UIControl;
-				if(!child) continue
+				if(!child) continue;
 				child.needsMeasurement=true;
 			}
 			dispatchEvent(new PyroEvent(PyroEvent.SIZE_INVALIDATED));	
@@ -157,12 +157,12 @@ package org.openPyro.core{
 		 * dimensions are based on its own)
 		 */
 		override public function set measuredHeight(h:Number):void{
-			if(h == _measuredHeight) return
+			if(h == _measuredHeight) return;
 			this._dimensionsChanged = true;
 			_measuredHeight = h;
 			for(var i:uint=0; i<this.numChildren; i++){
 				var child:UIControl = this.getChildAt(i) as UIControl;
-				if(!child) continue
+				if(!child) continue;
 				child.needsMeasurement=true;
 			}
 			dispatchEvent(new PyroEvent(PyroEvent.SIZE_INVALIDATED));	

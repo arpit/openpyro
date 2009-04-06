@@ -138,7 +138,7 @@ package org.openPyro.core{
 		 * invalidation cycle
 		 */ 
 		override public function set width(n:Number):void{
-			if(n == _explicitWidth) return
+			if(n == _explicitWidth) return;
 			this._explicitWidth = n
 			_dimensionsChanged = true;
 			displayListInvalidated = true;
@@ -216,7 +216,7 @@ package org.openPyro.core{
 		 * flag and calls invalidateSize
 		 */ 
 		public function set percentUnusedWidth(w:Number):void{
-			if(w == _percentUnusedWidth) return
+			if(w == _percentUnusedWidth) return;
 			_percentUnusedWidth = w;
 			if(!initialized) return;
 			invalidateSize()
@@ -367,7 +367,7 @@ package org.openPyro.core{
 			}
 			for(var j:uint=0; j<this.numChildren; j++){
 				var child:MeasurableControl = this.getChildAt(j) as MeasurableControl;
-				if(!child) continue
+				if(!child) continue;
 				child.validateSize()
 				//child.dispatchEvent(new PyroEvent(PyroEvent.SIZE_VALIDATED));	
 			}
@@ -478,7 +478,7 @@ package org.openPyro.core{
 		 * the displayList is invalidated
 		 */ 
 		public function set measuredHeight(h:Number):void{
-			if(h == _measuredHeight) return
+			if(h == _measuredHeight) return;
 			_measuredHeight = h;
 			displayListInvalidated = true;
 			_dimensionsChanged = true;
@@ -500,7 +500,7 @@ package org.openPyro.core{
 		 * is explicitly sized by setting the explicitWidth property
 		 */ 
 		public function set measuredWidth(w:Number):void{
-			if(w  == _measuredWidth) return
+			if(w  == _measuredWidth) return;
 			_measuredWidth = w;
 			displayListInvalidated = true;
 			_dimensionsChanged = true
@@ -577,7 +577,7 @@ package org.openPyro.core{
 			}
 			for(var j:uint=0; j<this.numChildren; j++){
 				var child:MeasurableControl = this.getChildAt(j) as MeasurableControl;
-				if(!child) continue
+				if(!child) continue;
 				child.validateDisplayList()
 			}
 			this.updateDisplayList(this.getExplicitOrMeasuredWidth(), this.getExplicitOrMeasuredHeight());
