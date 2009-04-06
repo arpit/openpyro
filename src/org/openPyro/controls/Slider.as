@@ -64,7 +64,13 @@ package org.openPyro.controls
 			}
 			this.invalidateSize()
 		}
-		
+
+		override public function validateSize():void
+		{
+			super.validateSize();
+			value = _value;
+		}
+
 		public function set thumbButton(button:Button):void
 		{
 			if(_thumbButton){
