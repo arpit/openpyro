@@ -13,6 +13,17 @@ package org.openPyro.core
 		private var _bottom:Number;
 		private var _left:Number;
 		
+		/**
+		 * Creates a new Padding object.
+		 * 
+		 * All arguments are optional and the behaviour with missing arguments is based on
+		 * the way padding works in standard CSS. If you just provide one argument then that
+		 * value is used on all sides. If you provide two arguments then the first argument is
+		 * the padding on the top and bottom and the second argument is the padding on the right
+		 * and left. If you provide three arguments then the first is the top padding, second 
+		 * is right and left padding and the third argument is the bottom padding. If you supply
+		 * all four arguments then each argument is the padding for the side it is named on.
+		 */
 		public function Padding(top:Number=0, right:Number=-1, bottom:Number=-1, left:Number=-1)
 		{
 			_top = top;
