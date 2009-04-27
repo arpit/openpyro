@@ -40,6 +40,11 @@ package org.openPyro.core
 		{
 			return _bottom;	
 		}
+		
+		public function toString():String
+		{
+			return '[org.openPyro.core.Padding - ' + _top + ' ' + _right + ' ' + _bottom + ' ' + _left + ']';
+		}
 
 	}
 }
