@@ -13,12 +13,12 @@ package org.openPyro.core
 		private var _bottom:Number;
 		private var _left:Number;
 		
-		public function Padding(top:Number=0, right:Number=0, bottom:Number=0, left:Number=0)
+		public function Padding(top:Number=0, right:Number=-1, bottom:Number=-1, left:Number=-1)
 		{
 			_top = top;
-			_right = right;
-			_bottom = bottom;
-			_left = left;
+			_right = right > -1 ? right : top;
+			_bottom = bottom > -1 ? bottom : top;
+			_left = left > -1 ? left : right;
 		}
 		
 		public function get top():Number
