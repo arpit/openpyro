@@ -16,9 +16,9 @@ package org.openPyro.core
 		public function Padding(top:Number=0, right:Number=-1, bottom:Number=-1, left:Number=-1)
 		{
 			_top = top;
-			_right = right > -1 ? right : top;
-			_bottom = bottom > -1 ? bottom : top;
-			_left = left > -1 ? left : right;
+			_right = right > -1 ? right : _top;
+			_bottom = bottom > -1 ? bottom : _top;
+			_left = left > -1 ? left : _right;
 		}
 		
 		public function get top():Number
