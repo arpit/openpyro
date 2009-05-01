@@ -27,7 +27,7 @@ package {
 			//stage.addEventListener(MouseEvent.MOUSE_DOWN,onStageClick)
 			overall = new UIContainer()
 			overall.name = "overall";
-			overall.setSize(stage.stageWidth/2,stage.stageHeight/2);
+			overall.size(stage.stageWidth/2,stage.stageHeight/2);
 			overall.x = overall.y = 10;
 			
 			addChild(overall);
@@ -44,7 +44,7 @@ package {
 			
 			container = new UIContainer();
 			container.name = "inner_container_1"
-			container.setSize("100%","100%");
+			container.size("100%","100%");
 			container.layout = new VLayout();
 			
 			overall.addChild(container);
@@ -101,7 +101,7 @@ package {
 			c4.addChild(greyish);
 		}
 		private function onStageResize(event:Event):void{
-			overall.setSize(stage.stageWidth/2,stage.stageHeight/2);
+			overall.size(stage.stageWidth/2,stage.stageHeight/2);
 		}
 	}
 	
