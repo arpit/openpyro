@@ -60,7 +60,7 @@ package
 			container.y = 100;
 			
 			var spacer:UIControl = new UIControl();
-			spacer.setSize(800,400)
+			spacer.size(800,400)
 			spacer.backgroundPainter = new FillPainter(0xff0000);
 			container.addChild(spacer);
 			
@@ -163,7 +163,7 @@ package
 		private function createShape(color:uint):UIControl
 		{
 			var spacer:UIControl = new UIControl();
-			spacer.setSize("60%","100%");
+			spacer.size("60%","100%");
 			spacer.skin = new DimensionMarkerSkin();
 			spacer.backgroundPainter = new FillPainter(color);
 			return spacer;

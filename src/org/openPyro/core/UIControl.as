@@ -1,15 +1,15 @@
 package org.openPyro.core{
+	import flash.display.DisplayObject;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.managers.SkinManager;
 	import org.openPyro.managers.TooltipManager;
 	import org.openPyro.painters.IPainter;
 	import org.openPyro.skins.ISkin;
 	import org.openPyro.skins.ISkinClient;
-	
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
 	/**
 	 * The UIControl is the basic building block for
@@ -414,7 +414,7 @@ package org.openPyro.core{
 		 * @throws	Error if the datatype passed in is not a Number 
 		 * 			or String
 		 */ 
-		public function setSize(w:*, h:*):void{
+		public function size(w:*, h:*):UIControl{
 			var str:String
 			if(w is Number){
 				this.width = w
@@ -445,7 +445,13 @@ package org.openPyro.core{
 			else{
 				throw new Error('SetSize can only take a string or number as a param')
 			}
-			
+			return this;
+		}
+		
+		public function position(x:Number, y:Number):UIControl{
+			this.x = x;
+			this.y = y;
+			return this;
 		}
 		
 	}
