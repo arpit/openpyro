@@ -21,7 +21,7 @@ package
 			stage.removeEventListener(Event.ENTER_FRAME, initialize);
 			
 			var hdbox:HDividedBox = new HDividedBox()
-			//hdbox.skin = new AuroraHDividedBoxSkin();
+			hdbox.skin = new AuroraHDividedBoxSkin();
 			hdbox.horizontalScrollPolicy = false;
 			hdbox.width = 600
 			hdbox.height = 400
@@ -52,7 +52,7 @@ package
 			hdbox.addChild(blueBox);
 			
 			addChild(hdbox);
-			
+			hdbox.x = hdbox.y = 20;
 			
 		}
 

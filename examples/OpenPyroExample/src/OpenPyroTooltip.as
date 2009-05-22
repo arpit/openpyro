@@ -1,11 +1,12 @@
 package {
+	import flash.display.Sprite;
+	import flash.events.Event;
+	
 	import org.openPyro.core.Padding;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.managers.TooltipManager;
 	import org.openPyro.painters.GradientFillPainter;
 	import org.openPyro.utils.MathUtil;
-	
-	import flash.display.Sprite;
 
 	public class OpenPyroTooltip extends Sprite
 	{
@@ -18,6 +19,11 @@ package {
 			
 			stage.scaleMode = "noScale"
 			stage.align = "TL"
+			stage.addEventListener(Event.ENTER_FRAME, init);
+		}
+		
+		private function init(event:Event):void{
+			stage.removeEventListener(Event.ENTER_FRAME, init);
 			
 			TooltipManager.getInstance().moveWithMouse = true;
 			
@@ -27,16 +33,13 @@ package {
 				control.toolTip = "This is a tooltip for "+i;
 				control.backgroundPainter = fp;
 				control.name = "red";
-				control.width = 200
-				control.height = 200
-				control.x = MathUtil.randRange(0, stage.stageWidth-205);
-				control.y = MathUtil.randRange(0,stage.stageHeight-205);
+				control.width = 100
+				control.height = 100
+				control.x = MathUtil.randRange(0, 800);
+				control.y = MathUtil.randRange(0, 600);
 				addChild(control);
 			}
 			
-			
-			
-
 		}
 	}
 }

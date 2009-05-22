@@ -4,13 +4,15 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import org.openPyro.aurora.AuroraButtonSkin;
 	import org.openPyro.aurora.AuroraContainerSkin;
+	import org.openPyro.aurora.AuroraPainterButtonSkin;
+	import org.openPyro.collections.ArrayCollection;
 	import org.openPyro.controls.Button;
 	import org.openPyro.controls.List;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.core.ClassFactory;
+	import org.openPyro.painters.GradientFillPainter;
 
 	public class TestSimpleList extends Sprite
 	{
@@ -39,30 +41,49 @@ package
 			addChild(list);
 			
 			var dp:Array = new Array()
-			for(var i:int=0; i< 40; i++){
-				dp.push("label_"+i)
+			for(var i:int=0; i< 10; i++){
+				dp.push("original data: "+i)
 			}
 			
 			list.dataProvider = dp;
 			
-			var bttn:Button = new Button()
-			bttn.width = 70
-			bttn.height = 25
-			bttn.label = "reset"
-			bttn.skin = new AuroraButtonSkin()
-			addChild(bttn);
+			var bttn:Button = createButton();
+			bttn.label = "Add some data"
 			bttn.x = 250
-			bttn.y = 10
+			bttn.y = 10;
 			bttn.addEventListener(MouseEvent.CLICK, onBttnClick);
+			
+			var bttn2:Button = createButton();
+			bttn2.label = "Set scrollPosition"
+			bttn2.x = 250
+			bttn2.y = 50
+			bttn2.addEventListener(MouseEvent.CLICK, onBttn2Click);
+			
 			
 		}
 		
+		private function createButton():Button{
+			var bttn:Button = new Button()
+			bttn.height = 25
+			var bttnSkin:AuroraPainterButtonSkin  = new AuroraPainterButtonSkin();
+			bttnSkin.painters = new GradientFillPainter([0xdfdfdf, 0xffffff])
+			bttn.skin = bttnSkin;
+			addChild(bttn);
+			bttn.width = 110;
+			return bttn;
+		}
+		
+		private function onBttn2Click(event:Event):void{
+			list.verticalScrollPosition = 1;
+		}
+		
+		private var newdataIdx:Number = 0;
 		private function onBttnClick(event:MouseEvent):void{
-			list.verticalScrollPosition =1
+			ArrayCollection(list.dataProvider).addItemsAt(["new data "+newdataIdx++], 0)
 		}
 		
 		private function onListItemClick(event:ListEvent):void{
-			trace("click")
+			trace("click --> ");
 		}
 		
 	}
