@@ -1,4 +1,7 @@
 package org.openPyro.aurora{
+	import flash.display.DisplayObject;
+	import flash.text.TextFormat;
+	
 	import org.openPyro.controls.Button;
 	import org.openPyro.controls.Label;
 	import org.openPyro.controls.events.ButtonEvent;
@@ -8,9 +11,10 @@ package org.openPyro.aurora{
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.painters.IPainter;
 	
-	import flash.display.DisplayObject;
-	import flash.text.TextFormat;
-	
+	/**
+	 * Class used for creating Button skins specified by painters that define
+	 * the different button states.
+	 */ 
 	public class AuroraPainterButtonSkin extends UIControl implements IStateFulClient
 	{
 		/**
@@ -122,6 +126,17 @@ package org.openPyro.aurora{
 		public function set painters(painter:IPainter):void{
 			upPainter = overPainter = downPainter = painter;
 			this.invalidateDisplayList();
+		}
+		
+		public function setPainters(upPainter:IPainter, overPainter:IPainter=null, downPainter:IPainter=null):AuroraPainterButtonSkin{
+			painters = upPainter;
+			if(overPainter){
+				this.overPainter = overPainter
+			}
+			if(downPainter){
+				this.downPainter = downPainter;
+			}
+			return this;
 		}
 		
 /*		public function set stroke(str:Stroke):void
