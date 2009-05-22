@@ -283,6 +283,7 @@ package org.openPyro.controls
 		
 		private function positionThumb(v:Number):void
 		{
+			if(!_thumbButton) return;
 			if(_direction == Direction.HORIZONTAL)
 			{
 				_thumbButton.x = v*(this.width-_thumbButton.width)/(_maximum-_minimum) ;

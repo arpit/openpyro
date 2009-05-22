@@ -34,7 +34,7 @@ package
 		private function testSliderBug():void{
 			
 			var container = new UIContainer();
-			container.setSize(585, 700);
+			container.size(585, 700);
 			container.layout = new VLayout(10);
 			
 			container.backgroundPainter = new FillPainter(0xcccccc);

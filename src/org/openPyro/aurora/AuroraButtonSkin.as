@@ -1,18 +1,14 @@
 package org.openPyro.aurora
 {
+	import org.openPyro.aurora.skinClasses.AbstractButtonSkin;
 	import org.openPyro.controls.Button;
-	import org.openPyro.controls.Label;
 	import org.openPyro.controls.events.ButtonEvent;
 	import org.openPyro.core.IStateFulClient;
-	import org.openPyro.core.UIControl;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.painters.GradientFillPainter;
 	import org.openPyro.painters.Stroke;
 	
-	import flash.display.DisplayObject;
-	import flash.text.TextFormat;
-	
-	public class AuroraButtonSkin extends UIControl implements IStateFulClient
+	public class AuroraButtonSkin extends AbstractButtonSkin implements IStateFulClient
 	{
 		protected var _cornerRadius:Number = 0
 		protected var gradientPainter:GradientFillPainter;
@@ -23,25 +19,7 @@ package org.openPyro.aurora
 			this.mouseChildren=false;
 		}
 		
-		override public function set skinnedControl(uic:UIControl):void
-		{
-			if(skinnedControl)
-			{
-				skinnedControl.removeEventListener(PyroEvent.PROPERTY_CHANGE, onSkinnedControlPropertyChange)
-			}
-			super.skinnedControl = uic;
-			skinnedControl.addEventListener(PyroEvent.PROPERTY_CHANGE, onSkinnedControlPropertyChange)
-			if(uic is Button)
-			{
-				this.changeState(null, Button(uic).currentState);
-				updateLabel();
-			}
-			this.buttonMode = true;
-			this.useHandCursor = true;
-			
-		}
-		
-		protected function onSkinnedControlPropertyChange(event:PyroEvent):void
+		override protected function onSkinnedControlPropertyChange(event:PyroEvent):void
 		{
 			if(skinnedControl is Button)
 			{
@@ -49,67 +27,6 @@ package org.openPyro.aurora
 			}
 		}
 		
-		/////////////////// ICON /////////////////
-		
-		protected var _icon:DisplayObject;
-		public function set icon(icn:DisplayObject):void
-		{
-			_icon = icn;
-			addChild(_icon);
-			if(skinnedControl){
-				invalidateDisplayList();
-			}
-		}
-		
-		////////////////// LABEL /////////////////
-		
-		protected var _labelFormat:TextFormat = new TextFormat("Arial",11, 0x111111,true);
-		
-		public function set labelFormat(fmt:TextFormat):void
-		{
-			_labelFormat = fmt;
-			if(label)
-			{
-				label.textFormat = fmt;
-			}
-			if(skinnedControl)
-			{
-				invalidateDisplayList();
-			}
-		}
-		
-		public function get labelFormat():TextFormat
-		{
-			return _labelFormat;
-		}
-		
-		protected var label:Label;
-		
-		public function updateLabel():void
-		{
-			if(this.skinnedControl is Button)
-			{
-				var bttn:Button = Button(this.skinnedControl);
-				if(!bttn.label) return;
-				if(!label){
-					label = new Label();
-					label.textFormat = _labelFormat;
-					addChild(label);
-					
-				}
-				label.text = bttn.label;
-			}
-		}
-		
-		private var _labelAlign:String = "center";
-		public function set labelAlign(direction:String):void
-		{
-			_labelAlign = direction;
-			if(skinnedControl){
-				invalidateDisplayList();
-			}
-		}
-	
 		//////////// Colors ///////////////
 		
 		private var _upColors:Array = [0xdfdfdf, 0xffffff];
@@ -179,7 +96,7 @@ package org.openPyro.aurora
 		
 		///////////////// Button Behavior ////////
 		
-		public function changeState(fromState:String, toState:String):void
+		override public function changeState(fromState:String, toState:String):void
 		{
 			this.gradientPainter = new GradientFillPainter([0,0])
 			if(toState==ButtonEvent.UP)
