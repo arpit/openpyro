@@ -230,7 +230,7 @@ package org.openPyro.core{
 		}
 		/////////////// Painters Implementation //////////////
 		
-		private var _backgroundPainter:IPainter;
+		protected var _backgroundPainter:IPainter;
 		
 		/**
 		 * UIControls can have a backgroundPainter object attached that is 

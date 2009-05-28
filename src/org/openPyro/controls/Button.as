@@ -1,13 +1,14 @@
 package org.openPyro.controls{
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.openPyro.controls.events.ButtonEvent;
 	import org.openPyro.core.IStateFulClient;
 	import org.openPyro.core.Padding;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.skins.ISkin;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import org.openPyro.utils.MouseUtil;
 	
 	
 	[Event(name="up", type="org.openPyro.controls.events.ButtonEvent")]
@@ -38,15 +39,17 @@ package org.openPyro.controls{
 		public function Button(){
 			super();
 			_styleName = "Button";
+			this.buttonMode = true;
 		}
 		
 		override public function initialize():void{
 			super.initialize();
 			this.currentState = ButtonEvent.UP
+			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.addEventListener(MouseEvent.MOUSE_OUT, this.mouseOutHandler);
+			
 		}
 		
 		private var _label:String;
@@ -143,7 +146,8 @@ package org.openPyro.controls{
 		
 		public function changeState(fromState:String, toState:String):void{}
 		
-		private function onMouseOver(event:MouseEvent):void{
+		private function onMouseOver(event:MouseEvent):void
+		{
 			if(_buttonSkin && _buttonSkin is IStateFulClient){
 				IStateFulClient(this._buttonSkin).changeState(this.currentState,ButtonEvent.OVER);
 			}
@@ -151,7 +155,12 @@ package org.openPyro.controls{
 			dispatchEvent(new ButtonEvent(ButtonEvent.OVER));
 		}
 		
+		
+		protected var _isPressed:Boolean = false;
 		private function onMouseDown(event:MouseEvent):void{
+			_isPressed = true;
+			this.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpOutside);
+			this.removeEventListener(MouseEvent.ROLL_OVER, onMouseOver)
 			if(_toggle){
 				if(_selected){
 					selected = false;
@@ -168,8 +177,22 @@ package org.openPyro.controls{
 		}
 		
 		private function onMouseUp(event:MouseEvent):void{
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpOutside);
+			_isPressed = false;
 			if(_buttonSkin  && _buttonSkin is IStateFulClient){
 				IStateFulClient(this._buttonSkin).changeState(this.currentState, ButtonEvent.OVER);
+			}
+			this.currentState = ButtonEvent.OVER;
+			dispatchEvent(new ButtonEvent(ButtonEvent.UP));
+		}
+		
+		protected function onMouseUpOutside(event:MouseEvent):void{
+			if(!_isPressed) return;
+			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpOutside);
+			_isPressed = false;
+			
+			if(_buttonSkin  && _buttonSkin is IStateFulClient){
+				IStateFulClient(this._buttonSkin).changeState(this.currentState, ButtonEvent.UP);
 			}
 			this.currentState = ButtonEvent.UP;
 			dispatchEvent(new ButtonEvent(ButtonEvent.UP));
@@ -177,6 +200,7 @@ package org.openPyro.controls{
 		
 		private function onMouseOut(event:MouseEvent):void
 		{
+			if(_isPressed) return; 
 			if(_buttonSkin  && _buttonSkin is IStateFulClient){
 				IStateFulClient(this._buttonSkin).changeState(this.currentState, ButtonEvent.UP);
 			}

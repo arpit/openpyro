@@ -1,16 +1,17 @@
 package org.openPyro.controls
 {
-	import org.openPyro.controls.events.ButtonEvent;
-	import org.openPyro.controls.events.SliderEvent;
-	import org.openPyro.controls.skins.ISliderSkin;
-	import org.openPyro.core.Direction;
-	import org.openPyro.core.UIControl;
-	import org.openPyro.skins.ISkin;
-	
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	
+	import org.openPyro.controls.events.ButtonEvent;
+	import org.openPyro.controls.events.SliderEvent;
+	import org.openPyro.controls.skins.ISliderSkin;
+	import org.openPyro.core.Direction;
+	import org.openPyro.core.MeasurableControl;
+	import org.openPyro.core.UIControl;
+	import org.openPyro.skins.ISkin;
 	
 	[Event(name="thumbDrag", type="org.openPyro.controls.events.SliderEvent")]
 	
@@ -80,7 +81,7 @@ package org.openPyro.controls
 			Buttons by default return to their 'up' state when
 			the mouse moves out, but slider buttons do not.
 			*/
-			_thumbButton.mouseOutHandler = function(event:MouseEvent):void{}
+			//_thumbButton.mouseOutHandler = function(event:MouseEvent):void{}
 			
 			if(_direction == Direction.VERTICAL)
 			{
@@ -126,33 +127,58 @@ package org.openPyro.controls
 			_thumbSkin = skin;
 			if(this._thumbButton)
 			{
-				_thumbButton.skin = skin
+				_thumbButton.skin = skin;
+				_thumbButton.width = _thumbButtonWidth;
 			}
-			_thumbButton.width = _thumbButtonWidth;
+			
 		}
 		
 		private var _value:Number = 0;
 		private var _minimum:Number = 0;
 		private var _maximum:Number = 100;
 		
-		
+		/**
+		 * Returns the minimum value for
+		 * the slider
+		 */ 
 		public function get minimum():Number{
 			return _minimum;
 		}
 		
+		/**
+		 * @private
+		 */  
 		public function set minimum(value:Number):void
 		{
 			_minimum = value;
 		}
 		
+		/**
+		 * Returns the maximum value for
+		 * the slider
+		 */ 
 		public function get maximum():Number{
 			return _maximum;
 		}
 		
+		/**
+		 * @private
+		 */ 
 		public function set maximum(value:Number):void
 		{
 			_maximum = value;
 		}
+		
+		/**
+		 * Utility function for setting the range of the Slider
+		 * that returns reference to the slider instance itself
+		 * for method chaining purposes.
+		 */ 
+		 public function setRange(min:Number, max:Number):Slider{
+		 	_maximum = max;
+		 	_minimum = min;
+		 	return this;
+		 }
 		
 		protected var boundsRect:Rectangle;
 		
@@ -168,7 +194,7 @@ package org.openPyro.controls
 			}
 			_thumbButton.startDrag(false,boundsRect)
 			this.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			_thumbButton.addEventListener(ButtonEvent.UP, onThumbUp);
+			_thumbButton.addEventListener(MouseEvent.MOUSE_UP, onThumbUp);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onThumbUp);
 			
 		}
@@ -204,8 +230,12 @@ package org.openPyro.controls
 		private function onThumbUp(event:Event):void{
 			this.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onThumbUp);
+			//this.startDrag(true, new Rectangle(0,0,0,0));
+			//this.stopDrag();
 			_thumbButton.stopDrag();
 			this._isThumbPressed=false;
+			//this.forceInvalidateDisplayList = true;
+			//this.invalidateDisplayList()
 		}
 		
 		public function set trackSkin(trackSkin:DisplayObject):void{
@@ -244,7 +274,9 @@ package org.openPyro.controls
 			if(_trackSkin)
 			{
 				_trackSkin.width = unscaledWidth;
-				_trackSkin.height = unscaledHeight;	
+				if(_trackSkin is MeasurableControl && isNaN(MeasurableControl(_trackSkin).explicitHeight)){
+					_trackSkin.height = unscaledHeight;	
+				}
 				if(_trackSkin is UIControl)
 				{
 					UIControl(_trackSkin).validateSize();
@@ -258,6 +290,8 @@ package org.openPyro.controls
 				*/ 
 				this._thumbButton.y = this.thumbButtonY; 
 				this._thumbButton.x = this.thumbButtonX;
+				// center the trackskin
+				_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;
 			}
 		}
 
@@ -279,6 +313,16 @@ package org.openPyro.controls
 			if(!thumbButton) return;
 			positionThumb(v);
 			dispatchEvent(new SliderEvent(SliderEvent.CHANGE));
+		}
+		
+		/**
+		 * Utility function for setting the value of
+		 * the slider and returning reference to the
+		 * instance itself for chaining purposes.
+		 */ 
+		public function setValue(v:Number):Slider{
+			value = v;
+			return this;
 		}
 		
 		private function positionThumb(v:Number):void
