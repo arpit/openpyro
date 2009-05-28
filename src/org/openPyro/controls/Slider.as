@@ -22,8 +22,8 @@ package org.openPyro.controls
 		protected var _thumbButton:Button;
 		protected var _trackSkin:DisplayObject;
 		protected var _isThumbPressed:Boolean = false;
-		protected var _thumbButtonHeight:Number=NaN;
-		protected var _thumbButtonWidth:Number = NaN;
+		protected var _thumbButtonHeight:Number= 20;
+		protected var _thumbButtonWidth:Number = 20;
 		
 		public function Slider(direction:String)
 		{
@@ -43,6 +43,8 @@ package org.openPyro.controls
 			if(!_thumbButton)
 			{
 				thumbButton = new Button();
+				thumbButton.width = _thumbButtonWidth;
+				thumbButton.height = _thumbButtonHeight;
 			}
 		}
 		
@@ -363,6 +365,10 @@ package org.openPyro.controls
 			{
 				_thumbButton.width = value;
 			}
+		}
+		
+		public function get thumbButtonWidth():Number{
+			return _thumbButtonWidth;
 		}
 		
 
