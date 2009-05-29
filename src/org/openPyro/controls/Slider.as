@@ -14,7 +14,7 @@ package org.openPyro.controls
 	import org.openPyro.skins.ISkin;
 	
 	[Event(name="thumbDrag", type="org.openPyro.controls.events.SliderEvent")]
-	
+	[Event(name="change", type="org.openPyro.controls.events.SliderEvent")]
 	public class Slider extends UIControl
 	{
 		
@@ -334,11 +334,13 @@ package org.openPyro.controls
 			{
 				_thumbButton.x = v*(this.width-_thumbButton.width)/(_maximum-_minimum) ;
 				thumbButtonX = _thumbButton.x;
+				thumbButtonY = (this.height-_thumbButton.height)/2;
 			}
 			else
 			{
 				_thumbButton.y = v*(this.height-_thumbButton.height)/(_maximum-_minimum) ;
 				thumbButtonY = _thumbButton.y;
+				thumbButtonX = (this.width-_thumbButton.width)/2;
 			}
 		}
 		
