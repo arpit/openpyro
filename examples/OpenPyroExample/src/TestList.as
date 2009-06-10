@@ -5,6 +5,7 @@ package
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.List;
+	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.ScrollBar;
 	import org.openPyro.core.*;
 	import org.openPyro.events.PyroEvent;
@@ -171,26 +172,27 @@ package
 		
 		private function createList():List{
 			list = new List();
-			list.addEventListener(MouseEvent.CLICK, onListClick)
+			list.addEventListener(ListEvent.ITEM_CLICK, onListClick);
 			list.width = 200
 			list.percentUnusedHeight = 100;
 			
-			var layout:VLayout = new VLayout(0);
+			var layout:VLayout = new VLayout(2);
 			list.layout = layout;
 			
 			var rendererFactory:ClassFactory = new ClassFactory(Renderer);
 			rendererFactory.properties = {width:500, height:30}
 			list.itemRenderer = rendererFactory;
-			list.dataProvider = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+			list.dataProvider = ["a", "a", "a", "a", "e", "f", "c", "b", "a"];
 			
 			list.skin = new AuroraContainerSkin()
 			return list;
 		}
 		
-		private function onListClick(event:MouseEvent):void
+		private function onListClick(_e:ListEvent):void
 		{
 			//container.horizontalScrollBar.visible = false;
 			//trace('list height: '+list.height, 'list measuredht: '+list.measuredHeight, 'hScrollBar y'+list.horizontalScrollBar.y)
+            trace(List(_e.target).selectedIndex+", "+List(_e.target).selectedItem);
 		}
 		
 		public function onStageResize(event:Event):void{
@@ -239,13 +241,13 @@ package
 			var verticalScrollBar:ScrollBar = new ScrollBar(Direction.VERTICAL);
 			verticalScrollBar.width = 15;
 			verticalScrollBar.height = 300;
-			addChild(verticalScrollBar)
+			addChild(verticalScrollBar);
 			
-			verticalScrollBar.slider.trackSkin = new HaloTrackSkin()
-			verticalScrollBar.slider.thumbSkin = new SimpleButtonSkin()
+			verticalScrollBar.slider.trackSkin = new HaloTrackSkin();
+			verticalScrollBar.slider.thumbSkin = new SimpleButtonSkin();
 			verticalScrollBar.incrementButtonSkin = new SimpleButtonSkin()
 			verticalScrollBar.decrementButtonSkin = new SimpleButtonSkin();
-			return verticalScrollBar
+			return verticalScrollBar;
 			
 		}	
 	}
@@ -254,14 +256,18 @@ package
 
 import flash.display.Sprite;
 import flash.display.Graphics;
+import flash.geom.ColorTransform;
 import org.openPyro.core.UIControl;
 import flash.text.TextField;
-import org.openPyro.core.IDataRenderer;
 import flash.events.MouseEvent;	
+import org.openPyro.controls.listClasses.IListDataRenderer;
+import org.openPyro.controls.listClasses.BaseListData;
 
-internal class Renderer extends UIControl implements IDataRenderer{
+internal class Renderer extends UIControl implements IListDataRenderer{
 	
 	private var txt:TextField;
+    private var m_selected:Boolean;
+    private var m_bld:BaseListData
 	
 	public function Renderer(){
 		
@@ -283,15 +289,16 @@ internal class Renderer extends UIControl implements IDataRenderer{
 	}
 	
 	public function set data(d:Object):void{
-		this.txt.text = String(d)
+        _data = d;
+		this.txt.text = String(d);
 		invalidateSize();
 	}
 	
-	private var _data:String
+	private var _data:Object;
 	public function set label(s:String):void{
 		_data = s;
 		this.txt.text = s;
-		this.invalidateSize()
+		this.invalidateSize();
 	}
 	
 	override public function measure():void{
@@ -327,4 +334,23 @@ internal class Renderer extends UIControl implements IDataRenderer{
 		gr.drawRect(0,0,unscaledWidth,unscaledHeight);
 		gr.endFill();
 	}
+
+    public function  get selected():Boolean {
+        return m_selected;
+    }
+
+    public function  set selected(_selected:Boolean):void {
+        //var e:Error = new Error();
+        //trace(e.getStackTrace());
+        m_selected = _selected;
+        if(m_selected) {
+            this.transform.colorTransform = new ColorTransform(1.1, 1.1, 1.1);
+        } else {
+            this.transform.colorTransform = new ColorTransform(1.0, 1.0, 1.0);
+        }
+    }
+
+    public function  set baseListData(_bld:BaseListData):void {
+        m_bld = _bld;
+    }
 }
