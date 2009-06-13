@@ -88,6 +88,7 @@ package org.openPyro.aurora.skinClasses
 					
 				}
 				label.text = bttn.label;
+                label.embedFonts = _embedFonts;
 			}
 		}
 		
@@ -100,5 +101,15 @@ package org.openPyro.aurora.skinClasses
 			}
 		}
 
+        protected var _embedFonts:Boolean;
+        public function set embedFonts(_val:Boolean):void {
+            _embedFonts = _val;
+            if(label)
+                label.embedFonts = _val;
+        }
+
+        public function get embedFonts():Boolean {
+            return _embedFonts;
+        }
 	}
 }

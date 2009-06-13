@@ -268,24 +268,27 @@ package org.openPyro.controls
 		
 		protected function handleRendererClick(event:MouseEvent):void
 		{
-				// dont react if the click is coming from a currently 
-				// selected child.
-				if(!(event.currentTarget is IListDataRenderer) || IListDataRenderer(event.currentTarget).selected) return;
+            /*
+            // dont react if the click is coming from a currently 
+            // selected child.
+            if(!(event.currentTarget is IListDataRenderer) || IListDataRenderer(event.currentTarget).selected) return;
+             */
+            if(!(event.currentTarget is IListDataRenderer)) return;
 
-				if(selectedRenderer && selectedRenderer is IListDataRenderer){
-					IListDataRenderer(selectedRenderer).selected = false;
-				}
+            if(selectedRenderer && selectedRenderer is IListDataRenderer){
+                IListDataRenderer(selectedRenderer).selected = false;
+            }
 
-				var newIndex:int = itemRendererToIndex(event.currentTarget as DisplayObject);
-				if(newIndex != selectedIndex){
-					selectedIndex = newIndex;
-					selectedRenderer = event.currentTarget as DisplayObject;
-					if(selectedRenderer is IListDataRenderer){
-						IListDataRenderer(selectedRenderer).selected = true;
-					}
-				}
-				
-				dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK));
+            var newIndex:int = itemRendererToIndex(event.currentTarget as DisplayObject);
+            if(newIndex != selectedIndex){
+                selectedIndex = newIndex;
+                selectedRenderer = event.currentTarget as DisplayObject;
+                if(selectedRenderer is IListDataRenderer){
+                    IListDataRenderer(selectedRenderer).selected = true;
+                }
+            }
+
+            dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK));
 		}
 		
 		
