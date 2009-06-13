@@ -181,7 +181,9 @@ package org.openPyro.controls
 		{
 			var childNodesData:Array = event.delta;
 			var renderer:DisplayObject
+			var newRenderer:DisplayObject
 			var eventSourceData:Object = event.eventNode;
+			var listData:Object
 			var parentNode:DisplayObject
 			
 			var tgtY:Number;
@@ -190,8 +192,8 @@ package org.openPyro.controls
 				tgtY = 0;
 				for(var l:int=childNodesData.length-1; l>=0; l--){
 					//(this.renderers.length == 0)?0:this.renderers[this.renderers.length-1].y
-					var newRenderer:DisplayObject = _rendererPool.getObject() as DisplayObject;
-					var listData:Object = childNodesData[l]
+					newRenderer = _rendererPool.getObject() as DisplayObject;
+					listData = childNodesData[l]
 					setRendererData(newRenderer, listData, l);
 					this.contentPane.addChild(newRenderer);	
 					
@@ -212,8 +214,8 @@ package org.openPyro.controls
 					parentNode = r;
 					var positionRefNode:DisplayObject = parentNode;
 					for(var k:int=childNodesData.length-1; k>=0; k--){
-						var newRenderer:DisplayObject = _rendererPool.getObject() as DisplayObject;
-						var listData:Object = childNodesData[k]
+						newRenderer = _rendererPool.getObject() as DisplayObject;
+						listData = childNodesData[k]
 						setRendererData(newRenderer, listData, k);
 						this.contentPane.addChildAt(newRenderer,0);
 						newRenderer.y = positionRefNode.y - newRenderer.height;
