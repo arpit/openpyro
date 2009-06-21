@@ -82,12 +82,10 @@ package org.openPyro.controls
 			}
 			if(_dataProvider){
 				_dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
-				_dataProvider.iterator.addEventListener(IteratorEvent.ITERATOR_MOVED, onIteratorMoved);
 			}
 			convertDataToCollection(dp)
 			_dataProvider.addEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
-			_dataProvider.iterator.addEventListener(IteratorEvent.ITERATOR_MOVED, onIteratorMoved);
-			createRenderers()
+			createRenderers();
 		}
 		
 		public function get originalRawDataProvider():Object{
@@ -151,16 +149,6 @@ package org.openPyro.controls
 			this.displayListInvalidated = true
 			this.layoutInvalidated = true;
 			this.invalidateSize()
-		}
-		
-		protected function onIteratorMoved(event:IteratorEvent):void{
-			var data:Object = _dataProvider.iterator.getCurrent();
-			var renderer:DisplayObject = dataToItemRenderer(data);
-			if(renderer is IListDataRenderer){
-				IListDataRenderer(renderer).selected = true;
-			}
-			selectedRenderer = renderer;
-			dispatchEvent(new ListEvent(ListEvent.CHANGE));
 		}
 		
 		protected function handleDataProviderItemsRemoved(event:CollectionEvent):void
@@ -282,24 +270,27 @@ package org.openPyro.controls
 		
 		protected function handleRendererClick(event:MouseEvent):void
 		{
-				// dont react if the click is coming from a currently 
-				// selected child.
-				if(!(event.currentTarget is IListDataRenderer) || IListDataRenderer(event.currentTarget).selected) return;
-				
-				
-				if(selectedRenderer && selectedRenderer is IListDataRenderer){
-					IListDataRenderer(selectedRenderer).selected = false;
-				}
-				var newIndex:int = itemRendererToIndex(event.currentTarget as DisplayObject);
-				if(newIndex != selectedIndex){
-					selectedIndex = newIndex;
-					selectedRenderer = event.currentTarget as DisplayObject;
-					if(selectedRenderer is IListDataRenderer){
-						IListDataRenderer(selectedRenderer).selected = true;
-					}
-				}
-				
-				dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK));
+            /*
+            // dont react if the click is coming from a currently 
+            // selected child.
+            if(!(event.currentTarget is IListDataRenderer) || IListDataRenderer(event.currentTarget).selected) return;
+             */
+            if(!(event.currentTarget is IListDataRenderer)) return;
+
+            if(selectedRenderer && selectedRenderer is IListDataRenderer){
+                IListDataRenderer(selectedRenderer).selected = false;
+            }
+
+            var newIndex:int = itemRendererToIndex(event.currentTarget as DisplayObject);
+            if(newIndex != selectedIndex){
+                selectedIndex = newIndex;
+                selectedRenderer = event.currentTarget as DisplayObject;
+                if(selectedRenderer is IListDataRenderer){
+                    IListDataRenderer(selectedRenderer).selected = true;
+                }
+            }
+
+            dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK));
 		}
 		
 		
@@ -324,8 +315,7 @@ package org.openPyro.controls
 		
 		public function itemRendererToIndex(renderer:DisplayObject):int
 		{
-			var data:Object = IDataRenderer(renderer).data;
-			return _dataProvider.getItemIndex(data);
+            return renderers.indexOf(renderer);
 		}
 		
 		
@@ -377,10 +367,8 @@ package org.openPyro.controls
 			}
 			
 			_selectedIndex = index;
-			if(_dataProvider){
-				//selectedItem = _dataProvider[index];
-				_dataProvider.iterator.cursorIndex = index;
-			}
+
+			dispatchEvent(new ListEvent(ListEvent.CHANGE));
 		}
 		
 		public function get selectedIndex():int
@@ -397,12 +385,14 @@ package org.openPyro.controls
 			var renderer:DisplayObject
 			if(_dataProvider)
 			{
+                var it:IIterator =_dataProvider.iterator;
+                it.reset();
 				for(var j:uint=0; j<_dataProvider.length; j++)
 				{
 					renderer = DisplayObject(_rendererPool.getObject());
 					renderers.push(renderer);
 					contentPane.addChildAt(renderer,0);
-					setRendererData(renderer,j, j)
+					setRendererData(renderer, it.getNext(), j)
 				}		
 			}
 			this.displayListInvalidated = true;

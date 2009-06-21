@@ -9,6 +9,7 @@ package org.openPyro.controls
 	public class Label extends UIControl
 	{
 		protected var _textField:TextField;
+        protected var _embedFonts:Boolean;
 		
 		public function Label()
 		{
@@ -31,6 +32,7 @@ package org.openPyro.controls
 		protected function setTextFieldProperties():void{
 			_textField.selectable = false;
 			//_textField.border = true;
+            _textField.embedFonts = _embedFonts;
 		}
 		
 		/**
@@ -85,6 +87,17 @@ package org.openPyro.controls
 		public function get text():String{
 			return _text;
 		}
+
+        public function get embedFonts():Boolean {
+            return _embedFonts;
+        }
+
+        public function set embedFonts(_val:Boolean):void {
+            _embedFonts = _val;
+            if(_textField){
+                _textField.embedFonts = _val;
+            }
+        }
 		
 		override protected function doChildBasedValidation():void
 		{

@@ -48,12 +48,12 @@ package org.openPyro.utils{
 				return String(val);
 			}
 			
-			var s:String
+			var s:String;
 			try{
 				s = val["label"];
 			}
 			catch(e:Error){
-				s = "[Object]"
+				s = "[Object]";
 			}
 			return s;
 		}

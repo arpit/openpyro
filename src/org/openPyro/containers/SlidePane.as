@@ -62,7 +62,14 @@ package org.openPyro.containers
 		 }
 		 
 		 private var trans:Number = -1;
-			
+	   	 public function set transitionAttitude(_trans:Number):void
+		 {
+			 trans = _trans;
+		 }
+		 public function get transitionAttitude():Number
+		 {
+		 	return trans;
+		 }		
 		 
 		 override protected function showSelectedChild():void
 		 {

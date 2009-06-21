@@ -82,7 +82,11 @@ package org.openPyro.core{
 		public function get verticalScrollPolicy():Boolean{
 			return _verticalScrollPolicy;
 		}
-		
+
+        override public function addChild(child:DisplayObject):DisplayObject
+		{
+			return addChildAt(child, this.contentPane.numChildren);
+		}
 		
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
