@@ -37,7 +37,7 @@ package org.openPyro.containers
 		
 		public function get selectedIndex():int
 		{
-			return _selectedIndex
+			return _selectedIndex;
 		}
 		
 		override public function addChild(child:DisplayObject):DisplayObject
@@ -47,10 +47,6 @@ package org.openPyro.containers
 				throw new Error("ViewStacks can only hold UIContainers");
 				return;
 			}
-			this.viewChildren.push(child);
-			_selectedChild = UIContainer(child);
-			_selectedIndex++;
-			viewsChanged = true
 			return super.addChild(child);
 		}
 		
@@ -62,9 +58,9 @@ package org.openPyro.containers
 				return;
 			}
 			ArrayUtil.insertAt(viewChildren, index, child);
-			_selectedChild = viewChildren[viewChildren.length-1]
-			_selectedIndex++;
-			viewsChanged = true
+			_selectedChild = viewChildren[viewChildren.length-1];
+			_selectedIndex = viewChildren.length -1;
+			viewsChanged = true;
 			return super.addChildAt(child, index);
 		}
 		
@@ -90,7 +86,7 @@ package org.openPyro.containers
 			}
 			if(_selectedChild == child){
 				// set the topmost child as the visible child
-				_selectedIndex = viewChildren.length-1;	
+				selectedIndex = viewChildren.length-1;	
 			}
 			return super.removeChild(child);
 		}
