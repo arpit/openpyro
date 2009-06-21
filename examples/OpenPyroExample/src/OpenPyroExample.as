@@ -1,5 +1,4 @@
 package {
-	import org.openPyro.charts.VBarChart;
 	import org.openPyro.controls.*;
 	import org.openPyro.core.*;
 	import org.openPyro.layout.*;
