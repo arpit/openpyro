@@ -559,7 +559,10 @@ package org.openPyro.core{
 			if(this._parentContainer && _dimensionsChanged){
 				dispatchEvent(new PyroEvent(PyroEvent.SIZE_CHANGED));
 			}else{
-				this.addEventListener(Event.ENTER_FRAME, validateDisplayList)
+				if(this.stage){
+					stage.invalidate();
+					this.addEventListener(Event.RENDER, validateDisplayList);
+				}
 				
 			}
 		}
@@ -573,7 +576,7 @@ package org.openPyro.core{
 				return;
 			}
 			if(event){
-				this.removeEventListener(Event.ENTER_FRAME,validateDisplayList) 
+				this.removeEventListener(Event.RENDER,validateDisplayList) 
 			}
 			for(var j:uint=0; j<this.numChildren; j++){
 				var child:MeasurableControl = this.getChildAt(j) as MeasurableControl;
