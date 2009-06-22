@@ -99,7 +99,7 @@ package org.openPyro.controls
 				{
 					_thumbButton.percentUnusedHeight = 100;
 				}	
-				_thumbButton.width = 100;
+				_thumbButton.width = _thumbButtonWidth;
 			}
 			
 			addChild(_thumbButton);
@@ -130,7 +130,12 @@ package org.openPyro.controls
 			if(this._thumbButton)
 			{
 				_thumbButton.skin = skin;
-				_thumbButton.width = _thumbButtonWidth;
+			//if(_thumbButton is MeasurableControl && MeasurableControl(_thumbButton).usesMeasurementStrategy()){
+			//		_thumbButton.width = _thumbButtonWidth;
+			//	}
+			//	if(isNaN(_thumbButton.getExplicitOrMeasuredHeight())){
+			//		_thumbButton.height = _thumbButtonHeight;
+			//	}
 			}
 			
 		}
