@@ -1,10 +1,10 @@
 package org.openPyro.controls
 {
-	import org.openPyro.core.UIControl;
-	import org.openPyro.utils.StringUtil;
-	
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	
+	import org.openPyro.core.UIControl;
+	import org.openPyro.utils.StringUtil;
 	
 	public class Label extends UIControl
 	{
@@ -20,10 +20,10 @@ package org.openPyro.controls
 			_textField = new TextField();
 			setTextFieldProperties()
 			addChild(_textField);
-			
-			if(_format){
-				_textField.defaultTextFormat = _format;
+			if(!_format){
+				_format = new TextFormat("Arial", 12);
 			}
+			_textField.defaultTextFormat = _format;
 			if(_text){
 				_textField.text = _text
 			}
@@ -105,7 +105,7 @@ package org.openPyro.controls
 			// Set the _textField's text so that we can measure based on
 			// the textWidths
 			//
-			if(!_textField) return;
+			if(!_textField || !_text) return;
 			_textField.text = _text;
 			if(isNaN(this._explicitWidth) && isNaN(this._percentWidth) && isNaN(_percentUnusedWidth))
 			{
