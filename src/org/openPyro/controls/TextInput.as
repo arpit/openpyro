@@ -1,11 +1,11 @@
 package org.openPyro.controls
 {
-	import org.openPyro.events.PyroEvent;
-	
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.text.TextFieldType;
 	import flash.ui.Keyboard;
+	
+	import org.openPyro.events.PyroEvent;
 	
 	[Event(name="enter", type="org.openPyro.events.PyroEvent")]
 	[Event(name="change", type="flash.events.Event")]
@@ -27,6 +27,17 @@ package org.openPyro.controls
 			_textField.multiline = false;
 		}
 		
+		protected var _cornerRadius:Number=0;
+		public function set cornerRadius(r:Number):void{
+			_cornerRadius= r;
+			invalidateDisplayList()
+		}
+		
+		public function get cornerRadius():Number{
+			return _cornerRadius;
+		}
+		
+		
 		private var _displayAsPassword:Boolean = false;
 		public function set password(b:Boolean):void{
 			_displayAsPassword = b;
@@ -46,8 +57,9 @@ package org.openPyro.controls
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			_textField.width = width;
+			_textField.width = width - _cornerRadius;
 			_textField.height = height;
+			_textField.x = _cornerRadius/2;
 		}
 		
 	}
