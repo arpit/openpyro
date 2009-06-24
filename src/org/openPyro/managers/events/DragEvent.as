@@ -5,7 +5,8 @@ package org.openPyro.managers.events
 	
 	public class DragEvent extends Event
 	{
-		public static const DRAG_COMPLETE:String = "dragComplete";
+		public static const DRAG_DROP:String = "dragDrop";
+		public static const DRAG_OVER:String = "dragOver";
 		
 		public var stageX:Number;
 		public var stageY:Number;

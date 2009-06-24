@@ -5,11 +5,16 @@ package org.openPyro.core{
 	import flash.events.MouseEvent;
 	
 	import org.openPyro.events.PyroEvent;
+	import org.openPyro.managers.DragManager;
 	import org.openPyro.managers.SkinManager;
 	import org.openPyro.managers.TooltipManager;
 	import org.openPyro.painters.IPainter;
 	import org.openPyro.skins.ISkin;
 	import org.openPyro.skins.ISkinClient;
+	
+	
+	[Event(name="dragDrop", type="org.openPyro.managers.events.DragEvent")]
+	
 	
 	/**
 	 * The UIControl is the basic building block for
@@ -334,6 +339,47 @@ package org.openPyro.core{
 				//UIControl(_skin).percentUnusedWidth = 100
 				//UIControl(_skin).percentUnusedHeight = 100
 			}
+		}
+		
+		///////// handle drag /////
+		
+		protected var _dragEnabled:Boolean = false;
+		
+		public function get dragEnabled():Boolean{
+			return _dragEnabled;
+		}
+		
+		public function set dragEnabled(b:Boolean):void{
+			_dragEnabled = b
+			if(_dragEnabled){
+				this.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			}
+			else{
+				this.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			}
+		}
+		
+		protected var _dropEnabled:Boolean = false;
+		public function set dropEnabled(b:Boolean):void{
+			_dropEnabled = b;
+			if(_dropEnabled){
+				DragManager.getInstance().registerDropClient(this);
+			}
+			else{
+				DragManager.getInstance().removeDropClient(this);
+			}
+		}
+		
+		protected var isMouseDown:Boolean = false;
+		protected function handleMouseDown(event:Event):void{
+			isMouseDown = true;
+			if(_dragEnabled){
+				DragManager.getInstance().makeDraggable(this);
+			}
+		}
+		
+		public function willAcceptDragDrop():Boolean{
+			return true;
 		}
 		
 		////////////////////// ToolTip //////////////////////////

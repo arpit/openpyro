@@ -1,8 +1,5 @@
 package org.openPyro.managers
 {
-	import org.openPyro.core.UIControl;
-	import org.openPyro.managers.events.DragEvent;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -11,32 +8,33 @@ package org.openPyro.managers
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
+	import org.openPyro.managers.events.DragEvent;
+	import org.openPyro.utils.ArrayUtil;
+	
 	public class DragManager extends EventDispatcher{
 		
 		private var dragProxy:Sprite;
-		private var dragInitiator:DisplayObject
+		private var _dragInitiator:DisplayObject
 		
 		private var mouseStartY:Number = 0
 		private var mouseStartX:Number = 0
 		
 		public function DragManager() {
-			
+			dropClients = [];
 		}
 		
-		public function makeDraggable(object:DisplayObject, bounds:Rectangle):void{
+		public function makeDraggable(object:DisplayObject, bounds:Rectangle=null):void{
 			if(!object.stage){
 				throw new Error("DragTarget is not on stage")
 			}
-			dragInitiator = object;
+			if(!bounds){
+				bounds = new Rectangle(0,0, object.stage.stageWidth, object.stage.stageHeight);
+			}
+			_dragInitiator = object;
 			dragProxy = createDragProxy(object);
-			if(object.parent is UIControl){
-				UIControl(object.parent).$addChild(dragProxy);
-			}
-			else{
-				object.parent.addChild(dragProxy)
-			}
-			dragProxy.x = object.x;
-			dragProxy.y = object.y;
+			object.stage.addChild(dragProxy);
+			dragProxy.x = -dragProxy.width;
+			dragProxy.y = -dragProxy.height;
 			
 			dragProxy.startDrag(true, bounds);
 			
@@ -48,7 +46,7 @@ package org.openPyro.managers
 		private static var instance:DragManager;
 		public static function getInstance():DragManager{
 			if(!instance){
-				instance = new DragManager()
+				instance = new DragManager();
 			}
 			return instance;
 		}
@@ -56,20 +54,36 @@ package org.openPyro.managers
 		private function onMouseUp(event:MouseEvent):void{
 			if(!dragProxy) return;
 			
+			if(!_currentDropTarget){
+				showDropRejectedAnimation();
+				return;
+			}
 			
-			var dragEvent:DragEvent = new DragEvent(DragEvent.DRAG_COMPLETE);
+			var dropEvent:DragEvent = new DragEvent(DragEvent.DRAG_DROP);
 			
-			dragEvent.stageX = event.stageX;
-			dragEvent.stageY = event.stageY;
-			dragEvent.dragInitiator = dragInitiator;
+			dropEvent.stageX = event.stageX;
+			dropEvent.stageY = event.stageY;
+			dropEvent.dragInitiator = _dragInitiator;
 			
-			dragEvent.mouseXDelta = dragProxy.parent.stage.mouseX-mouseStartX;
-			dragEvent.mouseYDelta = dragProxy.parent.stage.mouseY-mouseStartY;
-			
+			dropEvent.mouseXDelta = dragProxy.parent.stage.mouseX-mouseStartX;
+			dropEvent.mouseYDelta = dragProxy.parent.stage.mouseY-mouseStartY;
+			showDropAcceptedAnimation();
+			_currentDropTarget.dispatchEvent(dropEvent);
+		}
+		
+		private function showDropRejectedAnimation():void{
+			//TODO: show the rejection animation
 			dragProxy.parent.removeChild(dragProxy);
 			dragProxy = null;
-			
-			dispatchEvent(dragEvent);
+			return;
+		}
+		
+		
+		private function showDropAcceptedAnimation():void{
+			//TODO: show the acecpted animation
+			dragProxy.parent.removeChild(dragProxy);
+			dragProxy = null;
+			return;
 		}
 		
 		
@@ -79,9 +93,46 @@ package org.openPyro.managers
 			var bmp:Bitmap = new Bitmap(data)
 			var sp:Sprite = new Sprite();
 			sp.addChild(bmp);
+			bmp.x = -bmp.width/2;
+			bmp.y = -bmp.height/2;
 			sp.alpha = .5;
 			return sp;
 			
+		}
+		
+		private var _isDragging:Boolean = false;
+		
+		/**
+		 * Flag to check if the DragManager is dragging 
+		 * a proxy across the application
+		 */ 
+		public function isDragging():Boolean{
+			return _isDragging;
+		}
+		
+		private var dropClients:Array;
+		public function registerDropClient(client:DisplayObject):void{
+			if(dropClients.indexOf(client)==-1){
+				client.addEventListener(MouseEvent.MOUSE_OVER, onMouseOverPossibleDropTarget);
+				dropClients.push(client);
+			}
+		}
+		
+		private var _currentDropTarget:DisplayObject;
+		
+		public function get currentDropTarget():DisplayObject{
+			return _currentDropTarget;
+		}
+		
+		private function onMouseOverPossibleDropTarget(event:MouseEvent):void{
+			DisplayObject(event.target).dispatchEvent(new DragEvent(DragEvent.DRAG_OVER));
+			_currentDropTarget = event.target as DisplayObject;
+		}
+		
+		public function removeDropClient(client:DisplayObject):void{
+			if(dropClients.indexOf(client) != -1){
+				ArrayUtil.remove(dropClients, client);
+			}
 		}
 
 	}
