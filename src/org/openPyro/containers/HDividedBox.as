@@ -13,6 +13,7 @@ package org.openPyro.containers
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.getQualifiedClassName;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -44,7 +45,7 @@ package org.openPyro.containers
 		
 		override protected function onDividerMouseDown(event:MouseEvent):void{
 			var dragManager:DragManager = DragManager.getInstance()
-			dragManager.addEventListener(DragEvent.DRAG_COMPLETE, onDividerDragComplete);
+			this.addEventListener(DragEvent.DRAG_DROP, onDividerDragComplete);
 			
 			for(var i:int=0; i<contentPane.numChildren; i++){
 				var child:DisplayObject = contentPane.getChildAt(i)
@@ -58,14 +59,19 @@ package org.openPyro.containers
 			
 			leftUIC.cancelMouseEvents()
 			rightUIC.cancelMouseEvents()
+			
+			var point:Point = new Point(0,0);
+			point = this.localToGlobal(point);
+			
 			dragManager.makeDraggable(DisplayObject(event.currentTarget), 
-													new Rectangle(0,0,this.width-DisplayObject(event.currentTarget).width, 0));
+													new Rectangle(point.x,point.y,this.width-DisplayObject(event.currentTarget).width, 0));
 		}
 		
 		
 		protected function onDividerDragComplete(event:DragEvent):void{
-			var dragManager:DragManager = DragManager.getInstance()
-			dragManager.removeEventListener(DragEvent.DRAG_COMPLETE, onDividerDragComplete);
+			trace("divider drop");
+			//var dragManager:DragManager = DragManager.getInstance()
+			//dragManager.removeEventListener(DragEvent.DRAG_DROP, onDividerDragComplete);
 			
 			/* 
 			If the divider moves left, delta is -ve, otherwise +ve

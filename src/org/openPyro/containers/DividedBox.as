@@ -16,6 +16,7 @@ package org.openPyro.containers
 		public function DividedBox()
 		{
 			super();
+			this.dropEnabled = true;
 		}
 		
 		protected var dividers:Array = new Array();

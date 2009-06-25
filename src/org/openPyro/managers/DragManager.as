@@ -6,10 +6,13 @@ package org.openPyro.managers
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import org.openPyro.managers.events.DragEvent;
 	import org.openPyro.utils.ArrayUtil;
+	import org.openPyro.utils.MouseUtil;
+	import org.openPyro.utils.GraphicUtil;
 	
 	public class DragManager extends EventDispatcher{
 		
@@ -23,7 +26,7 @@ package org.openPyro.managers
 			dropClients = [];
 		}
 		
-		public function makeDraggable(object:DisplayObject, bounds:Rectangle=null):void{
+		public function makeDraggable(object:DisplayObject, bounds:Rectangle=null, centerDragProxy:Boolean=false):void{
 			if(!object.stage){
 				throw new Error("DragTarget is not on stage")
 			}
@@ -31,12 +34,16 @@ package org.openPyro.managers
 				bounds = new Rectangle(0,0, object.stage.stageWidth, object.stage.stageHeight);
 			}
 			_dragInitiator = object;
-			dragProxy = createDragProxy(object);
+			dragProxy = createDragProxy(object, centerDragProxy);
 			object.stage.addChild(dragProxy);
+			
+			// position the dragproxy off the stage till the user
+			// actually begins moving the mouse
 			dragProxy.x = -dragProxy.width;
 			dragProxy.y = -dragProxy.height;
 			
 			dragProxy.startDrag(true, bounds);
+			this._isDragging = true;
 			
 			mouseStartY = object.stage.mouseY
 			mouseStartX = object.stage.mouseX;
@@ -52,23 +59,23 @@ package org.openPyro.managers
 		}
 		
 		private function onMouseUp(event:MouseEvent):void{
-			if(!dragProxy) return;
+			if(!dragProxy || !_isDragging) return;
+			_isDragging = false;
 			
-			if(!_currentDropTarget){
-				showDropRejectedAnimation();
-				return;
+			for each(var target:DisplayObject in dropClients){
+				if (MouseUtil.isMouseOver(target)){
+					var dropEvent:DragEvent = new DragEvent(DragEvent.DRAG_DROP);
+			
+					dropEvent.stageX = event.stageX;
+					dropEvent.stageY = event.stageY;
+					dropEvent.dragInitiator = _dragInitiator;
+					
+					dropEvent.mouseXDelta = dragProxy.parent.stage.mouseX-mouseStartX;
+					dropEvent.mouseYDelta = dragProxy.parent.stage.mouseY-mouseStartY;
+					showDropAcceptedAnimation();
+					target.dispatchEvent(dropEvent);
+				}
 			}
-			
-			var dropEvent:DragEvent = new DragEvent(DragEvent.DRAG_DROP);
-			
-			dropEvent.stageX = event.stageX;
-			dropEvent.stageY = event.stageY;
-			dropEvent.dragInitiator = _dragInitiator;
-			
-			dropEvent.mouseXDelta = dragProxy.parent.stage.mouseX-mouseStartX;
-			dropEvent.mouseYDelta = dragProxy.parent.stage.mouseY-mouseStartY;
-			showDropAcceptedAnimation();
-			_currentDropTarget.dispatchEvent(dropEvent);
 		}
 		
 		private function showDropRejectedAnimation():void{
@@ -87,14 +94,14 @@ package org.openPyro.managers
 		}
 		
 		
-		public function createDragProxy(object:DisplayObject):Sprite{
-			var data:BitmapData = new BitmapData(object.width, object.height)
-			data.draw(object);
-			var bmp:Bitmap = new Bitmap(data)
+		public function createDragProxy(source:DisplayObject, centerDragProxy:Boolean):Sprite{
+			var bmp:Bitmap = GraphicUtil.getBitmap(source);
 			var sp:Sprite = new Sprite();
 			sp.addChild(bmp);
-			bmp.x = -bmp.width/2;
-			bmp.y = -bmp.height/2;
+			if(centerDragProxy){
+				bmp.x = -bmp.width/2;
+				bmp.y = -bmp.height/2;
+			}
 			sp.alpha = .5;
 			return sp;
 			
@@ -118,15 +125,8 @@ package org.openPyro.managers
 			}
 		}
 		
-		private var _currentDropTarget:DisplayObject;
-		
-		public function get currentDropTarget():DisplayObject{
-			return _currentDropTarget;
-		}
-		
 		private function onMouseOverPossibleDropTarget(event:MouseEvent):void{
 			DisplayObject(event.target).dispatchEvent(new DragEvent(DragEvent.DRAG_OVER));
-			_currentDropTarget = event.target as DisplayObject;
 		}
 		
 		public function removeDropClient(client:DisplayObject):void{

@@ -1,12 +1,14 @@
 package
 {
-	import org.openPyro.containers.HDividedBox;
-	import org.openPyro.containers.VDividedBox;
-	import org.openPyro.core.UIControl;
-	import org.openPyro.examples.DimensionMarkerSkin;
-	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	
+	import org.openPyro.containers.VDividedBox;
+	import org.openPyro.core.UIContainer;
+	import org.openPyro.core.UIControl;
+	import org.openPyro.examples.DimensionMarkerSkin;
+	import org.openPyro.layout.HLayout;
+	import org.openPyro.painters.FillPainter;
 	
 	public class TestVDividedBox extends Sprite
 	{
@@ -25,6 +27,8 @@ package
 			//vdbox.horizontalScrollPolicy = false;
 			vdbox.width = 400
 			vdbox.height = 600
+			
+			vdbox.x = vdbox.y = 20;
 			
 			var greenBox:UIControl = new UIControl()
 			greenBox.name = "greenBox";
@@ -53,8 +57,14 @@ package
 			vdbox.addChild(redBox)
 			vdbox.addChild(blueBox);
 			
-			addChild(vdbox);
-			
+			var main:UIContainer = new UIContainer();
+			main.size(500,600);
+			main.backgroundPainter = new FillPainter(0xdfdfdf);
+			main.layout = new HLayout();
+			main.addChild(new UIControl().size(100,"100%"));
+			main.addChild(vdbox);
+			addChild(main);
+			main.x = main.y = 10;
 			
 		}
 

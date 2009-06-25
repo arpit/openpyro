@@ -1,13 +1,25 @@
 package org.openPyro.controls
 {
-	import org.openPyro.core.UIControl;
-	
 	import flash.display.Loader;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.system.LoaderContext;
+	
+	import org.openPyro.core.UIControl;
 
+	/**
+	 * Complete event is dispatched when the image load
+	 * is completed.
+	 */ 
+	[Event(name="complete", type="flash.events.Event")]
+
+	/**
+	 * The Image control is used to display images that 
+	 * are loaded from a remote URL. Unlike the Flex 
+	 * equivalent, OpenPyro Images cannot be used to 
+	 * render embedded content.
+	 */ 
 	public class Image extends UIControl
 	{
 		private var _sourceURL:String = "";
@@ -46,11 +58,22 @@ package org.openPyro.controls
 			return _autoLoad;
 		}
 		
+		protected var _isContentLoaded:Boolean = false;
+		
+		/**
+		 * Flag to check if the remote content is loaded 
+		 * or not.
+		 */ 
+		public function isContentLoaded():Boolean{
+			return _isContentLoaded;
+		}
+		
 		public function set source(url:String):void
 		{
 			if(url == _sourceURL) return;
 			_sourceURL = url;
 			if(_loader && _autoLoad){
+				_isContentLoaded = false;
 				_loader.load(new URLRequest(url), _loaderContext);
 			}
 		}
@@ -89,6 +112,7 @@ package org.openPyro.controls
 		{
 			_originalContentWidth = _loader.content.width;
 			_originalContentHeight = _loader.content.height;
+			_isContentLoaded = true;
 			dispatchEvent(new Event(Event.COMPLETE));
 			forceInvalidateDisplayList = true;
 			invalidateSize();
