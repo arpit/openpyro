@@ -68,6 +68,12 @@ package org.openPyro.core
 			_applicationHeight = stage.stageHeight;
 			this.width = _applicationWidth;
 			this.height = _applicationHeight;
+			
+			// validate immediately so that the user
+			// does not see the application lag behind
+			// the resize by 1 frame
+			this.validateSize();
+			this.validateDisplayList();
 		}
 
 	}
