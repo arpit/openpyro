@@ -51,10 +51,6 @@ package org.openPyro.containers
 		
 		
 		protected function onDividerDragComplete(event:DragEvent):void{
-			trace("dropped");
-			//var dragManager:DragManager = DragManager.getInstance()
-			//dragManager.removeEventListener(DragEvent.DRAG_DROP, onDividerDragComplete);
-		
 			/* 
 			If the divider moves up, delta is -ve, otherwise +ve
 			*/
