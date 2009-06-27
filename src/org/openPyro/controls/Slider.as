@@ -356,6 +356,11 @@ package org.openPyro.controls
 			{
 				_thumbButton.height = Math.max(value,_minThumbHeight);
 			}
+			this.invalidateDisplayList();
+		}
+		
+		public function get thumbButtonHeight():Number{
+			return _thumbButton?_thumbButton.height:NaN;
 		}
 		
 		protected var _minThumbHeight:Number = 50;

@@ -186,6 +186,16 @@ package org.openPyro.core{
 			return _maximumWidth;
 		}
 		
+		/*protected var _minimumHeight:Number = NaN;
+		public function set minimumHeight(n:Number):void{
+			_minimumHeight = n;
+			invalidateSize();
+		}
+		
+		public function get minimumHeight():Number{
+			return _minimumHeight;
+		}*/
+		
 		protected var _maximumHeight:Number = NaN;
 		public function set maximumHeight(n:Number):void{
 			_maximumHeight = n;

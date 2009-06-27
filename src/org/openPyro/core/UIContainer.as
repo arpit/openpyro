@@ -198,7 +198,7 @@ package org.openPyro.core{
 			
 			if(this._verticalScrollBar && _verticalScrollBar.visible)
 			{
-				this.explicitlyAllocatedWidth-=_verticalScrollBar.width
+				this.explicitlyAllocatedWidth-=_verticalScrollBar.width;
 				_verticalScrollBar.setScrollProperty(this.scrollHeight, this._contentHeight);
 			}
 			

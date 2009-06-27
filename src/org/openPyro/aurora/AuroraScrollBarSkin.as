@@ -11,6 +11,13 @@ package org.openPyro.aurora{
 		
 		public var direction:String = Direction.VERTICAL ;
 		
+		
+		public var incrementButtonWidth:Number = 15;
+		public var incrementButtonHeight:Number = 15;
+		
+		public var decrementButtonWidth:Number = 15;
+		public var decrementButtonHeight:Number = 15;
+		
 		private var _incrementButtonSkin:AuroraButtonSkin;
 		private var _decrementButtonSkin:AuroraButtonSkin;
 		private var _sliderSkin:AuroraSliderSkin;
@@ -23,13 +30,13 @@ package org.openPyro.aurora{
 		{
 			_incrementButtonSkin = new AuroraButtonSkin();
 			if(direction == Direction.VERTICAL){
-				_incrementButtonSkin.icon = new Triangle(Direction.DOWN, 6,6)
+				_incrementButtonSkin.icon = new Triangle(Direction.DOWN, 6,6);
 			}
 			else if(direction == Direction.HORIZONTAL){
-				_incrementButtonSkin.icon = new Triangle(Direction.RIGHT, 6,6)
+				_incrementButtonSkin.icon = new Triangle(Direction.RIGHT, 6,6);
 			}
-			_incrementButtonSkin.width = 15
-			_incrementButtonSkin.height= 15
+			_incrementButtonSkin.width = incrementButtonWidth;
+			_incrementButtonSkin.height= incrementButtonHeight;
 			return _incrementButtonSkin
 		}
 		
@@ -37,13 +44,13 @@ package org.openPyro.aurora{
 		{
 			_decrementButtonSkin = new AuroraButtonSkin();
 			if(direction == Direction.VERTICAL){
-				_decrementButtonSkin.icon = new Triangle(Direction.UP, 6,6)
+				_decrementButtonSkin.icon = new Triangle(Direction.UP, 6,6);
 			}
 			else if(direction == Direction.HORIZONTAL){
-				_decrementButtonSkin.icon = new Triangle(Direction.LEFT, 6,6)
+				_decrementButtonSkin.icon = new Triangle(Direction.LEFT, 6,6);
 			}
-			_decrementButtonSkin.width = 15
-			_decrementButtonSkin.height= 15
+			_decrementButtonSkin.width = decrementButtonWidth;
+			_decrementButtonSkin.height= decrementButtonHeight;
 			return _decrementButtonSkin
 			
 		}

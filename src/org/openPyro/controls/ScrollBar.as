@@ -1,5 +1,8 @@
 package org.openPyro.controls
 {
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.events.SliderEvent;
 	import org.openPyro.controls.scrollBarClasses.HScrollBarLayout;
@@ -9,9 +12,6 @@ package org.openPyro.controls
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.skins.ISkin;
-	
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	[Event(name="scroll",type="org.openPyro.controls.events.ScrollEvent")]
 	
@@ -174,9 +174,9 @@ package org.openPyro.controls
 				 _slider.thumbButton.x = Math.min(_slider.width-_slider.thumbButton.width,_slider.thumbButton.x + incrementalScrollDelta);
 			}
 			else if(slider.direction == Direction.VERTICAL){
-				_slider.thumbButton.y = Math.min(_slider.height-_slider.thumbButton.height, _slider.thumbButton.y + incrementalScrollDelta)
+				_slider.thumbButton.y = Math.min(_slider.height-_slider.thumbButton.height, _slider.thumbButton.y + incrementalScrollDelta);
 			}
-			_slider.dispatchScrollEvent()
+			_slider.dispatchScrollEvent();
 		}
 		
 		public function get decrementButton():Button
@@ -190,7 +190,7 @@ package org.openPyro.controls
 			_decrementButtonSkin = skin;
 			if(!_decrementButton)
 			{
-				decrementButton = new Button()
+				decrementButton = new Button();
 			}
 			_decrementButton.skin = skin;
 			invalidateSize();
@@ -221,7 +221,7 @@ package org.openPyro.controls
 			}
 			_slider.minimum = 0;
 			_slider.maximum = 1;
-			this.invalidateSize()
+			this.invalidateSize();
 			//this.invalidateDisplayList()	
 		}
 		
@@ -236,7 +236,7 @@ package org.openPyro.controls
 			var scrollEvent:ScrollEvent = new ScrollEvent(ScrollEvent.SCROLL);
 			scrollEvent.direction = this._direction;
 			scrollEvent.delta = _slider.value - _sliderThumbPosition;
-			scrollEvent.value = this._slider.value;
+			scrollEvent.value = this._value = this._slider.value;
 			dispatchEvent(scrollEvent);
 			_sliderThumbPosition = _slider.value;
 		}
@@ -303,16 +303,19 @@ package org.openPyro.controls
 		protected var _maxScroll:Number=NaN;
 		protected var _scrollButtonSize:Number = NaN;
 		
+		/**
+		 * For example: setScrollProperty(scrollHeight, contentHeight);
+		 * 
+		 * @param visibleScroll	The height of the viewport being scrolled
+		 * @param maxScroll		The height of the content to be scrolled
+		 */ 
 		public function setScrollProperty(visibleScroll:Number, maxScroll:Number):void
 		{
-			
-			//trace("Setting scroll py >> "+visibleScroll, maxScroll, _slider.height, this.height);
-			//trace(">> "+this.height, this.incrementButton.height, this.decrementButton.height);
-			//if(visibleScroll == _visibleScroll && maxScroll == _maxScroll) return;
-			
+			if(visibleScroll == _visibleScroll && maxScroll == _maxScroll) return;
 			_visibleScroll = visibleScroll;
 			_maxScroll = maxScroll;
-			updateScrollUI()
+			updateScrollUI();
+			
 		}
 		
 		protected function updateScrollUI():void
@@ -320,15 +323,15 @@ package org.openPyro.controls
 			if(!_slider) return;
 			if(this._direction == Direction.VERTICAL)
 			{
-				_scrollButtonSize = Math.floor(_visibleScroll*_slider.height/_maxScroll)
-				_slider.thumbButtonHeight = _scrollButtonSize
-				
+				_scrollButtonSize = Math.floor(_visibleScroll*_slider.height/_maxScroll);
+				_slider.thumbButtonHeight = _scrollButtonSize;
 			}
 			else if(this._direction == Direction.HORIZONTAL)
 			{
 				_scrollButtonSize =  Math.floor(_visibleScroll*_slider.width/_maxScroll);
 				_slider.thumbButtonWidth = _scrollButtonSize;
-			}	
+			}
+			_slider.value = _value;	
 		}
 		
 	}
