@@ -331,7 +331,7 @@ package org.openPyro.controls
 				_scrollButtonSize =  Math.floor(_visibleScroll*_slider.width/_maxScroll);
 				_slider.thumbButtonWidth = _scrollButtonSize;
 			}
-			_slider.value = _value;	
+			_slider.value = _value;
 		}
 		
 	}

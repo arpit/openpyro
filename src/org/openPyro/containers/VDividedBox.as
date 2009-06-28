@@ -1,19 +1,17 @@
 package org.openPyro.containers
 {
+	import flash.display.DisplayObject;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.getQualifiedClassName;
+	
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.layout.ILayout;
 	import org.openPyro.layout.VLayout;
-	import org.openPyro.managers.DragManager;
 	import org.openPyro.managers.events.DragEvent;
 	import org.openPyro.painters.GradientFillPainter;
-	
-	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.getQualifiedClassName;
-	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -38,19 +36,16 @@ package org.openPyro.containers
 			df.properties = {percentWidth:100, height:6, backgroundPainter:new GradientFillPainter([0x999999, 0x666666])}
 			return df;	
 		}
-		
-		override protected function onDividerMouseDown(event:MouseEvent):void{
-			this.addEventListener(DragEvent.DRAG_DROP, onDividerDragComplete);
-			var dragManager:DragManager = DragManager.getInstance();
+			
+		override protected function getDividerDragRect():Rectangle{
 			var point:Point = new Point(0, 0);
 			point = this.localToGlobal(point);
-			
-			dragManager.makeDraggable(DisplayObject(event.currentTarget), 
-													new Rectangle(point.x,point.y,0,this.height-DisplayObject(event.currentTarget).height));
+			return new Rectangle(point.x,point.y,0,this.height);
 		}
 		
 		
-		protected function onDividerDragComplete(event:DragEvent):void{
+		override protected function onDividerDragDrop(event:DragEvent):void{
+			//if(!event.dragInitiator == this) return;
 			/* 
 			If the divider moves up, delta is -ve, otherwise +ve
 			*/

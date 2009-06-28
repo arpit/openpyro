@@ -8,6 +8,7 @@ package org.openPyro.core{
 	import org.openPyro.managers.DragManager;
 	import org.openPyro.managers.SkinManager;
 	import org.openPyro.managers.TooltipManager;
+	import org.openPyro.managers.events.DragEvent;
 	import org.openPyro.painters.IPainter;
 	import org.openPyro.skins.ISkin;
 	import org.openPyro.skins.ISkinClient;
@@ -352,10 +353,10 @@ package org.openPyro.core{
 		public function set dragEnabled(b:Boolean):void{
 			_dragEnabled = b
 			if(_dragEnabled){
-				this.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+				this.addEventListener(MouseEvent.MOUSE_DOWN, handlePreDragMouseDown);
 			}
 			else{
-				this.removeEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+				this.removeEventListener(MouseEvent.MOUSE_DOWN, handlePreDragMouseDown);
 			}
 		}
 		
@@ -363,23 +364,33 @@ package org.openPyro.core{
 		public function set dropEnabled(b:Boolean):void{
 			_dropEnabled = b;
 			if(_dropEnabled){
-				DragManager.getInstance().registerDropClient(this);
+				DragManager.registerDropClient(this);
 			}
 			else{
-				DragManager.getInstance().removeDropClient(this);
+				DragManager.removeDropClient(this);
 			}
 		}
 		
 		protected var isMouseDown:Boolean = false;
-		protected function handleMouseDown(event:Event):void{
+		
+		public var dragData:Object = {source:this};
+		
+		/**
+		 * This function is called if the UIControl instance is drag enabled
+		 * and the user clicks the mouse down. The control then waits for the
+		 * mouse to move for dispatching the DragEvent.DRAG_START event. That 
+		 * event can be used to trigger DragManager's doDrag() function to 
+		 * implement Drag And Drop
+		 */ 
+		protected function handlePreDragMouseDown(event:Event):void{
 			isMouseDown = true;
-			if(_dragEnabled){
-				DragManager.getInstance().makeDraggable(this);
-			}
+			DragManager.doDrag(this, dragData, null, true);
+			//this.addEventListener(MouseEvent.MOUSE_MOVE, dispatchDragStart);
 		}
 		
-		public function willAcceptDragDrop():Boolean{
-			return true;
+		protected function dispatchDragStart(event:MouseEvent):void{
+			dispatchEvent(new DragEvent(DragEvent.DRAG_START));
+			this.removeEventListener(MouseEvent.MOUSE_MOVE, dispatchDragStart);
 		}
 		
 		////////////////////// ToolTip //////////////////////////

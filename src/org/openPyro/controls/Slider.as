@@ -9,7 +9,6 @@ package org.openPyro.controls
 	import org.openPyro.controls.events.SliderEvent;
 	import org.openPyro.controls.skins.ISliderSkin;
 	import org.openPyro.core.Direction;
-	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.skins.ISkin;
 	
@@ -249,10 +248,14 @@ package org.openPyro.controls
 			if(_trackSkin)
 			{
 				_trackSkin.removeEventListener(MouseEvent.CLICK, onTrackSkinClick);
+				if(_trackSkin is ISkin){
+					ISkin(_trackSkin).dispose();
+				}
 			}
 			_trackSkin = trackSkin;
 			_trackSkin.addEventListener(MouseEvent.CLICK, onTrackSkinClick);
 			_trackSkin.x = 0;
+			
 			addChildAt(_trackSkin,0);
 			this.invalidateDisplayList();
 		}
@@ -277,28 +280,43 @@ package org.openPyro.controls
 		}
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+			trace("calling slider updatedl "+unscaledHeight);
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
 			if(_trackSkin)
 			{
-				_trackSkin.width = unscaledWidth;
-				if(_trackSkin is MeasurableControl && isNaN(MeasurableControl(_trackSkin).explicitHeight)){
-					_trackSkin.height = unscaledHeight;	
+				if(_trackSkin is UIControl){
+					var track:UIControl = UIControl(_trackSkin);
+					if(isNaN(track.explicitWidth) || this.direction==Direction.HORIZONTAL){
+						_trackSkin.width = unscaledWidth;
+					}
+					if(isNaN(track.explicitHeight)|| this.direction == Direction.VERTICAL){
+						_trackSkin.height = unscaledHeight;
+					}
+					track.validateSize();
+					track.validateDisplayList()
 				}
-				if(_trackSkin is UIControl)
-				{
-					UIControl(_trackSkin).validateSize();
-					UIControl(_trackSkin).validateDisplayList()
+				
+				else{
+					if(this.direction == Direction.HORIZONTAL){
+						_trackSkin.width = unscaledWidth;
+					}
+					else{
+						_trackSkin.height = unscaledHeight;
+					}
 				}
+				
 				
 				/*
 				Position the thumb button wherever it was supposed to
 				be. For some reason updateDisplaylist keeps sending the button 
 				to 0,0
 				*/ 
-				this._thumbButton.y = this.thumbButtonY; 
-				this._thumbButton.x = this.thumbButtonX;
+				//this._thumbButton.y = this.thumbButtonY; 
+				//this._thumbButton.x = this.thumbButtonX;
+				//_trackSkin.y = 0
 				// center the trackskin
-				_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;
+				//_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;
+				
 			}
 		}
 

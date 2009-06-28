@@ -1,18 +1,28 @@
 package org.openPyro.containers
 {
+	import flash.display.DisplayObject;
+	import flash.display.InteractiveObject;
+	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
+	
 	import org.openPyro.containers.events.DividerEvent;
 	import org.openPyro.controls.skins.IDividedBoxSkin;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.UIContainer;
-	
-	import flash.display.DisplayObject;
-	import flash.display.InteractiveObject;
-	import flash.events.MouseEvent;
+	import org.openPyro.managers.DragManager;
+	import org.openPyro.managers.events.DragEvent;
 	
 	[Event(name="dividerDoubleClick", type="org.openPyro.containers.events.DividerEvent" )]
 
 	public class DividedBox extends UIContainer
 	{
+		/**
+		 * Static identifier for identifying Drag
+		 * 
+		 * @private
+		 */
+		public static var DIVIDED_BOX_DIVIDER_MOVE:String = "DividedBoxDividerMove";
+		
 		public function DividedBox()
 		{
 			super();
@@ -58,14 +68,46 @@ package org.openPyro.containers
 		}
 		
 		protected function get defaultDividerFactory():ClassFactory{
-			throw new Error("Method needs overriding")
-			return new ClassFactory();
-			/// override
+			return null;
+			// override
 		}
 		
+		/**
+		 * Event handler for when a mouse is pressed over a divider.
+		 * This begins the drag operation on the divider
+		 */ 
 		protected function onDividerMouseDown(event:MouseEvent):void{
-			throw new Error("DividerMouseDown needs overriding")
+			var divider:DisplayObject = DisplayObject(event.currentTarget);
+			this.addEventListener(DragEvent.DRAG_ENTER, onDividerDragEnter);
+			divider.addEventListener(DragEvent.DRAG_INIT, onDividerDragInit);
+			this.addEventListener(DragEvent.DRAG_DROP, onDividerDragDrop);
+			DragManager.doDrag(divider,{type:DIVIDED_BOX_DIVIDER_MOVE, source:this},getDividerDragRect());
 		}
+		
+		/**
+		 * Event handler for when the divider begins dragging. At this
+		 * point, the <code>DividedBox</code> accepts drops of any divider.
+		 */ 
+		protected function onDividerDragInit(event:DragEvent):void{
+			if(event.data.type == DividedBox.DIVIDED_BOX_DIVIDER_MOVE && event.data.source==this){
+				DragManager.acceptDragDrop(this);
+			}
+		}
+		
+		/**
+		 * Returns the <code>Rectangle</code> where the drop action is permitted
+		 */ 
+		protected function getDividerDragRect():Rectangle{
+			return null;
+		}
+		
+		protected function onDividerDragEnter(event:DragEvent):void{
+			if(event.data.type == DividedBox.DIVIDED_BOX_DIVIDER_MOVE && event.data.source==this){
+				DragManager.acceptDragDrop(this);
+			}
+		}
+		
+		protected function onDividerDragDrop(event:DragEvent):void{}
 		
 		protected function onDividerDoubleClick(event:MouseEvent):void{
 			var evt:DividerEvent = new DividerEvent(DividerEvent.DIVIDER_DOUBLE_CLICK)

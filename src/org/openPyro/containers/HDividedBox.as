@@ -1,19 +1,17 @@
 package org.openPyro.containers
 {
+	import flash.display.DisplayObject;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.getQualifiedClassName;
+	
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.layout.HLayout;
 	import org.openPyro.layout.ILayout;
-	import org.openPyro.managers.DragManager;
 	import org.openPyro.managers.events.DragEvent;
 	import org.openPyro.painters.GradientFillPainter;
-	
-	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
-	import flash.utils.getQualifiedClassName;
-	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -43,13 +41,26 @@ package org.openPyro.containers
 		protected var leftUIC:MeasurableControl
 		protected var rightUIC:MeasurableControl
 		
-		override protected function onDividerMouseDown(event:MouseEvent):void{
-			var dragManager:DragManager = DragManager.getInstance()
-			this.addEventListener(DragEvent.DRAG_DROP, onDividerDragComplete);
+		/**
+		 * @inheritDoc
+		 */ 
+		override protected function getDividerDragRect():Rectangle{
+			var point:Point = new Point(0,0);
+			point = this.localToGlobal(point);
+			
+			return new Rectangle(point.x,point.y,this.width, 0)
+		}
+		
+		
+		override protected function onDividerDragDrop(event:DragEvent):void{
+			/* 
+			If the divider moves left, delta is -ve, otherwise +ve
+			*/
+			var delta:Number = event.mouseXDelta
 			
 			for(var i:int=0; i<contentPane.numChildren; i++){
 				var child:DisplayObject = contentPane.getChildAt(i)
-				if(child == event.currentTarget){
+				if(child == event.dragInitiator){
 					leftUIC = MeasurableControl(contentPane.getChildAt(i-1));
 					rightUIC = MeasurableControl(contentPane.getChildAt(i+1));
 					break;
@@ -59,21 +70,6 @@ package org.openPyro.containers
 			
 			leftUIC.cancelMouseEvents()
 			rightUIC.cancelMouseEvents()
-			
-			var point:Point = new Point(0,0);
-			point = this.localToGlobal(point);
-			
-			dragManager.makeDraggable(DisplayObject(event.currentTarget), 
-													new Rectangle(point.x,point.y,this.width-DisplayObject(event.currentTarget).width, 0));
-		}
-		
-		
-		protected function onDividerDragComplete(event:DragEvent):void{
-			/* 
-			If the divider moves left, delta is -ve, otherwise +ve
-			*/
-			var delta:Number = event.mouseXDelta
-			
 			
 			
 			var unallocatedWidth:Number = (this.width - this.explicitlyAllocatedWidth);
