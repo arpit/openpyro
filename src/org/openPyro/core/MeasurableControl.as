@@ -571,7 +571,7 @@ package org.openPyro.core{
 			}else{
 				if(this.stage){
 					stage.invalidate();
-					this.addEventListener(Event.RENDER, validateDisplayList);
+					this.stage.addEventListener(Event.RENDER, validateDisplayList);
 				}
 				
 			}
