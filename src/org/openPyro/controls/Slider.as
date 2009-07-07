@@ -36,6 +36,12 @@ package org.openPyro.controls
 			return _direction;
 		}
 		
+		/**
+		 * Property that determines whether the trackSkin
+		 * is centered within this component.
+		 */ 
+		public var centerTrackSkin:Boolean = true;
+		
 		override public function initialize():void
 		{
 			super.initialize()
@@ -280,7 +286,6 @@ package org.openPyro.controls
 		}
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
-			trace("calling slider updatedl "+unscaledHeight);
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
 			if(_trackSkin)
 			{
@@ -315,7 +320,14 @@ package org.openPyro.controls
 				//this._thumbButton.x = this.thumbButtonX;
 				//_trackSkin.y = 0
 				// center the trackskin
-				//_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;
+				if(centerTrackSkin){
+					if(this.direction == Direction.HORIZONTAL){
+						_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;	
+					}
+					else{
+						_trackSkin.x = (unscaledWidth-_trackSkin.width)/2;
+					}	
+				}
 				
 			}
 		}
