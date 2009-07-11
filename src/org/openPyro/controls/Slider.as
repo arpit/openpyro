@@ -290,31 +290,36 @@ package org.openPyro.controls
 		}
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+			
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
-			if(_trackSkin)
-			{
-				if(_trackSkin is UIControl){
-					var track:UIControl = UIControl(_trackSkin);
-					if(isNaN(track.explicitWidth) || this.direction==Direction.HORIZONTAL){
-						_trackSkin.width = unscaledWidth;
-					}
-					if(isNaN(track.explicitHeight)|| this.direction == Direction.VERTICAL){
-						_trackSkin.height = unscaledHeight;
-					}
-					track.validateSize();
-					track.validateDisplayList()
+			
+			/**
+			 * Do not position or validate track or thumb 
+			 * if either one is not present
+			 */
+			if(!_trackSkin || !_thumbButton) return;
+			
+			if(_trackSkin is UIControl){
+				var track:UIControl = UIControl(_trackSkin);
+				if(isNaN(track.explicitWidth) || this.direction==Direction.HORIZONTAL){
+					_trackSkin.width = unscaledWidth;
 				}
-				
+				if(isNaN(track.explicitHeight)|| this.direction == Direction.VERTICAL){
+					_trackSkin.height = unscaledHeight;
+				}
+				track.validateSize();
+				track.validateDisplayList()
+			}
+			
+			else{
+				if(this.direction == Direction.HORIZONTAL){
+					_trackSkin.width = unscaledWidth;
+				}
 				else{
-					if(this.direction == Direction.HORIZONTAL){
-						_trackSkin.width = unscaledWidth;
-					}
-					else{
-						_trackSkin.height = unscaledHeight;
-					}
+					_trackSkin.height = unscaledHeight;
 				}
-				
-				// center the trackskin and the thumbButton
+			
+				// center the trackskin and thumbButton
 				if(this.direction == Direction.HORIZONTAL){
 					_trackSkin.y = (unscaledHeight - _trackSkin.height)/2;
 					_thumbButton.y = (unscaledHeight - _thumbButton.height)/2;	
