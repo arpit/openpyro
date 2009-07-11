@@ -8,7 +8,6 @@ package org.openPyro.controls{
 	import org.openPyro.core.UIControl;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.skins.ISkin;
-	import org.openPyro.utils.MouseUtil;
 	
 	
 	[Event(name="up", type="org.openPyro.controls.events.ButtonEvent")]
