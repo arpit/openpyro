@@ -37,11 +37,14 @@ package org.openPyro.controls
 		}
 		
 		/**
-		 * Property that determines whether the trackSkin
-		 * is centered within this component.
+		 * Returns a boolean value indicating whether
+		 * the thumb button is currently pressed or
+		 * not 
 		 */ 
-		public var centerTrackSkin:Boolean = true;
-		
+		public function get isThumbPressed():Boolean{
+			return _isThumbPressed;
+		}
+			
 		override public function initialize():void
 		{
 			super.initialize()
@@ -246,6 +249,7 @@ package org.openPyro.controls
 			//this.stopDrag();
 			_thumbButton.stopDrag();
 			this._isThumbPressed=false;
+			dispatchEvent(new SliderEvent(SliderEvent.THUMB_RELEASE));
 			//this.forceInvalidateDisplayList = true;
 			//this.invalidateDisplayList()
 		}
@@ -310,24 +314,15 @@ package org.openPyro.controls
 					}
 				}
 				
-				
-				/*
-				Position the thumb button wherever it was supposed to
-				be. For some reason updateDisplaylist keeps sending the button 
-				to 0,0
-				*/ 
-				//this._thumbButton.y = this.thumbButtonY; 
-				//this._thumbButton.x = this.thumbButtonX;
-				//_trackSkin.y = 0
-				// center the trackskin
-				if(centerTrackSkin){
-					if(this.direction == Direction.HORIZONTAL){
-						_trackSkin.y = (unscaledHeight-_trackSkin.height)/2;	
-					}
-					else{
-						_trackSkin.x = (unscaledWidth-_trackSkin.width)/2;
-					}	
+				// center the trackskin and the thumbButton
+				if(this.direction == Direction.HORIZONTAL){
+					_trackSkin.y = (unscaledHeight - _trackSkin.height)/2;
+					_thumbButton.y = (unscaledHeight - _thumbButton.height)/2;	
 				}
+				else{
+					_trackSkin.x = (unscaledWidth-_trackSkin.width)/2;
+					_thumbButton.x = (unscaledHeight - _thumbButton.height)/2;
+				}	
 				
 			}
 		}
