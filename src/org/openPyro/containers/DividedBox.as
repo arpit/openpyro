@@ -81,7 +81,7 @@ package org.openPyro.containers
 			this.addEventListener(DragEvent.DRAG_ENTER, onDividerDragEnter);
 			divider.addEventListener(DragEvent.DRAG_INIT, onDividerDragInit);
 			this.addEventListener(DragEvent.DRAG_DROP, onDividerDragDrop);
-			DragManager.doDrag(divider,{type:DIVIDED_BOX_DIVIDER_MOVE, source:this},getDividerDragRect());
+			DragManager.doDrag(divider,{type:DIVIDED_BOX_DIVIDER_MOVE, source:this},null,getDividerDragRect());
 		}
 		
 		/**

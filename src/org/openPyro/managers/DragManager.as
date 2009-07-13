@@ -25,7 +25,7 @@ package org.openPyro.managers
 		public function DragManager() {
 		}
 		
-		public static function doDrag(dragInitiator:DisplayObject, data:Object, bounds:Rectangle=null, centerDragProxy:Boolean=false):void{
+		public static function doDrag(dragInitiator:DisplayObject, data:Object, dragImage:DisplayObject = null, bounds:Rectangle=null, centerDragProxy:Boolean=false):void{
 			dropAcceptingClients = [];
 			for each(var client:DisplayObject in dropClients){
 				client.addEventListener(MouseEvent.ROLL_OVER, onMouseOverPossibleDropTarget);
@@ -36,7 +36,12 @@ package org.openPyro.managers
 			}
 			_dragInitiator = dragInitiator;
 			_data = data;
-			dragProxy = createDragProxy(dragInitiator, centerDragProxy);
+			if(!dragImage){
+				dragProxy = createDragProxy(dragInitiator, centerDragProxy);	
+			}
+			else{
+				dragProxy = wrapDragProxy(dragImage, centerDragProxy);
+			}
 			dragInitiator.stage.addChild(dragProxy);
 			
 			// position the dragproxy off the stage till the user
@@ -100,16 +105,20 @@ package org.openPyro.managers
 		
 		private static function createDragProxy(source:DisplayObject, centerDragProxy:Boolean):Sprite{
 			var bmp:Bitmap = GraphicUtil.getBitmap(source);
+			return wrapDragProxy(bmp,centerDragProxy)
+		}
+		
+		private static function wrapDragProxy(source:DisplayObject, centerDragProxy:Boolean):Sprite{
 			var sp:Sprite = new Sprite();
-			sp.addChild(bmp);
+			sp.addChild(source);
 			if(centerDragProxy){
-				bmp.x = -bmp.width/2;
-				bmp.y = -bmp.height/2;
+				source.x = -source.width/2;
+				source.y = -source.height/2;
 			}
 			sp.alpha = .5;
 			sp.mouseEnabled = false;
-			return sp;
-			
+			sp.mouseChildren=false;
+			return sp;	
 		}
 		
 		private static var _isDragging:Boolean = false;

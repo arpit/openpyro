@@ -384,8 +384,12 @@ package org.openPyro.core{
 		 */ 
 		protected function handlePreDragMouseDown(event:Event):void{
 			isMouseDown = true;
-			DragManager.doDrag(this, dragData, null, true);
+			DragManager.doDrag(this, dragData, getDragImage(),  null, true);
 			//this.addEventListener(MouseEvent.MOUSE_MOVE, dispatchDragStart);
+		}
+		
+		protected function getDragImage():DisplayObject{
+			return null;
 		}
 		
 		protected function dispatchDragStart(event:MouseEvent):void{
