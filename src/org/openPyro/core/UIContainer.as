@@ -90,7 +90,7 @@ package org.openPyro.core{
 		
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
 		{
-			var ch:DisplayObject = contentPane.addChild(child);
+			var ch:DisplayObject = contentPane.addChildAt(child, index);
 			if(child is MeasurableControl)
 			{
 				var control:MeasurableControl  = child as MeasurableControl;
@@ -107,7 +107,11 @@ package org.openPyro.core{
 		}
 		
 		override public function removeChild(child:DisplayObject):DisplayObject{
-			return contentPane.removeChild(child)
+			var childToRemove:DisplayObject = contentPane.removeChild(child);
+			this.invalidateSize();
+			this.invalidateDisplayList();
+			return childToRemove;
+			
 		}
 		
 		public function removeAllChildren():void{
