@@ -267,6 +267,7 @@ package org.openPyro.controls
 			_trackSkin.x = 0;
 			
 			addChildAt(_trackSkin,0);
+			
 			this.invalidateDisplayList();
 		}
 		
@@ -293,7 +294,7 @@ package org.openPyro.controls
 			
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
 			
-			/**
+			/*
 			 * Do not position or validate track or thumb 
 			 * if either one is not present
 			 */
@@ -318,18 +319,17 @@ package org.openPyro.controls
 				else{
 					_trackSkin.height = unscaledHeight;
 				}
-			
-				// center the trackskin and thumbButton
-				if(this.direction == Direction.HORIZONTAL){
-					_trackSkin.y = (unscaledHeight - _trackSkin.height)/2;
-					_thumbButton.y = (unscaledHeight - _thumbButton.height)/2;	
-				}
-				else{
-					_trackSkin.x = (unscaledWidth-_trackSkin.width)/2;
-					_thumbButton.x = (unscaledHeight - _thumbButton.height)/2;
-				}	
-				
 			}
+				// center the trackskin and thumbButton
+			if(this.direction == Direction.HORIZONTAL){
+				_trackSkin.y = (unscaledHeight - _trackSkin.height)/2;
+				_thumbButton.y = (unscaledHeight - _thumbButton.height)/2;	
+			}
+			else{
+				_trackSkin.x = (unscaledWidth-_trackSkin.width)/2;
+				_thumbButton.x = (unscaledWidth - _thumbButton.width)/2;
+			}	
+				
 		}
 
 		override public function validateSize():void
@@ -346,6 +346,7 @@ package org.openPyro.controls
 		}
 		
 		public function set value(v:Number):void{
+			if(_value == v) return;
 			_value = v;
 			if(!thumbButton) return;
 			positionThumb(v);
