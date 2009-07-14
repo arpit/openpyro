@@ -58,18 +58,22 @@ package org.openPyro.containers
 			*/
 			var delta:Number = event.mouseXDelta
 			
-			for(var i:int=0; i<contentPane.numChildren; i++){
-				var child:DisplayObject = contentPane.getChildAt(i)
+			for(var i:int=0; i<dividerPane.numChildren; i++){
+				var child:DisplayObject = dividerPane.getChildAt(i)
 				if(child == event.dragInitiator){
-					leftUIC = MeasurableControl(contentPane.getChildAt(i-1));
+					leftUIC = MeasurableControl(contentPane.getChildAt(i));
 					rightUIC = MeasurableControl(contentPane.getChildAt(i+1));
 					break;
 				}
 				
 			}
 			
-			leftUIC.cancelMouseEvents()
-			rightUIC.cancelMouseEvents()
+			/*
+			Disable mouseEvents so that rollovers etc are 
+			not triggered if the mouse rolls over them
+			*/
+			leftUIC.cancelMouseEvents();
+			rightUIC.cancelMouseEvents();
 			
 			
 			var unallocatedWidth:Number = (this.width - this.explicitlyAllocatedWidth);
@@ -144,6 +148,18 @@ package org.openPyro.containers
 			leftUIC.enableMouseEvents()
 			rightUIC.enableMouseEvents();
 			
+		}
+		
+		/**
+		 * @inheritDoc
+		 */ 
+		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			if(this.contentPane.numChildren < 2) return;
+			for(var i:uint=1; i<this.contentPane.numChildren; i++){
+				var child:DisplayObject = this.contentPane.getChildAt(i);
+				dividerPane.getChildAt(i-1).x = child.x;
+			} 
 		}
 		
 		override public function set layout(l:ILayout):void{

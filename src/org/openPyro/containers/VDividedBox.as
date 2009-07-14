@@ -54,10 +54,10 @@ package org.openPyro.containers
 			var topUIC:MeasurableControl
 			var bottomUIC:MeasurableControl
 			
-			for(var i:int=0; i<contentPane.numChildren; i++){
-				var child:DisplayObject = contentPane.getChildAt(i)
+			for(var i:int=0; i< dividerPane.numChildren; i++){
+				var child:DisplayObject = dividerPane.getChildAt(i)
 				if(child == event.dragInitiator){
-					topUIC = MeasurableControl(contentPane.getChildAt(i-1));
+					topUIC = MeasurableControl(contentPane.getChildAt(i));
 					bottomUIC = MeasurableControl(contentPane.getChildAt(i+1));
 					break;
 				}
@@ -132,6 +132,15 @@ package org.openPyro.containers
 					}
 				}
 			}	
+		}
+		
+		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			if(contentPane.numChildren < 2) return; 
+			for(var i:uint=1; i<this.contentPane.numChildren; i++){
+				var child:DisplayObject = this.contentPane.getChildAt(i);
+				dividerPane.getChildAt(i-1).y = child.y;
+			} 
 		}
 		
 		override public function set layout(l:ILayout):void{

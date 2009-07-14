@@ -9,8 +9,10 @@ package org.openPyro.containers
 	import org.openPyro.controls.skins.IDividedBoxSkin;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.core.UIControl;
 	import org.openPyro.managers.DragManager;
 	import org.openPyro.managers.events.DragEvent;
+	import org.openPyro.painters.FillPainter;
 	
 	[Event(name="dividerDoubleClick", type="org.openPyro.containers.events.DividerEvent" )]
 
@@ -27,6 +29,8 @@ package org.openPyro.containers
 		{
 			super();
 			this.dropEnabled = true;
+			dividerPane = new UIControl();
+			
 		}
 		
 		protected var dividers:Array = new Array();
@@ -40,9 +44,18 @@ package org.openPyro.containers
 			return _dividerFactory;
 		}
 		
+		protected var dividerPane:UIControl;
+		override protected function createChildren():void{
+			super.createChildren();
+			dividerPane.percentUnusedWidth=100;
+			dividerPane.percentUnusedHeight=100;
+			$addChild(dividerPane);
+			
+		}
+		
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject{
 			if(contentPane.numChildren > 0){
-				contentPane.addChild(getNewDivider())
+				dividerPane.addChild(getNewDivider())
 			}
 			return super.addChildAt(child, index);
 		}
@@ -128,7 +141,7 @@ package org.openPyro.containers
 		 was created 
 		 */ 
 		override public function removeChild(child:DisplayObject):DisplayObject{
-			
+			/*
 			var prevDivider:DisplayObject;
 			for(var i:int=0; i<contentPane.numChildren; i++){
 				var uiObject:DisplayObject = contentPane.getChildAt(i)
@@ -148,7 +161,7 @@ package org.openPyro.containers
 			
 			if(prevDivider){
 				contentPane.removeChild(prevDivider);
-			}
+			}*/
 			return super.removeChild(child);
 		}
 	}
