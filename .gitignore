@@ -2,6 +2,8 @@ examples/.metadata/*
 examples/OpenPyroBuilder/*
 examples/OpenPyroExample/bin-debug/*
 bin/
+examples/OpenPyroExample/.actionScriptProperties
+examples/OpenPyroExample/bin-release/
 
 .metadata
 .classpath
