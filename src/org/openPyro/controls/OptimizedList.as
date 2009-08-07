@@ -1,4 +1,4 @@
-package org.openpyro.controls
+package org.openPyro.controls
 {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
@@ -82,13 +82,6 @@ package org.openpyro.controls
 		}
 		
 		private var _verticalScrollbar:ScrollBar;
-		
-		public function set verticalScrollBarInstance(scrollBar:ScrollBar):void{
-			_verticalScrollbar = scrollBar;
-			_verticalScrollbar.addEventListener(ScrollEvent.SCROLL, onVerticalScroll);
-		}
-		
-		
 		private var _topRenderer:Number = 0;
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
@@ -175,6 +168,7 @@ package org.openpyro.controls
 				if(_rendererPool){
 					var testWithRenderer:DisplayObject = DisplayObject(_rendererPool.getObject());
 					_rowHeight = testWithRenderer.height;
+					_rendererPool.returnToPool(testWithRenderer);
 				}
 			}
 			return _rowHeight;

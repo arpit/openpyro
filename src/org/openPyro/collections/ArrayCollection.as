@@ -1,10 +1,10 @@
 package org.openPyro.collections
 {
+	import flash.events.EventDispatcher;
+	
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.utils.ArrayUtil;
-	
-	import flash.events.EventDispatcher;
 	
 	public class ArrayCollection extends EventDispatcher implements ICollection
 	{
@@ -90,7 +90,19 @@ package org.openPyro.collections
 		}
 		
 		public function removeItems(items:Array):void{
+			var changed:Boolean = false;
+			for each(var item:* in _source){
+				if(_source.indexOf(item) != -1){
+					ArrayUtil.remove(_source, item);
+					changed = true;
+				}
+			}
+			if(! changed) return;
 			
+			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
+			event.kind = CollectionEventKind.REMOVE;
+			event.delta = items;
+			dispatchEvent(event);
 		}
 		
 		public function set filterFunction(f:Function):void{
