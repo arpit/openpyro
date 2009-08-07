@@ -185,8 +185,7 @@ package org.openPyro.core{
 		 */ 
 		override public function validateSize():void
 		{
-			_contentHeight = this._layout.getMaxHeight(this.layoutChildren);
-			_contentWidth = this._layout.getMaxWidth(this.layoutChildren);
+			calculateContentDimensions();
 			_explicitlyAllocatedWidth = _padding.left+_padding.right
 			_explicitlyAllocatedHeight = _padding.top+_padding.bottom;
 			var layoutChildrenArray:Array = layoutChildren;
@@ -232,6 +231,14 @@ package org.openPyro.core{
 				}
 			}
 			checkRevalidation()	
+		}
+		
+		/**
+		 * Calculates the contentWidth and contentHeight properties
+		 */ 
+		public function calculateContentDimensions():void{
+			_contentHeight = this._layout.getMaxHeight(this.layoutChildren);
+			_contentWidth = this._layout.getMaxWidth(this.layoutChildren);
 		}
 		
 		protected var _layout:ILayout = new AbsoluteLayout()
@@ -384,25 +391,6 @@ package org.openPyro.core{
 			}
 		}
 		
-		/**
-		 * @private
-		 */ 
-		public function set verticalScrollBar(scrollBar:ScrollBar):void
-		{
-			if(_verticalScrollBar)
-			{
-				_verticalScrollBar.removeEventListener(ScrollEvent.SCROLL, onVerticalScroll);
-				_verticalScrollBar.removeEventListener(PyroEvent.UPDATE_COMPLETE, onVScrollBarUpdateComplete)
-				_verticalScrollBar.removeEventListener(PyroEvent.SIZE_VALIDATED, onVerticalScrollBarSizeValidated)
-			}
-			_verticalScrollBar = scrollBar;
-			addChild(scrollBar);
-			if(this._contentHeight > this.height)
-			{
-				setVerticalScrollBar();
-			}
-		}
-		
 		protected var scrollBarsChanged:Boolean = false;
 		
 		protected function checkRevalidation():void
@@ -430,13 +418,11 @@ package org.openPyro.core{
 					scrollBarsChanged = true;
 				}
 			}
-			else
+			
+			if(!needsHorizontalScrollBar && _horizontalScrollBar && _horizontalScrollBar.visible==true)
 			{
-				if(_horizontalScrollBar && _horizontalScrollBar.visible==true)
-				{
-					_horizontalScrollBar.visible = false;
-					scrollBarsChanged = true;
-				}
+				_horizontalScrollBar.visible = false;
+				scrollBarsChanged = true;
 			}
 			if(needsVerticalScrollBar && 
 				this._skin && 
@@ -453,14 +439,13 @@ package org.openPyro.core{
 					scrollBarsChanged=true;
 				}
 			}
-			else
+			
+			if(!needsVerticalScrollBar && _verticalScrollBar && _verticalScrollBar.visible == true)
 			{
-				if(_verticalScrollBar && _verticalScrollBar.visible == true)
-				{
-					_verticalScrollBar.visible = false;
-					scrollBarsChanged = true;
-				}
+				_verticalScrollBar.visible = false;
+				scrollBarsChanged = true;
 			}
+			
 			
 			if(scrollBarsChanged)
 			{
@@ -486,7 +471,7 @@ package org.openPyro.core{
 		
 		protected function checkNeedsVScrollBar():void
 		{
-			_contentHeight = this._layout.getMaxHeight(this.layoutChildren);
+			calculateContentDimensions();
 			if(_contentHeight > this.height){
 				needsVerticalScrollBar = true
 			}
@@ -496,7 +481,8 @@ package org.openPyro.core{
 		}
 		protected function checkNeedsHScrollBar():void
 		{
-			_contentWidth = this._layout.getMaxWidth(this.layoutChildren);
+			calculateContentDimensions();
+			//_contentWidth = this._layout.getMaxWidth(this.layoutChildren);
 			if(_contentWidth > this.width){
 				needsHorizontalScrollBar = true
 			}
@@ -531,6 +517,18 @@ package org.openPyro.core{
 			_verticalScrollBar.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
 				mouseOverDisabled = false;
 			})
+		}
+		
+		/**
+		 * @private
+		 */ 
+		public function set verticalScrollBar(scrollBar:ScrollBar):void
+		{
+			_verticalScrollBar = scrollBar;
+			_verticalScrollBar.height = this.getExplicitOrMeasuredHeight();
+			$addChild(scrollBar);
+			scrollBar.doOnAdded();
+			_verticalScrollBar.addEventListener(ScrollEvent.SCROLL, onVerticalScroll)
 		}
 		
 		protected function hideVScrollBar():void
@@ -588,13 +586,13 @@ package org.openPyro.core{
 			}
 		}
 		
-		protected function setVerticalScrollBar():void{
+		/*protected function setVerticalScrollBar():void{
 			if(_verticalScrollBar.parent != this)
 			{
 				addChild(_verticalScrollBar);
 			}
 			_verticalScrollBar.height = this.height;
-		}
+		}*/
 		
 		protected function handleMouseWheel(event:MouseEvent):void{
 			if(this.verticalScrollBar){
