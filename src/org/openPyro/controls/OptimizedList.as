@@ -1,11 +1,9 @@
 package org.openPyro.controls
 {
-	import flash.display.DisplayObject;
-	import flash.utils.Dictionary;
+	import flash.events.Event;
 	
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.listClasses.ListBase;
-	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.layout.VListLayout;
 
@@ -31,25 +29,31 @@ package org.openPyro.controls
 			dispatchEvent(event);
 		}
 		
+		private var _topRendererIndex:Number = 0;
+		
+		
 		/**
 		 * Renders the data into itemRenderers.
 		 * This should probably be called only once
 		 * 
 		 */ 
-		override protected function renderData():void{
-			var nowY:Number = 0;
-			
-			for (var i:int=0; i<IVirtualizedLayout(this.layout).numberOfVerticalRenderersNeededForDisplay; i++){
-				var renderer:DisplayObject = DisplayObject(_rendererPool.getObject());
-				visibleRenderersMap[i] = (renderer);
-				this.contentPane.addChild(renderer);
-				if(renderer is IDataRenderer){
-					IDataRenderer(renderer).data = _dataProvider[i];
-				}
-				renderer.y = nowY;
-				nowY+=rowHeight;
+		override protected function renderInitialData():void{
+			var newRendererIndexes:Array = [];
+			for(var i:int=_topRendererIndex; i<IVirtualizedLayout(_layout).numberOfVerticalRenderersNeededForDisplay; i++){
+				newRendererIndexes.push(i);
 			}
-			super.invalidateSize();
+			createNewRenderersAndMap(newRendererIndexes);
+			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
+			invalidateSize();
+			displayListInvalidated = true;
+			invalidateDisplayList();
+			this.addEventListener(Event.RESIZE, onResize);
+		}
+		
+		private function onResize(event:Event):void{
+		createNewRenderersAndMap(IVirtualizedLayout(layout).visibleRenderers);
+			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
+			
 		}
 		
 		public function indexToItemRenderer(index:int):Number{

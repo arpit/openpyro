@@ -15,16 +15,6 @@ package org.openPyro.layout
 			
 		}
 		
-		override public function set container(c:UIContainer):void{
-			super.container = c;
-			c.addEventListener(ScrollEvent.SCROLL, onContainerScroll);
-			
-		}
-		
-		private function onContainerScroll(event:ScrollEvent):void{
-			
-		}
-		
 		override public function getMaxWidth(children:Array):Number
 		{
 			var listBase:ListBase = ListBase(_container);

@@ -6,8 +6,10 @@ package org.openPyro.controls.listClasses
 	
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.IDataRenderer;
+	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.layout.IVirtualizedLayout;
 
 	public class ListBase extends UIContainer
 	{
@@ -67,13 +69,27 @@ package org.openPyro.controls.listClasses
 			this.stage.invalidate();
 		}
 		
+		override public function initialize() : void{
+			super.initialize();
+			if(_needsReRendering){
+				needsReRendering=true;
+			}
+		}
+		
+		override public function validateSize() : void{
+			super.validateSize();
+			
+			
+			
+		}
+		
 		protected function stageRenderEventHandler(event:Event):void{
 			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering){
-				return
+				return;
 			}
 			this.stage.removeEventListener(Event.RENDER, stageRenderEventHandler);
 			_needsReRendering = false;
-			renderData();
+			renderInitialData();
 		}
 		
 		protected function createNewRenderersAndMap(newRendererIndexes:Array):void{
@@ -90,9 +106,20 @@ package org.openPyro.controls.listClasses
 			}
 			for(var i:int=0; i<newRendererIndexes.length; i++){
 				var newRendererIndex:int = newRendererIndexes[i];
+					
 				if(!newRendererMap[newRendererIndex]){
 					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 					contentPane.addChild(newRenderer);
+					if(newRenderer is MeasurableControl){
+						MeasurableControl(newRenderer).doOnAdded();
+					}
+					if(newRenderer is IListDataRenderer){
+						var listRenderer:IListDataRenderer = newRenderer as IListDataRenderer;
+						var baseListData:BaseListData = new BaseListData()
+						//baseListData.list = this;
+						baseListData.rowIndex = i;
+						listRenderer.baseListData = baseListData;
+					}
 					if(newRenderer is IDataRenderer){
 						IDataRenderer(newRenderer).data = _dataProvider[newRendererIndex];
 					}
@@ -102,16 +129,7 @@ package org.openPyro.controls.listClasses
 			this.visibleRenderersMap = newRendererMap;
 		}
 		
-		protected function renderData():void{}	
-		
-		protected var _topRenderer:Number = 0;
-		public function get topRenderer():Number{
-			return _topRenderer;
-		}
-		
-		public function set topRenderer(idx:Number):void{
-			_topRenderer = idx;
-		}
+		protected function renderInitialData():void{}	
 		
 		protected var _rowHeight:Number = NaN;
 		public function set rowHeight(value:Number):void{

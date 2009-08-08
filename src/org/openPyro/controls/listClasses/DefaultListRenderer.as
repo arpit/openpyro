@@ -91,7 +91,13 @@ package org.openPyro.controls.listClasses
 		
 		public function set data(value:Object):void{
 			_data = value;
-			_labelField.text =  _baseListData.list.labelFunction(_data);
+			if( _baseListData && _baseListData.list){
+				_labelField.text =  _baseListData.list.labelFunction(_data);
+			}
+			else{
+				_labelField.text = String(data);
+			}
+			
 		}
 		
 		public function get data():Object
