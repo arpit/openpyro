@@ -653,7 +653,10 @@ package org.openPyro.core{
 		}
 		
 		public function get verticalScrollPosition():Number{
-			return _verticalScrollBar.value;
+			if(_verticalScrollBar){
+				return _verticalScrollBar.value;
+			}
+			return 0;
 		}
 		
 		protected var scrollY:Number = 0;
