@@ -612,7 +612,10 @@ package org.openPyro.core{
 		}
 		
 		public function get horizontalScrollPosition():Number{
-			return _horizontalScrollBar.value;
+			if(_horizontalScrollBar){
+				return _horizontalScrollBar.value;
+			}
+			return 0;
 		}
 		
 		private var _horizontalScrollIncrement:Number = 25;
