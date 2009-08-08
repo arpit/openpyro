@@ -5,9 +5,10 @@ package org.openPyro.controls.listClasses
 	import flash.utils.Dictionary;
 	
 	import org.openPyro.core.ClassFactory;
+	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
-	
+
 	public class ListBase extends UIContainer
 	{
 		public function ListBase()
@@ -73,6 +74,32 @@ package org.openPyro.controls.listClasses
 			this.stage.removeEventListener(Event.RENDER, stageRenderEventHandler);
 			_needsReRendering = false;
 			renderData();
+		}
+		
+		protected function createNewRenderersAndMap(newRendererIndexes:Array):void{
+			var newRendererMap:Dictionary = new Dictionary();
+			for(var a:String in this.visibleRenderersMap){
+				if(newRendererIndexes.indexOf(Number(a)) == -1){
+					var unusedRenderer:DisplayObject = DisplayObject(visibleRenderersMap[a]);
+					unusedRenderer.parent.removeChild(unusedRenderer);
+					rendererPool.returnToPool(unusedRenderer);
+				}
+				else{
+					newRendererMap[a] = visibleRenderersMap[a];
+				}
+			}
+			for(var i:int=0; i<newRendererIndexes.length; i++){
+				var newRendererIndex:int = newRendererIndexes[i];
+				if(!newRendererMap[newRendererIndex]){
+					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
+					contentPane.addChild(newRenderer);
+					if(newRenderer is IDataRenderer){
+						IDataRenderer(newRenderer).data = _dataProvider[newRendererIndex];
+					}
+					newRendererMap[newRendererIndex] = newRenderer;
+				}
+			}
+			this.visibleRenderersMap = newRendererMap;
 		}
 		
 		protected function renderData():void{}	

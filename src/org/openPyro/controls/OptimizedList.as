@@ -26,29 +26,7 @@ package org.openPyro.controls
 		override protected function onVerticalScroll(event:ScrollEvent):void
 		{
 			var newRendererIndexes:Array = IVirtualizedLayout(layout).visibleRenderers;
-			var newRendererMap:Dictionary = new Dictionary();
-			for(var a:String in this.visibleRenderersMap){
-				if(newRendererIndexes.indexOf(Number(a)) == -1){
-					var unusedRenderer:DisplayObject = DisplayObject(visibleRenderersMap[a]);
-					unusedRenderer.parent.removeChild(unusedRenderer);
-					rendererPool.returnToPool(unusedRenderer);
-				}
-				else{
-					newRendererMap[a] = visibleRenderersMap[a];
-				}
-			}
-			for(var i:int=0; i<newRendererIndexes.length; i++){
-				var newRendererIndex:int = newRendererIndexes[i];
-				if(!newRendererMap[newRendererIndex]){
-					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
-					contentPane.addChild(newRenderer);
-					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = _dataProvider[newRendererIndex];
-					}
-					newRendererMap[newRendererIndex] = newRenderer;
-				}
-			}
-			this.visibleRenderersMap = newRendererMap;
+			createNewRenderersAndMap(newRendererIndexes);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
 			dispatchEvent(event);
 		}
