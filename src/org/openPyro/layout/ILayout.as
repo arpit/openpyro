@@ -10,6 +10,5 @@ package org.openPyro.layout
 		function layout(children:Array):void;
 		function getMaxWidth(children:Array):Number;
 		function getMaxHeight(children:Array):Number;
-		function set prepare(f:Function):void;
 	}
 }

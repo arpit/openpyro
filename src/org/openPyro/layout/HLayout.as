@@ -87,11 +87,6 @@ package org.openPyro.layout{
 			return maxH;
 		}
 		
-		private var _prepare:Function;
-		public function set prepare(f:Function):void{
-			_prepare = f;
-		}
-		
 		public function layout(children:Array):void{
 			var nowX:Number=_initX;
 			for(var i:uint=0; i<children.length; i++){
@@ -101,6 +96,5 @@ package org.openPyro.layout{
 				nowX+=c.width+_hGap;
 			}		
 		}
-
 	}
 }

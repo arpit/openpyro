@@ -1,11 +1,12 @@
 package org.openPyro.layout{
+	import flash.display.DisplayObject;
+	
+	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.effects.EffectDescriptor;
 	import org.openPyro.effects.PyroEffect;
-	
-	import flash.display.DisplayObject;
-	
+
 	public class VLayout implements ILayout, IContainerMeasurementHelper{
 		
 		private var _vGap:Number = 0;
@@ -20,8 +21,8 @@ package org.openPyro.layout{
 			_container = container;
 		}
 		
-		private var _initY:Number = 0;
-		private var _initX:Number = 0;
+		protected var _initY:Number = 0;
+		protected var _initX:Number = 0;
 		
 		public function set initX(n:Number):void
 		{
@@ -58,18 +59,9 @@ package org.openPyro.layout{
 			return nowY-_vGap;
 		}
 		
-		private var _prepare:Function;
-		public function set prepare(f:Function):void{
-			_prepare = f;
-		}
-		
 		public var animationDuration:Number = 0;
 		
 		public function layout(children:Array):void{
-			
-			if(_prepare != null){
-				_prepare(children)
-			}	
 			
 			var nowY:Number=_initY;
 			var effectDescriptors:Array  = new Array();

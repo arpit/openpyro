@@ -16,5 +16,13 @@ package org.openPyro.controls.events
 		{
 			super(type, bubbles, cancelable);
 		}
+		
+		override public function clone() : Event{
+			var event:ScrollEvent =  new ScrollEvent(this.type);
+			event.direction = this.direction;
+			event.delta = this.delta;
+			event.value = this.value;
+			return event;
+		}
 	}
 }

@@ -24,7 +24,7 @@ package org.openPyro.core{
 	 */ 
 	public class UIContainer extends UIControl{
 		
-		protected var contentPane:UIControl;
+		public var contentPane:UIControl;
 		protected var _horizontalScrollPolicy:Boolean = true
 		protected var _verticalScrollPolicy:Boolean = true;
 		
@@ -671,7 +671,8 @@ package org.openPyro.core{
 				scrollAbleHeight+=_horizontalScrollBar.height;
 			}
 			scrollY = event.value*scrollAbleHeight
-			setContentMask()
+			setContentMask();
+			dispatchEvent(event);
 		}
 		
 		/**
@@ -686,7 +687,8 @@ package org.openPyro.core{
 				scrollAbleWidth+=_verticalScrollBar.width;
 			}
 			scrollX = event.value*scrollAbleWidth
-			setContentMask()
+			setContentMask();
+			dispatchEvent(event);
 		}
 		
 		/**
@@ -774,7 +776,7 @@ package org.openPyro.core{
 			}
 		}
 		
-		protected function setContentMask():void{
+		public function setContentMask():void{
 			var contentW:Number = width
 			var contentH:Number = height;
 			
@@ -784,12 +786,22 @@ package org.openPyro.core{
 			if(_horizontalScrollBar && _horizontalScrollBar.visible==true){
 				contentH-=_horizontalScrollBar.height
 			}
-			if(_verticalScrollBar){
-				
-			}
 			var rect:Rectangle = new Rectangle(scrollX,scrollY,contentW,contentH);
-			
-			this.contentPane.scrollRect = rect
+			setScrollRect(rect);	
+		}
+		
+		public function scrollContentPaneY(value:Number):void{
+			scrollY = value;
+			setContentMask();
+		}
+		
+		public function scrollContentPaneX(value:Number):void{
+			scrollX = value;
+			setContentMask();
+		}
+		
+		public function setScrollRect(rect:Rectangle):void{
+			this.contentPane.scrollRect = rect	
 		}
 	}
 }
