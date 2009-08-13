@@ -119,7 +119,7 @@ package org.openPyro.collections
 		public function getItemInUnfilteredAt(idx:int):Object{
 			return _unfilteredNormalizedArray[idx];
 		}
-		public function getItemAt(idx:int):Object{
+		public function getItemAt(idx:int):*{
 			return _normalizedArray[idx];
 		}
 		

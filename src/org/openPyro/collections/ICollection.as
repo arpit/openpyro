@@ -9,6 +9,7 @@ package org.openPyro.collections
 		function get iterator():IIterator;
 		function set filterFunction(f:Function):void
 		function refresh():void;
+		function getItemAt(index:int):*
 		
 		/**
 		 * The dataToIndex function returns the index

@@ -1,5 +1,6 @@
 package org.openPyro.core{
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
@@ -25,13 +26,16 @@ package org.openPyro.core{
 	public class UIContainer extends UIControl{
 		
 		public var contentPane:UIControl;
+		public var focusRectHolder:Sprite;
 		protected var _horizontalScrollPolicy:Boolean = true
 		protected var _verticalScrollPolicy:Boolean = true;
 		
 		public function UIContainer(){
 			super();
 			contentPane = new UIControl();
-			contentPane.name = "contentPane_"+this.name
+			contentPane.name = "contentPane_"+this.name;
+			focusRectHolder = new Sprite();
+			
 		}
 		
 		/**
@@ -47,6 +51,7 @@ package org.openPyro.core{
 			scrollbars are not placed under it
 			*/
 			$addChild(contentPane);
+			$addChild(focusRectHolder);
 			this.addEventListener(MouseEvent.MOUSE_WHEEL, handleMouseWheel);
 			
 			super.initialize();
@@ -713,11 +718,11 @@ package org.openPyro.core{
 			}
 			if(_verticalScrollBar && _verticalScrollBar.visible==true)
 			{
-				_verticalScrollBar.x = this.width - _verticalScrollBar.width;
+				_verticalScrollBar.x = this.width - _verticalScrollBar.width-1;
 			}
 			if(_horizontalScrollBar && _horizontalScrollBar.visible==true)
 			{
-				_horizontalScrollBar.y = this.height - _horizontalScrollBar.height;
+				_horizontalScrollBar.y = this.height - _horizontalScrollBar.height-1;
 			}	
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
 			if(_clipContent){

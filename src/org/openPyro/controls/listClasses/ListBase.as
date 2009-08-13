@@ -1,15 +1,19 @@
 package org.openPyro.controls.listClasses
 {
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
+	import org.openPyro.collections.CollectionHelpers;
+	import org.openPyro.collections.ICollection;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
-	import org.openPyro.layout.IVirtualizedLayout;
+	import org.openPyro.painters.Stroke;
+	import org.openPyro.painters.StrokePainter;
 
 	public class ListBase extends UIContainer
 	{
@@ -18,19 +22,50 @@ package org.openPyro.controls.listClasses
 			super();
 		}
 		
-		protected var _dataProvider:Array;
+		protected var _dataProvider:Object;
 		protected var _rendererPool:ObjectPool;
 		
 		public var visibleRenderersMap:Dictionary = new Dictionary();
 		
-		public function set dataProvider(src:Array):void{
+		public function set dataProvider(src:Object):void{
+			if(_dataProvider == src) return;
 			_dataProvider = src;
+			
+			/*
+			 * Reset the scroll positions 
+			 */
+			verticalScrollPosition = 0
+			horizontalScrollPosition = 0
+			convertDataToCollection(src);
+			
 			needsReRendering = true;
 		}
 		
-		public function get dataProvider():Array{
+		public function get dataProvider():Object{
 			return _dataProvider;
 		}
+		
+		protected var _dataProviderCollection:ICollection;
+		
+		/**
+		 * Converts an Array to ArrayCollection or xml to 
+		 * XMLCollection. Written as a separate function so 
+		 * that overriding classes may massage the data as 
+		 * needed
+		 */ 
+		protected function convertDataToCollection(dp:Object):void{
+			this._dataProviderCollection = CollectionHelpers.sourceToCollection(dp);
+		}
+		
+		
+		
+		private var borderRect:Sprite;
+		override protected function createChildren() : void{
+			super.createChildren();
+			borderRect = new Sprite();
+			$addChild(borderRect);
+		}
+		
 		
 		protected var _itemRendererFactory:ClassFactory;
 		public function set itemRenderer(factory:ClassFactory):void{
@@ -121,7 +156,7 @@ package org.openPyro.controls.listClasses
 						listRenderer.baseListData = baseListData;
 					}
 					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = _dataProvider[newRendererIndex];
+						IDataRenderer(newRenderer).data = _dataProviderCollection.getItemAt(newRendererIndex);
 					}
 					newRendererMap[newRendererIndex] = newRenderer;
 				}
@@ -165,6 +200,13 @@ package org.openPyro.controls.listClasses
 
 		public function set columnWidth(v:Number):void{
 			_columnWidth = v;
+		}
+		
+		protected var borderStrokePainter:StrokePainter = new StrokePainter(new Stroke(1,0xaaaaaa))
+		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void{
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			borderRect.graphics.clear();
+			borderStrokePainter.draw(borderRect.graphics, unscaledWidth, unscaledHeight);
 		}
 		
 	}
