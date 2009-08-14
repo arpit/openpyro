@@ -104,7 +104,10 @@ package org.openPyro.core{
 				control.addEventListener(PyroEvent.SIZE_CHANGED, queueValidateDisplayList);
 				control.doOnAdded()
 			}
+			displayListInvalidated = true;
+			invalidateSize();
 			return ch;
+			
 		}
 		
 		override public function getChildByName(name:String):DisplayObject{
@@ -224,6 +227,9 @@ package org.openPyro.core{
 				else{
 					_verticalScrollBar.height = this.height
 				}
+				_verticalScrollBar.validateSize();
+				_verticalScrollBar.validateDisplayList();
+				
 			}
 			if(_horizontalScrollBar)
 			{
@@ -234,8 +240,12 @@ package org.openPyro.core{
 				else{
 					_horizontalScrollBar.width = this.width;
 				}
+				_horizontalScrollBar.validateSize();
+				_horizontalScrollBar.validateDisplayList();
 			}
-			checkRevalidation()	
+			checkRevalidation();
+			
+			dispatchEvent(new PyroEvent(PyroEvent.SIZE_VALIDATED));	
 		}
 		
 		/**
@@ -401,11 +411,11 @@ package org.openPyro.core{
 		protected function checkRevalidation():void
 		{
 			if(_horizontalScrollPolicy){
-				checkNeedsHScrollBar()
+				checkNeedsHScrollBar();
 			}
 			if(_verticalScrollPolicy)
 			{
-				checkNeedsVScrollBar()
+				checkNeedsVScrollBar();
 			}
 			
 			if(needsHorizontalScrollBar && 
@@ -546,6 +556,7 @@ package org.openPyro.core{
 			
 		protected function createHScrollBar():void
 		{
+			trace("creating hscrollbar")
 			_horizontalScrollBar = new ScrollBar(Direction.HORIZONTAL);
 			_horizontalScrollBar.maximum = 1
 			_horizontalScrollBar.minimum = 0
@@ -681,7 +692,6 @@ package org.openPyro.core{
 			{
 				scrollAbleHeight+=_horizontalScrollBar.height;
 			}
-			scrollY = event.value*scrollAbleHeight
 			setContentMask();
 			dispatchEvent(event);
 		}
@@ -726,7 +736,6 @@ package org.openPyro.core{
 			}	
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
 			if(_clipContent){
-				//this.scrollRect = new Rectangle(0,0,unscaledWidth, unscaledHeight);
 				this.setContentMask()
 			}
 		}
@@ -788,16 +797,21 @@ package org.openPyro.core{
 		}
 		
 		public function setContentMask():void{
-			var contentW:Number = width
-			var contentH:Number = height;
-			
+			var viewportWidth:Number = width
+			var viewportHeight:Number = height;
 			if(_verticalScrollBar && _verticalScrollBar.visible==true){
-				contentW-=_verticalScrollBar.width	
+				viewportWidth-=_verticalScrollBar.width	
 			}
 			if(_horizontalScrollBar && _horizontalScrollBar.visible==true){
-				contentH-=_horizontalScrollBar.height
+				viewportHeight-=_horizontalScrollBar.height
 			}
-			var rect:Rectangle = new Rectangle(scrollX,scrollY,contentW,contentH);
+			if(_verticalScrollBar){
+				scrollY = _verticalScrollBar.value*(_contentHeight-viewportHeight);
+			}
+			if(_horizontalScrollBar){
+				scrollX = _horizontalScrollBar.value*(_contentWidth-viewportWidth);
+			}
+			var rect:Rectangle = new Rectangle(scrollX,scrollY,viewportWidth,viewportHeight);
 			setScrollRect(rect);	
 		}
 		

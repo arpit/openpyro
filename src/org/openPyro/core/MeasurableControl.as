@@ -1,11 +1,10 @@
 package org.openPyro.core{
-	import org.openPyro.events.PyroEvent;
-	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import org.openPyro.events.PyroEvent;
 	
 	[Event(name="preInitialize", type="org.openPyro.events.PyroEvent")]
 	[Event(name="initialize", type="org.openPyro.events.PyroEvent")]
@@ -565,7 +564,6 @@ package org.openPyro.core{
 		 * and waits till the validateDisplaylist is called.
 		 */ 
 		public function queueValidateDisplayList(event:PyroEvent=null):void{
-			
 			if(this._parentContainer && _dimensionsChanged){
 				dispatchEvent(new PyroEvent(PyroEvent.SIZE_CHANGED));
 			}else{

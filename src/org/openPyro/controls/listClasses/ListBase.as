@@ -2,7 +2,6 @@ package org.openPyro.controls.listClasses
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
 	import org.openPyro.collections.CollectionHelpers;
@@ -14,9 +13,9 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
-	import org.openPyro.controls.listClasses.IListDataRenderer
 
 	public class ListBase extends UIContainer
 	{
@@ -160,7 +159,7 @@ package org.openPyro.controls.listClasses
 				return;
 			}
 			_needsReRendering = false;
-			renderInitialData();
+			renderListItems();
 		}
 		
 		protected function createNewRenderersAndMap(newRenderersData:Array):void{
@@ -200,7 +199,12 @@ package org.openPyro.controls.listClasses
 			this.visibleRenderersMap = newRendererMap;
 		}
 		
-		protected function renderInitialData():void{}	
+		protected function renderListItems():void{
+			createNewRenderersAndMap(IVirtualizedLayout(this.layout).visibleRenderersData);
+			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
+			displayListInvalidated = true;
+			invalidateDisplayList();
+		}	
 		
 		protected var _rowHeight:Number = NaN;
 		public function set rowHeight(value:Number):void{
