@@ -34,14 +34,14 @@ package org.openPyro.collections
 		public function hasNext():Boolean{
 			return _cursorIndex < (_array.length - 1);
 		}
-		public function getNext():Object{
+		public function getNext():*{
 			_cursorIndex++;
 			return _array[_cursorIndex];
 		}	
 		public function hasPrevious():Boolean{
 			return _cursorIndex > 0;
 		}
-		public function getPrevious():Object{
+		public function getPrevious():*{
 			_cursorIndex--;
 			return _array[_cursorIndex];
 		}

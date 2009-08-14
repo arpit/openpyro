@@ -91,8 +91,10 @@ package org.openPyro.collections
 		
 		public function removeItems(items:Array):void{
 			var changed:Boolean = false;
-			for each(var item:* in _source){
+			var delta:Array = [];
+			for each(var item:* in items){
 				if(_source.indexOf(item) != -1){
+					delta.push(item);
 					ArrayUtil.remove(_source, item);
 					changed = true;
 				}
@@ -101,7 +103,7 @@ package org.openPyro.collections
 			
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			event.kind = CollectionEventKind.REMOVE;
-			event.delta = items;
+			event.delta = delta;
 			dispatchEvent(event);
 		}
 		

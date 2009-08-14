@@ -7,6 +7,8 @@ package org.openPyro.layout
 	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.collections.ICollection;
+	import org.openPyro.collections.IIterator;
 
 	public class VListLayout extends VLayout implements IVirtualizedLayout
 	{
@@ -44,22 +46,44 @@ package org.openPyro.layout
 			return Math.ceil(_container.height/ListBase(_container).rowHeight)+1;
 		}
 		
-		public function get visibleRenderers():Array{
+		public function get visibleRenderersData():Array{
 			var listBase:ListBase = ListBase(_container);
 			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
 			var scrollPos:Number = listBase.verticalScrollPosition*scrollAbleHeight;
 			var newTopRendererIndex:int = Math.floor(scrollPos/listBase.rowHeight);
-			var newRenderersIndexes:Array = []
-			for(var i:int=newTopRendererIndex; i<newTopRendererIndex+numberOfVerticalRenderersNeededForDisplay; i++){
-				newRenderersIndexes.push(i);	
+			var newRenderersData:Array = []
+			
+			
+			var sourceCollection:ICollection = listBase.dataProviderCollection;
+			var iterator:IIterator = sourceCollection.iterator;
+			iterator.cursorIndex = newTopRendererIndex;
+			
+			for(var i:int=0; i<numberOfVerticalRenderersNeededForDisplay; i++){
+				var dataItem:* = iterator.getCurrent();
+				newRenderersData.push(dataItem);
+				iterator.cursorIndex++;	
 			}
-			return newRenderersIndexes;
+			return newRenderersData;
 		}
 		
 		public function positionRendererMap(map:Dictionary):void{
 			var listBase:ListBase = ListBase(_container);
+			var index:Number = 0;
+			
+			var itemsArray:Array = [];
 			for(var a:String in map){
-				DisplayObject(map[a]).y = listBase.rowHeight*Number(a);
+				itemsArray.push(
+								{data:a, 
+								renderer:map[a], 
+								itemIndex:listBase.dataProviderCollection.getItemIndex(a)
+								})	
+			}
+			itemsArray.sortOn("itemIndex");
+			
+			var s:String =""
+			for(var i:int=0; i<itemsArray.length; i++){
+				itemsArray[i].renderer.y = itemsArray[i].itemIndex*listBase.rowHeight;
+				s+=itemsArray[i].itemIndex+",";
 			}
 			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
 			listBase.scrollContentPaneY(listBase.verticalScrollPosition*scrollAbleHeight);

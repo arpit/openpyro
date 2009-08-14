@@ -6,6 +6,7 @@ package org.openPyro.controls
 	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.layout.VListLayout;
+	import org.openPyro.collections.IIterator;
 
 	public class OptimizedList extends ListBase
 	{
@@ -23,10 +24,11 @@ package org.openPyro.controls
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
 		{
-			var newRendererIndexes:Array = IVirtualizedLayout(layout).visibleRenderers;
-			createNewRenderersAndMap(newRendererIndexes);
+			var newRenderersData:Array = IVirtualizedLayout(layout).visibleRenderersData;
+			createNewRenderersAndMap(newRenderersData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
 			dispatchEvent(event);
+			
 		}
 		
 		private var _topRendererIndex:Number = 0;
@@ -38,11 +40,15 @@ package org.openPyro.controls
 		 * 
 		 */ 
 		override protected function renderInitialData():void{
-			var newRendererIndexes:Array = [];
-			for(var i:int=_topRendererIndex; i<IVirtualizedLayout(_layout).numberOfVerticalRenderersNeededForDisplay; i++){
-				newRendererIndexes.push(i);
+			var newRenderersData:Array = [];
+			var iterator:IIterator = dataProviderCollection.iterator;
+			iterator.cursorIndex = _topRendererIndex;
+			
+			for(var i:int=0; i<IVirtualizedLayout(_layout).numberOfVerticalRenderersNeededForDisplay; i++){
+				newRenderersData.push(iterator.getCurrent());
+				iterator.cursorIndex++;
 			}
-			createNewRenderersAndMap(newRendererIndexes);
+			createNewRenderersAndMap(newRenderersData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
 			invalidateSize();
 			displayListInvalidated = true;
@@ -51,9 +57,8 @@ package org.openPyro.controls
 		}
 		
 		private function onResize(event:Event):void{
-		createNewRenderersAndMap(IVirtualizedLayout(layout).visibleRenderers);
+			createNewRenderersAndMap(IVirtualizedLayout(layout).visibleRenderersData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
-			
 		}
 		
 		public function indexToItemRenderer(index:int):Number{

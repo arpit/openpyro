@@ -7,6 +7,8 @@ package org.openPyro.controls.listClasses
 	
 	import org.openPyro.collections.CollectionHelpers;
 	import org.openPyro.collections.ICollection;
+	import org.openPyro.collections.events.CollectionEvent;
+	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.MeasurableControl;
@@ -14,6 +16,7 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
+	import org.openPyro.controls.listClasses.IListDataRenderer
 
 	public class ListBase extends UIContainer
 	{
@@ -36,14 +39,52 @@ package org.openPyro.controls.listClasses
 			 */
 			verticalScrollPosition = 0
 			horizontalScrollPosition = 0
+			if(_dataProviderCollection){
+				_dataProviderCollection.removeEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
+			}
 			convertDataToCollection(src);
-			
+			_dataProviderCollection.addEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
 			needsReRendering = true;
 		}
-		
 		public function get dataProvider():Object{
 			return _dataProvider;
 		}
+		
+		protected function onSourceCollectionChanged(event:CollectionEvent):void{
+			if(event.kind == CollectionEventKind.REMOVE){
+				handleItemsRemoved(event.delta)
+			}
+		}
+		
+		protected function handleItemsRemoved(items:Array):void{
+			for each(var item:* in items){
+				for (var a:String in this.visibleRenderersMap){
+					if(IListDataRenderer(this.visibleRenderersMap[a]).data == item){
+						var renderer:DisplayObject = this.visibleRenderersMap[a];
+						delete(this.visibleRenderersMap[a]);
+						renderer.parent.removeChild(renderer);
+						this.rendererPool.returnToPool(renderer);
+						needsReRendering = true;
+						invalidateSize();
+					}
+				}
+			}
+		}
+		
+		public function itemToItemRenderer(item:*):DisplayObject{
+			for (var a:String in this.visibleRenderersMap){
+				if(IListDataRenderer(visibleRenderersMap[a]).data == item){
+					return visibleRenderersMap[a];
+				}
+			}
+			return null;
+		}
+		
+		protected function handleItemsAdded(items:Array):void{
+			
+		}
+		
+		//public function 
 		
 		protected var _dataProviderCollection:ICollection;
 		
@@ -57,7 +98,9 @@ package org.openPyro.controls.listClasses
 			this._dataProviderCollection = CollectionHelpers.sourceToCollection(dp);
 		}
 		
-		
+		public function get dataProviderCollection():ICollection{
+			return _dataProviderCollection;
+		}
 		
 		private var borderRect:Sprite;
 		override protected function createChildren() : void{
@@ -98,10 +141,13 @@ package org.openPyro.controls.listClasses
 		}
 		
 		public function set needsReRendering(b:Boolean):void{
-			_needsReRendering = true;
-			if(!initialized) return;
+			_needsReRendering = b;
+			/*if(!initialized) return;
 			this.stage.addEventListener(Event.RENDER, stageRenderEventHandler);
-			this.stage.invalidate();
+			this.stage.invalidate();*/
+			if(_needsReRendering){
+				this.invalidateSize();
+			}
 		}
 		
 		override public function initialize() : void{
@@ -113,24 +159,17 @@ package org.openPyro.controls.listClasses
 		
 		override public function validateSize() : void{
 			super.validateSize();
-			
-			
-			
-		}
-		
-		protected function stageRenderEventHandler(event:Event):void{
 			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering){
 				return;
 			}
-			this.stage.removeEventListener(Event.RENDER, stageRenderEventHandler);
 			_needsReRendering = false;
 			renderInitialData();
 		}
 		
-		protected function createNewRenderersAndMap(newRendererIndexes:Array):void{
+		protected function createNewRenderersAndMap(newRenderersData:Array):void{
 			var newRendererMap:Dictionary = new Dictionary();
 			for(var a:String in this.visibleRenderersMap){
-				if(newRendererIndexes.indexOf(Number(a)) == -1){
+				if(newRenderersData.indexOf(a) == -1){
 					var unusedRenderer:DisplayObject = DisplayObject(visibleRenderersMap[a]);
 					unusedRenderer.parent.removeChild(unusedRenderer);
 					rendererPool.returnToPool(unusedRenderer);
@@ -139,10 +178,10 @@ package org.openPyro.controls.listClasses
 					newRendererMap[a] = visibleRenderersMap[a];
 				}
 			}
-			for(var i:int=0; i<newRendererIndexes.length; i++){
-				var newRendererIndex:int = newRendererIndexes[i];
+			for(var i:int=0; i<newRenderersData.length; i++){
+				var newRendererData:* = newRenderersData[i];
 					
-				if(!newRendererMap[newRendererIndex]){
+				if(!newRendererMap[newRendererData]){
 					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 					contentPane.addChild(newRenderer);
 					if(newRenderer is MeasurableControl){
@@ -156,9 +195,9 @@ package org.openPyro.controls.listClasses
 						listRenderer.baseListData = baseListData;
 					}
 					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = _dataProviderCollection.getItemAt(newRendererIndex);
+						IDataRenderer(newRenderer).data = newRendererData//_dataProviderCollection.getItemAt(newRendererIndex);
 					}
-					newRendererMap[newRendererIndex] = newRenderer;
+					newRendererMap[newRendererData] = newRenderer;
 				}
 			}
 			this.visibleRenderersMap = newRendererMap;

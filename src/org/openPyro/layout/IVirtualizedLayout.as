@@ -7,7 +7,7 @@ package org.openPyro.layout
 	public interface IVirtualizedLayout
 	{
 		function get numberOfVerticalRenderersNeededForDisplay():int;
-		function get visibleRenderers():Array;
+		function get visibleRenderersData():Array;
 		function positionRendererMap(map:Dictionary):void;
 	}
 }

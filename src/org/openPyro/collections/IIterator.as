@@ -6,9 +6,9 @@ package org.openPyro.collections
 	{
 		function getCurrent():Object;
 		function hasNext():Boolean;
-		function getNext():Object;
+		function getNext():*;
 		function hasPrevious():Boolean;
-		function getPrevious():Object;
+		function getPrevious():*;
 		function set cursorIndex(idx:int):void;
 		function get cursorIndex():int;
 		function reset():void;
