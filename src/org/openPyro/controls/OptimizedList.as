@@ -2,11 +2,11 @@ package org.openPyro.controls
 {
 	import flash.events.Event;
 	
+	import org.openPyro.collections.IIterator;
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.layout.VListLayout;
-	import org.openPyro.collections.IIterator;
 
 	public class OptimizedList extends ListBase
 	{
@@ -20,6 +20,7 @@ package org.openPyro.controls
 		public function OptimizedList()
 		{
 			this.layout = new VListLayout();
+			IVirtualizedLayout(this.layout).listBase = this;
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void

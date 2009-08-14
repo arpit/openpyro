@@ -1,14 +1,10 @@
 package org.openPyro.layout
 {
-	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	
-	import org.openPyro.controls.events.ScrollEvent;
-	import org.openPyro.controls.listClasses.ListBase;
-	import org.openPyro.core.IDataRenderer;
-	import org.openPyro.core.UIContainer;
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.IIterator;
+	import org.openPyro.controls.listClasses.ListBase;
 
 	public class VListLayout extends VLayout implements IVirtualizedLayout
 	{
@@ -17,24 +13,27 @@ package org.openPyro.layout
 			
 		}
 		
+		private var _listBase:ListBase;
+		public function set listBase(object:ListBase):void{
+			_listBase = object;
+		}
+		
 		override public function getMaxWidth(children:Array):Number
 		{
-			var listBase:ListBase = ListBase(_container);
-			if(!listBase.dataProvider){
+			if(!_listBase.dataProvider){
 				 return 0;	
 			}
 			else{
-				return listBase.columnWidth + this._initX;
+				return _listBase.columnWidth + this._initX;
 			}
 		}
 		
 		override public function getMaxHeight(children:Array) : Number{
-			var listBase:ListBase = ListBase(_container);
-			if(!listBase.dataProvider){
+			if(!_listBase.dataProvider){
 				 return 0;	
 			}
 			else{
-				return listBase.rowHeight * listBase.dataProvider.length + _initY;
+				return _listBase.rowHeight * _listBase.dataProviderCollection.length + _initY;
 			}
 		}
 		
@@ -47,14 +46,13 @@ package org.openPyro.layout
 		}
 		
 		public function get visibleRenderersData():Array{
-			var listBase:ListBase = ListBase(_container);
-			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
-			var scrollPos:Number = listBase.verticalScrollPosition*scrollAbleHeight;
-			var newTopRendererIndex:int = Math.floor(scrollPos/listBase.rowHeight);
+			var scrollAbleHeight:Number = _listBase.contentHeight - _listBase.height;
+			var scrollPos:Number = _listBase.verticalScrollPosition*scrollAbleHeight;
+			var newTopRendererIndex:int = Math.floor(scrollPos/_listBase.rowHeight);
 			var newRenderersData:Array = []
 			
 			
-			var sourceCollection:ICollection = listBase.dataProviderCollection;
+			var sourceCollection:ICollection = _listBase.dataProviderCollection;
 			var iterator:IIterator = sourceCollection.iterator;
 			iterator.cursorIndex = newTopRendererIndex;
 			

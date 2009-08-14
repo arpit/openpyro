@@ -142,9 +142,6 @@ package org.openPyro.controls.listClasses
 		
 		public function set needsReRendering(b:Boolean):void{
 			_needsReRendering = b;
-			/*if(!initialized) return;
-			this.stage.addEventListener(Event.RENDER, stageRenderEventHandler);
-			this.stage.invalidate();*/
 			if(_needsReRendering){
 				this.invalidateSize();
 			}
