@@ -176,9 +176,6 @@ package
 			list.width = 200
 			list.percentUnusedHeight = 100;
 			
-			var layout:VLayout = new VLayout(2);
-			list.layout = layout;
-			
 			var rendererFactory:ClassFactory = new ClassFactory(Renderer);
 			rendererFactory.properties = {width:500, height:30}
 			list.itemRenderer = rendererFactory;

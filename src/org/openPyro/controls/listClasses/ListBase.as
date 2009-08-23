@@ -15,6 +15,7 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.events.PyroEvent;
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
@@ -171,13 +172,13 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
-		override public function validateSize() : void{
-			super.validateSize();
-			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering){
+		override public function queueValidateDisplayList(event:PyroEvent=null):void{
+			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering ){
 				return;
 			}
 			_needsReRendering = false;
 			renderListItems();
+			super.queueValidateDisplayList(event);
 		}
 		
 		protected function createNewRenderersAndMap(newRenderersData:Array):void{
@@ -267,7 +268,7 @@ package org.openPyro.controls.listClasses
 			_columnWidth = v;
 		}
 		
-		protected var borderStrokePainter:StrokePainter// = new StrokePainter(new Stroke(1,0xaaaaaa))
+		protected var borderStrokePainter:StrokePainter = new StrokePainter(new Stroke(1,0xaaaaaa))
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 			if(borderStrokePainter){
