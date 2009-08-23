@@ -209,7 +209,7 @@ package org.openPyro.controls.listClasses
 						baseListData.list = this;
 						baseListData.rowIndex = i;
 						listRenderer.baseListData = baseListData;
-						if(_dataProviderCollection.getItemAt(_selectedIndex) == newRendererUID){
+						if(_dataProviderCollection.getUIDForItemAtIndex(_selectedIndex) == newRendererUID){
 							listRenderer.selected = true;	
 						}
 						else{
@@ -281,11 +281,11 @@ package org.openPyro.controls.listClasses
 		 * Function invoked when an itemRenderer is clicked
 		 */ 
 		protected function handleRendererMouseClick(event:MouseEvent):void{
-			for (var rendererData:String in visibleRenderersMap){
-				if(visibleRenderersMap[rendererData] == event.currentTarget){
-					_selectedItem = rendererData;
-					var selectedRenderer:DisplayObject = visibleRenderersMap[rendererData];
-					selectedIndex = _dataProviderCollection.getItemIndex(rendererData);
+			for (var uid:String in visibleRenderersMap){
+				if(visibleRenderersMap[uid] == event.currentTarget){
+					//_selectedItem = rendererData;
+					var selectedRenderer:DisplayObject = visibleRenderersMap[uid];
+					selectedIndex = _dataProviderCollection.getUIDIndex(uid);
 					if(selectedRenderer is IListDataRenderer){
 						IListDataRenderer(selectedRenderer).selected = true;
 					}
@@ -302,10 +302,24 @@ package org.openPyro.controls.listClasses
 		
 		public function set selectedIndex(val:int):void{
 			if(_selectedIndex == val) return;
+			for(var uid:String in visibleRenderersMap){
+				if(_selectedIndex == _dataProviderCollection.getUIDIndex(uid)){
+					if(visibleRenderersMap[uid] is IListDataRenderer){
+						IListDataRenderer(visibleRenderersMap[uid]).selected = false;
+						break;
+					}
+				}
+			}
+			
 			_selectedIndex = val;
 			var event:ListEvent = new ListEvent(ListEvent.CHANGE);
 			dispatchEvent(event);
 		}
+		
+		public function getRendererForDataIndex(index:uint):void{
+			
+		}
+		
 		
 		protected var _selectedItem:*;
 		public function get selectedItem():*{

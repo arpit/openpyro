@@ -15,9 +15,10 @@ package org.openPyro.collections
 		
 		public function ArrayCollection(source:Array = null)
 		{
-			if(source){
-				this.source = source;
+			if(!source){
+				source = [];
 			}
+			this.source = source;
 		}
 		
 		public function set source(array:*):void
