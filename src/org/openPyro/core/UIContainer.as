@@ -556,7 +556,6 @@ package org.openPyro.core{
 			
 		protected function createHScrollBar():void
 		{
-			trace("creating hscrollbar")
 			_horizontalScrollBar = new ScrollBar(Direction.HORIZONTAL);
 			_horizontalScrollBar.maximum = 1
 			_horizontalScrollBar.minimum = 0
