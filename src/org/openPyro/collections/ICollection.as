@@ -10,6 +10,9 @@ package org.openPyro.collections
 		function set filterFunction(f:Function):void
 		function refresh():void;
 		function getItemAt(index:int):*
+		function getUIDForItemAtIndex(idx:int):String;
+		function getUIDIndex(uid:String):int;
+		function getItemForUID(uid:String):*;
 		
 		/**
 		 * The dataToIndex function returns the index

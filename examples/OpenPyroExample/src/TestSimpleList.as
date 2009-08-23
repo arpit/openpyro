@@ -41,7 +41,7 @@ package
 			addChild(list);
 			
 			var dp:Array = new Array()
-			for(var i:int=0; i< 10; i++){
+			for(var i:int=0; i< 100; i++){
 				dp.push("original data: "+i)
 			}
 			

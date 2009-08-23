@@ -181,22 +181,22 @@ package org.openPyro.controls.listClasses
 			super.queueValidateDisplayList(event);
 		}
 		
-		protected function createNewRenderersAndMap(newRenderersData:Array):void{
+		protected function createNewRenderersAndMap(newRenderersUIDs:Array):void{
 			var newRendererMap:Dictionary = new Dictionary();
-			for(var a:String in this.visibleRenderersMap){
-				if(newRenderersData.indexOf(a) == -1){
-					var unusedRenderer:DisplayObject = DisplayObject(visibleRenderersMap[a]);
+			for(var uid:String in this.visibleRenderersMap){
+				if(newRenderersUIDs.indexOf(uid) == -1){
+					var unusedRenderer:DisplayObject = DisplayObject(visibleRenderersMap[uid]);
 					unusedRenderer.parent.removeChild(unusedRenderer);
 					rendererPool.returnToPool(unusedRenderer);
 				}
 				else{
-					newRendererMap[a] = visibleRenderersMap[a];
+					newRendererMap[uid] = visibleRenderersMap[uid];
 				}
 			}
-			for(var i:int=0; i<newRenderersData.length; i++){
-				var newRendererData:* = newRenderersData[i];
+			for(var i:int=0; i<newRenderersUIDs.length; i++){
+				var newRendererUID:String = newRenderersUIDs[i];
 					
-				if(!newRendererMap[newRendererData]){
+				if(!newRendererMap[newRendererUID]){
 					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 					newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
 					contentPane.addChild(newRenderer);
@@ -209,7 +209,7 @@ package org.openPyro.controls.listClasses
 						baseListData.list = this;
 						baseListData.rowIndex = i;
 						listRenderer.baseListData = baseListData;
-						if(_dataProviderCollection.getItemAt(_selectedIndex) == newRendererData){
+						if(_dataProviderCollection.getItemAt(_selectedIndex) == newRendererUID){
 							listRenderer.selected = true;	
 						}
 						else{
@@ -217,9 +217,9 @@ package org.openPyro.controls.listClasses
 						}
 					}
 					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = newRendererData;
+						IDataRenderer(newRenderer).data = _dataProviderCollection.getItemForUID(newRendererUID);
 					}
-					newRendererMap[newRendererData] = newRenderer;
+					newRendererMap[newRendererUID] = newRenderer;
 				}
 			}
 			this.visibleRenderersMap = newRendererMap;

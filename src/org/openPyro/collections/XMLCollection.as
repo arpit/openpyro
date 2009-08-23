@@ -1,11 +1,11 @@
 package org.openPyro.collections
 {
+	import flash.events.EventDispatcher;
+	
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.utils.ArrayUtil;
 	import org.openPyro.utils.XMLUtil;
-	
-	import flash.events.EventDispatcher;
 	
 	public class XMLCollection extends EventDispatcher implements ICollection
 	{
@@ -168,6 +168,18 @@ package org.openPyro.collections
 			collectionEvent.kind = CollectionEventKind.REMOVE;
 			dispatchEvent(collectionEvent);
 			*/
+		}
+		
+		public function getUIDForItemAtIndex(idx:int):String{
+			return null;
+		}
+		
+		public function getUIDIndex(uid:String):int{
+			return -1;
+		}
+		
+		public function getItemForUID(uid:String):*{
+			return null;
 		}
 		
 	}

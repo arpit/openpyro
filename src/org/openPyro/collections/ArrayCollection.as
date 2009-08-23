@@ -8,26 +8,35 @@ package org.openPyro.collections
 	
 	public class ArrayCollection extends EventDispatcher implements ICollection
 	{
+		protected var _source:Array;
+		protected var _uids:Array;
+		protected var _iterator:ArrayIterator;
 		protected var _originalSource:Array;
 		
 		public function ArrayCollection(source:Array = null)
 		{
-			if(!source){
-				source = new Array();
+			if(source){
+				this.source = source;
 			}
-			_source = source;
-			_originalSource = source;
-			_iterator = new ArrayIterator(this);
 		}
-		
-		private var _source:Array;
-		private var _iterator:ArrayIterator;
 		
 		public function set source(array:*):void
 		{
 			_source = array;
 			_originalSource = array;
+			_uids = new Array();
+			for(var i:int = 0; i<_source.length; i++){
+				_uids.push({uid:getUID(), sourceItem:_source[i]});
+			}
+			_iterator = new ArrayIterator(this);
 			dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGED));
+		}
+		
+		protected var currUIDIndex:int = 0;
+		protected function getUID():String{
+			var uid:String = "item_"+currUIDIndex;
+			currUIDIndex++;
+			return uid;
 		}
 		
 		public function get source():*
@@ -67,12 +76,49 @@ package org.openPyro.collections
 			
 			
 			ArrayUtil.insertArrayAtIndex(_source, items, idx);
+			
+			var newUIDs:Array = []
+			for each(var item:* in items){
+				newUIDs.push({uid:getUID(), sourceItem:item});
+			}
+			
+			ArrayUtil.insertArrayAtIndex(_uids, newUIDs , idx);
+			
 			var collectionEvent:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			collectionEvent.delta = items;
 			
 			collectionEvent.eventNode = lastData;
 			collectionEvent.kind = CollectionEventKind.ADD;
 			dispatchEvent(collectionEvent);	
+		}
+		
+		/**
+		 * Returns the unique id generated for each item in the 
+		 * source array
+		 */
+		public function getUIDForItemAtIndex(idx:int):String{
+			if(_uids[idx]){
+				return _uids[idx].uid;
+			}
+			return null;
+		}
+		
+		public function getUIDIndex(uid:String):int{
+			for(var i:int=0; i<_uids.length;i++){
+				if(_uids[i].uid == uid){
+					return i;
+				}
+			}
+			return -1;
+		}
+		
+		public function getItemForUID(uid:String):*{
+			for(var i:int=0; i<_uids.length;i++){
+				if(_uids[i].uid == uid){
+					return _uids[i].sourceItem;
+				}
+			}
+			return null;
 		}
 		
 		public function get iterator():IIterator

@@ -58,8 +58,8 @@ package org.openPyro.layout
 			iterator.cursorIndex = newTopRendererIndex;
 			
 			for(var i:int=0; i<numberOfVerticalRenderersNeededForDisplay; i++){
-				var dataItem:* = iterator.getCurrent();
-				newRenderersData.push(dataItem);
+				var itemUID:String = sourceCollection.getUIDForItemAtIndex(iterator.cursorIndex);
+				newRenderersData.push(itemUID);
 				iterator.cursorIndex++;	
 			}
 			return newRenderersData;
@@ -70,11 +70,11 @@ package org.openPyro.layout
 			var index:Number = 0;
 			
 			var itemsArray:Array = [];
-			for(var a:* in map){
+			for(var uid:String in map){
 				itemsArray.push(
-								{data:a, 
-								renderer:map[a], 
-								itemIndex:listBase.dataProviderCollection.getItemIndex(a)
+								{data:uid, 
+								renderer:map[uid], 
+								itemIndex:listBase.dataProviderCollection.getUIDIndex(uid)
 								})	
 			}
 			itemsArray.sortOn("itemIndex");
