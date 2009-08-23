@@ -2,12 +2,14 @@ package org.openPyro.controls.listClasses
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	
 	import org.openPyro.collections.CollectionHelpers;
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.CollectionEventKind;
+	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.MeasurableControl;
@@ -16,17 +18,24 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
+	import org.openPyro.utils.StringUtil;
 
 	public class ListBase extends UIContainer
 	{
+		
 		public function ListBase()
 		{
 			super();
+			this._labelFunction = StringUtil.toStringLabel
 		}
 		
 		protected var _dataProvider:Object;
 		protected var _rendererPool:ObjectPool;
 		
+		/**
+		 * A dictionary of renderers mapped with the data they represent
+		 * as keys.
+		 */
 		public var visibleRenderersMap:Dictionary = new Dictionary();
 		
 		public function set dataProvider(src:Object):void{
@@ -53,6 +62,15 @@ package org.openPyro.controls.listClasses
 			if(event.kind == CollectionEventKind.REMOVE){
 				handleItemsRemoved(event.delta)
 			}
+		}
+		
+		protected var _labelFunction:Function  = StringUtil.toStringLabel
+		public function set labelFunction(func:Function):void{
+			_labelFunction = func;
+		}
+		
+		public function get labelFunction():Function{
+			return _labelFunction;
 		}
 		
 		protected function handleItemsRemoved(items:Array):void{
@@ -179,6 +197,7 @@ package org.openPyro.controls.listClasses
 					
 				if(!newRendererMap[newRendererData]){
 					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
+					newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
 					contentPane.addChild(newRenderer);
 					if(newRenderer is MeasurableControl){
 						MeasurableControl(newRenderer).doOnAdded();
@@ -186,12 +205,18 @@ package org.openPyro.controls.listClasses
 					if(newRenderer is IListDataRenderer){
 						var listRenderer:IListDataRenderer = newRenderer as IListDataRenderer;
 						var baseListData:BaseListData = new BaseListData()
-						//baseListData.list = this;
+						baseListData.list = this;
 						baseListData.rowIndex = i;
 						listRenderer.baseListData = baseListData;
+						if(_dataProviderCollection.getItemAt(_selectedIndex) == newRendererData){
+							listRenderer.selected = true;	
+						}
+						else{
+							listRenderer.selected = false;
+						}
 					}
 					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = newRendererData//_dataProviderCollection.getItemAt(newRendererIndex);
+						IDataRenderer(newRenderer).data = newRendererData;
 					}
 					newRendererMap[newRendererData] = newRenderer;
 				}
@@ -242,11 +267,52 @@ package org.openPyro.controls.listClasses
 			_columnWidth = v;
 		}
 		
-		protected var borderStrokePainter:StrokePainter = new StrokePainter(new Stroke(1,0xaaaaaa))
+		protected var borderStrokePainter:StrokePainter// = new StrokePainter(new Stroke(1,0xaaaaaa))
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			borderRect.graphics.clear();
-			borderStrokePainter.draw(borderRect.graphics, unscaledWidth, unscaledHeight);
+			if(borderStrokePainter){
+				borderRect.graphics.clear();
+				borderStrokePainter.draw(borderRect.graphics, unscaledWidth, unscaledHeight);
+			}
+		}
+		
+		/**
+		 * Function invoked when an itemRenderer is clicked
+		 */ 
+		protected function handleRendererMouseClick(event:MouseEvent):void{
+			for (var rendererData:String in visibleRenderersMap){
+				if(visibleRenderersMap[rendererData] == event.currentTarget){
+					_selectedItem = rendererData;
+					var selectedRenderer:DisplayObject = visibleRenderersMap[rendererData];
+					selectedIndex = _dataProviderCollection.getItemIndex(rendererData);
+					if(selectedRenderer is IListDataRenderer){
+						IListDataRenderer(selectedRenderer).selected = true;
+					}
+					break;
+				}
+			} 
+		}
+		
+		protected var _selectedIndex:int=-1;
+		
+		public function get selectedIndex():int{
+			return _selectedIndex;
+		}
+		
+		public function set selectedIndex(val:int):void{
+			if(_selectedIndex == val) return;
+			_selectedIndex = val;
+			var event:ListEvent = new ListEvent(ListEvent.CHANGE);
+			dispatchEvent(event);
+		}
+		
+		protected var _selectedItem:*;
+		public function get selectedItem():*{
+			return _selectedItem;
+		}
+		
+		public function set selectedItem(item:*):void{
+			selectedIndex = _dataProviderCollection.getItemIndex(item)
 		}
 		
 	}

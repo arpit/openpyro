@@ -2,6 +2,7 @@ package org.openPyro.layout
 {
 	import flash.utils.Dictionary;
 	
+	import org.openPyro.collections.ArrayCollection;
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.IIterator;
 	import org.openPyro.controls.listClasses.ListBase;
@@ -69,7 +70,7 @@ package org.openPyro.layout
 			var index:Number = 0;
 			
 			var itemsArray:Array = [];
-			for(var a:String in map){
+			for(var a:* in map){
 				itemsArray.push(
 								{data:a, 
 								renderer:map[a], 
@@ -77,11 +78,8 @@ package org.openPyro.layout
 								})	
 			}
 			itemsArray.sortOn("itemIndex");
-			
-			var s:String =""
 			for(var i:int=0; i<itemsArray.length; i++){
 				itemsArray[i].renderer.y = itemsArray[i].itemIndex*listBase.rowHeight;
-				s+=itemsArray[i].itemIndex+",";
 			}
 			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
 			listBase.scrollContentPaneY(listBase.verticalScrollPosition*scrollAbleHeight);

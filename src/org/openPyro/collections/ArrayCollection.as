@@ -115,5 +115,9 @@ package org.openPyro.collections
 		
 		}
 		
+		override public function toString():String{
+			return this._source.join(",");
+		}
+		
 	}
 }

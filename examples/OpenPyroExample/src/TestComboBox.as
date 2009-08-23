@@ -27,7 +27,6 @@ package
 		{
 			_list = new List()
 			_list.skin = new AuroraContainerSkin()
-			_list.layout = new VLayout(-1);
 			var renderers:ClassFactory = new ClassFactory(DefaultListRenderer)
 			renderers.properties = {percentWidth:100, height:25}
 			_list.itemRenderer = renderers;

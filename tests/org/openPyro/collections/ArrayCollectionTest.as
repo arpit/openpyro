@@ -23,6 +23,13 @@ package org.openPyro.collections
 			super.tearDown();
 		}
 		
+		public function testItemIndex():void{
+			assertTrue("Item index was reported incorrectly", _collection.getItemIndex(0) == 0);
+			assertTrue("Item index was reported incorrectly", _collection.getItemIndex(1) == 1);
+			assertTrue("Item index was reported incorrectly", _collection.getItemIndex(3) == 3);
+			assertTrue("Item index was reported incorrectly", _collection.getItemIndex(4) == 4);
+		}
+		
 		public function testRemoveItems():void
 		{
 			var eventFired:Boolean = false;

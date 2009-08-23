@@ -26,7 +26,7 @@ package org.openPyro.controls
 			this.backgroundPainter = new FillPainter(0xffffff);
 		}
 		
-		override protected function createChildren():void
+		/*override protected function createChildren():void
 		{
 			if(!this._rendererPool){
 				var cf:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);
@@ -35,14 +35,14 @@ package org.openPyro.controls
 			}
 			VLayout(this.layout).animationDuration = 0;
 			
-		}
+		}*/
 		
-		override protected function convertDataToCollection(dp:Object):void{
+		/*override protected function convertDataToCollection(dp:Object):void{
 			super.convertDataToCollection(dp);
 			if(!_showRoot){	
 				XMLCollection(_dataProvider).normalizedArray.shift();
 			}
-		}
+		}*/
 		
 		protected var _showRoot:Boolean = true;
 		public function set showRoot(value:Boolean):void {
@@ -53,10 +53,10 @@ package org.openPyro.controls
 			return _showRoot
 		}
 		
-		override protected function setRendererData(renderer:DisplayObject, data:Object, index:int):void{
+		/*override protected function setRendererData(renderer:DisplayObject, data:Object, index:int):void{
 			super.setRendererData(renderer, data, index);
 			renderer.addEventListener(TreeEvent.ROTATOR_CLICK, handleRotatorClick);
-		}
+		}*/
 		
 		protected function handleRotatorClick(event:TreeEvent):void
 		{

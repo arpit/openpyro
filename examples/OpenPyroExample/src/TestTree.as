@@ -1,19 +1,23 @@
 package
 {
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	
 	import org.openPyro.aurora.AuroraButtonSkin;
+	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.XMLCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
 	import org.openPyro.controls.Button;
+	import org.openPyro.controls.List;
 	import org.openPyro.controls.TextInput;
 	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ListEvent;
+	import org.openPyro.controls.listClasses.DefaultListRenderer;
+	import org.openPyro.core.ClassFactory;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.painters.FillPainter;
-	
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	public class TestTree extends Sprite
 	{
@@ -25,12 +29,33 @@ package
 			stage.scaleMode = "noScale"
 			stage.align = "TL"
 			
-			createTree()
+			//createTree()
+			testList()
+		}
+		private function testList():void{
+			var l:List = new List();
+			l.labelFunction = function(data:XMLNodeDescriptor):String{
+				if(data.node.nodeKind() == "element"){
+					return String(data.node.@label)
+				}
+				return String(data.node);
+			} 
+			l.dataProvider = xmlData;
+			l.skin = new AuroraContainerSkin();
+			l.backgroundPainter = new FillPainter(0xffffff);
+			var r:ClassFactory = new ClassFactory(DefaultListRenderer);
+			r.properties = {percentUnusedWidth:100, height:25};
+			l.itemRenderer = r;
+			l.size(300, 100);
+			addChild(l);
+			
 			
 		}
 		
+		
 		private function createTree():void{
 			tree = new Tree()
+			tree.dataProvider = xmlData
 			tree.width = 200;
 			tree.height = 600;
 			
@@ -103,9 +128,10 @@ package
 		
 		public function onTreeCreationComplete(event:PyroEvent):void{
 			tree.addEventListener(ListEvent.ITEM_CLICK, onTreeItemClick);
-			tree.dataProvider = xmlData
+			trace("setting dp")
 			
-			ICollection(tree.dataProvider).filterFunction = function(item:*, index:int, array:Array):Boolean{
+			
+			/*ICollection(tree.dataProviderCollection).filterFunction = function(item:*, index:int, array:Array):Boolean{
 				
 				var descriptor:XMLNodeDescriptor = XMLNodeDescriptor(item)
 				if(String(descriptor.node.@label).indexOf(ti.text)==0
@@ -115,10 +141,7 @@ package
 				else{
 					return false;
 				}
-			}
-			
-			
-			
+			}*/
 		}
 		
 		private function onTreeItemClick(event:ListEvent):void{

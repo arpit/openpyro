@@ -1,17 +1,5 @@
 package org.openPyro.controls
 {
-	import org.openPyro.aurora.AuroraContainerSkin;
-	import org.openPyro.controls.events.ButtonEvent;
-	import org.openPyro.controls.events.ListEvent;
-	import org.openPyro.controls.listClasses.DefaultListRenderer;
-	import org.openPyro.controls.skins.IComboBoxSkin;
-	import org.openPyro.core.ClassFactory;
-	import org.openPyro.core.UIControl;
-	import org.openPyro.layout.VLayout;
-	import org.openPyro.managers.OverlayManager;
-	import org.openPyro.skins.ISkin;
-	import org.openPyro.utils.StringUtil;
-	
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -19,6 +7,18 @@ package org.openPyro.controls
 	import flash.filters.DropShadowFilter;
 	
 	import gs.TweenMax;
+	
+	import org.openPyro.aurora.AuroraContainerSkin;
+	import org.openPyro.controls.events.ButtonEvent;
+	import org.openPyro.controls.events.ListEvent;
+	import org.openPyro.controls.listClasses.DefaultListRenderer;
+	import org.openPyro.controls.skins.IComboBoxSkin;
+	import org.openPyro.core.ClassFactory;
+	import org.openPyro.core.UIControl;
+	import org.openPyro.managers.OverlayManager;
+	import org.openPyro.painters.FillPainter;
+	import org.openPyro.skins.ISkin;
+	import org.openPyro.utils.StringUtil;
 	
 	[Event(name='open',type='org.openPyro.controls.events.DropDownEvent')]
 	[Event(name='close',type='org.openPyro.controls.events.DropDownEvent')]
@@ -44,6 +44,11 @@ package org.openPyro.controls
 			addChild(listHolder);
 			
 			_maskShape = new Shape()
+			_maskShape.graphics.beginFill(0xff000);
+			_maskShape.graphics.drawRect(0,0,100,100);
+			_maskShape.graphics.endFill();
+			_maskShape.visible = false;
+			
 			addChild(_maskShape);
 			if(!_bttn){
 				_bttn = new Button()
@@ -151,9 +156,8 @@ package org.openPyro.controls
 			
 			if(!_list)
 			{
-				_list = new List()
+				_list = new List();
 				_list.skin = new AuroraContainerSkin()
-				_list.layout = new VLayout(-1);
 				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer)
 				renderers.properties = {percentWidth:100, height:25}
 				_list.itemRenderer = renderers;
@@ -166,15 +170,7 @@ package org.openPyro.controls
 					this.stage.addChild(sprite)
 					overlayManager.overlayContainer = sprite
 				}
-				
 				overlayManager.showOnOverlay(listHolder, this);
-				
-			
-				
-				
-				//overlayManager.showPopUp(listHolder, false, false);
-				
-				
 				_list.width = this.width;
 				
 				if(!isNaN(_maxDropDownHeight))
@@ -190,23 +186,24 @@ package org.openPyro.controls
 			
 			_list.selectedIndex = _selectedIndex;
 			
-			// draw the mask //
-			
-			this._maskShape.graphics.clear()
-			this._maskShape.graphics.beginFill(0xff0000,.4)
-			this._maskShape.graphics.drawRect(-4,this.height+2,this.width+8, _list.height+4)
-			this._maskShape.graphics.endFill()
+			_maskShape.visible = true;
+			_maskShape.width = this.width+8;
+			_maskShape.height = _list.height+4;
+			_maskShape.x = -4;
+			_maskShape.y = this.height+2;
 			listHolder.mask = _maskShape;
-			_list.y = this.height-_list.height
-			TweenMax.to(_list, .5, {y:this.height+2, onComplete:function():void{
-				stage.addEventListener(MouseEvent.CLICK, onStageClick)
-			}})
+			
+			_list.y = this.height-_list.height;
+			
+			/*Hack*/
+			_list.backgroundPainter = new FillPainter(0xffffff);
+			TweenMax.to(_list, .5, {y:height+2, onComplete:function():void{
+					stage.addEventListener(MouseEvent.CLICK, onStageClick)
+				}});
 			
 		}
 		
 		protected function onStageClick(event:MouseEvent):void{
-			trace("curre "+ (event.currentTarget))
-			trace("tgt "+ (event.target))
 			if(this._isOpen){
 				close();
 			}
