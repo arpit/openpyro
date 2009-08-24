@@ -76,13 +76,14 @@ package org.openPyro.controls.listClasses
 		
 		protected function handleItemsRemoved(items:Array):void{
 			for each(var item:* in items){
-				for (var a:String in this.visibleRenderersMap){
-					if(IListDataRenderer(this.visibleRenderersMap[a]).data == item){
-						var renderer:DisplayObject = this.visibleRenderersMap[a];
-						delete(this.visibleRenderersMap[a]);
+				for (var uid:String in this.visibleRenderersMap){
+					if(IListDataRenderer(this.visibleRenderersMap[uid]).data == item){
+						var renderer:DisplayObject = this.visibleRenderersMap[uid];
+						delete(this.visibleRenderersMap[uid]);
 						renderer.parent.removeChild(renderer);
 						this.rendererPool.returnToPool(renderer);
 						needsReRendering = true;
+						displayListInvalidated = true;
 						invalidateSize();
 					}
 				}
@@ -90,9 +91,9 @@ package org.openPyro.controls.listClasses
 		}
 		
 		public function itemToItemRenderer(item:*):DisplayObject{
-			for (var a:String in this.visibleRenderersMap){
-				if(IListDataRenderer(visibleRenderersMap[a]).data == item){
-					return visibleRenderersMap[a];
+			for (var uid:String in this.visibleRenderersMap){
+				if(IListDataRenderer(visibleRenderersMap[uid]).data == item){
+					return visibleRenderersMap[uid];
 				}
 			}
 			return null;

@@ -143,6 +143,13 @@ package org.openPyro.collections
 				if(_source.indexOf(item) != -1){
 					delta.push(item);
 					ArrayUtil.remove(_source, item);
+					for each(var ob:Object in _uids){
+						if(ob.sourceItem == item){
+							ArrayUtil.remove(_uids, ob);
+							break;
+						}
+					}
+					
 					changed = true;
 				}
 			}
