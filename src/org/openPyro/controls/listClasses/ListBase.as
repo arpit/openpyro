@@ -63,6 +63,9 @@ package org.openPyro.controls.listClasses
 			if(event.kind == CollectionEventKind.REMOVE){
 				handleItemsRemoved(event.delta)
 			}
+			else if(event.kind == CollectionEventKind.ADD){
+				handleItemsAdded(event.delta);
+			}
 		}
 		
 		protected var _labelFunction:Function  = StringUtil.toStringLabel
@@ -90,20 +93,11 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
-		public function itemToItemRenderer(item:*):DisplayObject{
-			for (var uid:String in this.visibleRenderersMap){
-				if(IListDataRenderer(visibleRenderersMap[uid]).data == item){
-					return visibleRenderersMap[uid];
-				}
-			}
-			return null;
-		}
-		
 		protected function handleItemsAdded(items:Array):void{
-			
+			needsReRendering = true;
+			displayListInvalidated = true;
+			invalidateSize();	
 		}
-		
-		//public function 
 		
 		protected var _dataProviderCollection:ICollection;
 		
@@ -317,8 +311,19 @@ package org.openPyro.controls.listClasses
 			dispatchEvent(event);
 		}
 		
-		public function getRendererForDataIndex(index:uint):void{
-			
+		/**
+		 * Returns the itemRenderer for the associated with a particular
+		 * item in the dataProvider if one is created. Will return null
+		 * if the item is not being represented by a renderer at this particular
+		 * moment.
+		 */ 
+		public function itemToItemRenderer(item:*):DisplayObject{
+			for (var uid:String in this.visibleRenderersMap){
+				if(this._dataProviderCollection.getItemForUID(uid) == item){
+					return visibleRenderersMap[uid];
+				}
+			}
+			return null;
 		}
 		
 		
