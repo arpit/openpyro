@@ -20,6 +20,6 @@ package org.openPyro.collections
 		 * source after all filters have been applied
 		 */ 
 		function getItemIndex(data:Object):int;
-		//function removeItem(data:Object):void;
+		function removeItem(data:*):void;
 	}
 }

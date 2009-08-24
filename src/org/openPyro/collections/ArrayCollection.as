@@ -66,13 +66,13 @@ package org.openPyro.collections
 		}
 		
 		public function addItemsAt(items:Array, idx:Number):void{
-			var lastData:Object 
+			var location:int; 
 			if(idx==0 || _source.length==0){
 				// insert the data at the beginning
-				lastData = null;
+				location = -1;
 			}
 			else{
-				lastData = _source[idx-1];
+				location = idx-1;
 			}
 			
 			
@@ -88,7 +88,7 @@ package org.openPyro.collections
 			var collectionEvent:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			collectionEvent.delta = items;
 			
-			collectionEvent.eventNode = lastData;
+			collectionEvent.location = location;
 			collectionEvent.kind = CollectionEventKind.ADD;
 			dispatchEvent(collectionEvent);	
 		}
@@ -136,12 +136,21 @@ package org.openPyro.collections
 			return _source[index];
 		}
 		
+		public function removeItem(item:*):void{
+			removeItems([item]);
+		}
+		
 		public function removeItems(items:Array):void{
 			var changed:Boolean = false;
 			var delta:Array = [];
+			var location:int = NaN;
 			for each(var item:* in items){
-				if(_source.indexOf(item) != -1){
+				var itemIndex:Number = _source.indexOf(item);
+				if(itemIndex != -1){
 					delta.push(item);
+					if(itemIndex < location || isNaN(location)){
+						location = itemIndex;
+					}
 					ArrayUtil.remove(_source, item);
 					for each(var ob:Object in _uids){
 						if(ob.sourceItem == item){
@@ -158,6 +167,7 @@ package org.openPyro.collections
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			event.kind = CollectionEventKind.REMOVE;
 			event.delta = delta;
+			event.location = location;
 			dispatchEvent(event);
 		}
 		

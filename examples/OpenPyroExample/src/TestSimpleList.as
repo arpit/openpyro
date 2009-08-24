@@ -3,6 +3,8 @@ package
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.aurora.AuroraPainterButtonSkin;
@@ -12,6 +14,7 @@ package
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.core.ClassFactory;
+	import org.openPyro.layout.VLayout;
 	import org.openPyro.painters.GradientFillPainter;
 
 	public class TestSimpleList extends Sprite
@@ -25,6 +28,8 @@ package
 		}
 		
 		private var list:List;
+		private var tf:TextField;
+		
 		private function init(event:Event):void{
 			this.removeEventListener(Event.ENTER_FRAME, init)
 			list = new List();
@@ -32,7 +37,9 @@ package
 			var cf:ClassFactory = new ClassFactory(DefaultListRenderer);
 			cf.properties = {percentUnusedWidth:100, height:25};
 			list.itemRenderer = cf;
-			list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick)
+			//list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick);
+			list.addEventListener(ListEvent.CHANGE, onListItemClick);
+			
 			list.skin = new AuroraContainerSkin()
 			
 			list.width = 200
@@ -41,7 +48,7 @@ package
 			addChild(list);
 			
 			var dp:Array = new Array()
-			for(var i:int=0; i< 100; i++){
+			for(var i:int=0; i< 5; i++){
 				dp.push("original data: "+i)
 			}
 			
@@ -49,15 +56,35 @@ package
 			
 			var bttn:Button = createButton();
 			bttn.label = "Add some data"
-			bttn.x = 250
-			bttn.y = 10;
 			bttn.addEventListener(MouseEvent.CLICK, onBttnClick);
 			
 			var bttn2:Button = createButton();
 			bttn2.label = "Set scrollPosition"
-			bttn2.x = 250
-			bttn2.y = 50
 			bttn2.addEventListener(MouseEvent.CLICK, onBttn2Click);
+			
+			var bttn3:Button = createButton();
+			bttn3.label = "Delete selectedIndex";
+			bttn3.addEventListener(MouseEvent.CLICK, function(event:Event):void{
+				list.dataProviderCollection.removeItem(list.dataProviderCollection.getItemAt(2));
+			});
+			
+			tf = new TextField();
+			tf.border = true;
+			tf.borderColor = 0xdfdfdf;
+			tf.background = true;
+			tf.backgroundColor = 0xffffff;
+			tf.width = 140;
+			tf.height = 100;
+			tf.defaultTextFormat = new TextFormat("Arial", 12);
+			addChild(tf);
+			
+			var layout:VLayout = new VLayout(10);
+			layout.initX = list.width+20;
+			layout.initY = 20;
+			layout.layout([bttn, bttn2, bttn3,tf]);
+			
+			
+			
 			
 			
 		}
@@ -69,7 +96,7 @@ package
 			bttnSkin.painters = new GradientFillPainter([0xdfdfdf, 0xffffff])
 			bttn.skin = bttnSkin;
 			addChild(bttn);
-			bttn.width = 110;
+			bttn.width = 140;
 			return bttn;
 		}
 		
@@ -79,11 +106,12 @@ package
 		
 		private var newdataIdx:Number = 0;
 		private function onBttnClick(event:MouseEvent):void{
-			ArrayCollection(list.dataProvider).addItemsAt(["new data "+newdataIdx++], 0)
+			ArrayCollection(list.dataProviderCollection).addItemsAt(["new data "+newdataIdx++], 1)
 		}
 		
 		private function onListItemClick(event:ListEvent):void{
-			trace("click --> ");
+			tf.appendText( "list selectedIndex: "+list.selectedIndex+"\n");
+		//	list.dataProviderCollection.removeItem(list.selectedItem);
 		}
 		
 	}

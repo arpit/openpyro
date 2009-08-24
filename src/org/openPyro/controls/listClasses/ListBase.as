@@ -20,7 +20,23 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
 	import org.openPyro.utils.StringUtil;
+	
+	/**
+	 * The event dispatched when an item is clicked. This event is always broadcast
+	 * whether the selectedIndex has changed or not, unlike the change event.
+	 */ 
+	[Event (name="itemClick", type="org.openPyro.controls.events.ListEvent")]
+	
+	/**
+	 * The event dispatched when the selectedIndex property changes.
+	 */ 
+	[Event (name="change", type="org.openPyro.controls.events.ListEvent")]
 
+	/**
+	 * The ListBase class is the base class for all classes that can use
+	 * renderer recycling algorithm for displaying a lot of data. ListBase 
+	 * classes can have the IVirualizedLayout layouts applied to them.
+	 */ 
 	public class ListBase extends UIContainer
 	{
 		
@@ -59,9 +75,13 @@ package org.openPyro.controls.listClasses
 			return _dataProvider;
 		}
 		
+		/**
+		 * Function invoked when the source dataCollection changes by either having items added
+		 * or removed.
+		 */ 
 		protected function onSourceCollectionChanged(event:CollectionEvent):void{
 			if(event.kind == CollectionEventKind.REMOVE){
-				handleItemsRemoved(event.delta)
+				handleItemsRemoved(event)
 			}
 			else if(event.kind == CollectionEventKind.ADD){
 				handleItemsAdded(event.delta);
@@ -77,8 +97,18 @@ package org.openPyro.controls.listClasses
 			return _labelFunction;
 		}
 		
-		protected function handleItemsRemoved(items:Array):void{
+		protected function handleItemsRemoved(event:CollectionEvent):void{
+			var items:Array = event.delta;
+			var needsEventDispatch:Boolean = false;
+			if(event.location < _selectedIndex){
+				_selectedIndex-=items.length;
+				needsEventDispatch = true;
+			}
 			for each(var item:* in items){
+				if(item == this._selectedItem){
+					this.selectedIndex = -1;
+					needsEventDispatch = false;
+				}
 				for (var uid:String in this.visibleRenderersMap){
 					if(IListDataRenderer(this.visibleRenderersMap[uid]).data == item){
 						var renderer:DisplayObject = this.visibleRenderersMap[uid];
@@ -91,6 +121,11 @@ package org.openPyro.controls.listClasses
 					}
 				}
 			}
+			if(needsEventDispatch){
+				var listEvent:ListEvent = new ListEvent(ListEvent.CHANGE);
+				dispatchEvent(listEvent);
+			}
+			
 		}
 		
 		protected function handleItemsAdded(items:Array):void{
@@ -286,7 +321,9 @@ package org.openPyro.controls.listClasses
 					}
 					break;
 				}
-			} 
+			}
+			var listEvent:ListEvent = new ListEvent(ListEvent.ITEM_CLICK);
+			dispatchEvent(listEvent); 
 		}
 		
 		protected var _selectedIndex:int=-1;
@@ -299,6 +336,7 @@ package org.openPyro.controls.listClasses
 			if(_selectedIndex == val) return;
 			for(var uid:String in visibleRenderersMap){
 				if(_selectedIndex == _dataProviderCollection.getUIDIndex(uid)){
+					
 					if(visibleRenderersMap[uid] is IListDataRenderer){
 						IListDataRenderer(visibleRenderersMap[uid]).selected = false;
 						break;
@@ -307,6 +345,8 @@ package org.openPyro.controls.listClasses
 			}
 			
 			_selectedIndex = val;
+			_selectedItem = _dataProviderCollection.getItemAt(_selectedIndex);
+			
 			var event:ListEvent = new ListEvent(ListEvent.CHANGE);
 			dispatchEvent(event);
 		}

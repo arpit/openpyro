@@ -17,14 +17,9 @@ package org.openPyro.collections.events
 		 public var kind:String; 
 		 
 		 /**
-		 * The data node around near which this event happened.
-		 * For example, in case of elements added to a tree the property is used 
-		 * to find what the parentNode of the newly added 
-		 * branch is.
-		 * 
-		 * Note: This is not the DisplayObject associated with the data
+		 * The zero-base index in the collection of the item(s) specified in the items property.
 		 */ 
-		 public var eventNode:Object;
+		 public var location:int;
 		
 		public function CollectionEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

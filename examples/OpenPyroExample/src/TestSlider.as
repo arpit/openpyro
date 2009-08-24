@@ -33,13 +33,13 @@ package
 		
 		private function testSliderBug():void{
 			
-			var container = new UIContainer();
+			var container:UIContainer = new UIContainer();
 			container.size(585, 700);
 			container.layout = new VLayout(10);
 			
 			container.backgroundPainter = new FillPainter(0xcccccc);
 			
-			var redMultiplier = new Slider(Direction.HORIZONTAL);
+			var redMultiplier:Slider = new Slider(Direction.HORIZONTAL);
 			redMultiplier.percentWidth = 90;
 			redMultiplier.height = 15;
 			redMultiplier.minimum = 0;
@@ -49,7 +49,7 @@ package
 			container.addChild(redMultiplier);
 			redMultiplier.value = 1;
 			
-			var greenMultiplier = new Slider(Direction.HORIZONTAL);
+			var greenMultiplier:Slider = new Slider(Direction.HORIZONTAL);
 			greenMultiplier.percentWidth = 90;
 			greenMultiplier.height = 15;
 			greenMultiplier.minimum = 0;
