@@ -84,7 +84,7 @@ package org.openPyro.controls.listClasses
 				handleItemsRemoved(event)
 			}
 			else if(event.kind == CollectionEventKind.ADD){
-				handleItemsAdded(event.delta);
+				handleItemsAdded(event);
 			}
 		}
 		
@@ -128,7 +128,10 @@ package org.openPyro.controls.listClasses
 			
 		}
 		
-		protected function handleItemsAdded(items:Array):void{
+		protected function handleItemsAdded(event:CollectionEvent):void{
+			if(event.location < _selectedIndex){
+				selectedIndex = _selectedIndex+event.delta.length;
+			}
 			needsReRendering = true;
 			displayListInvalidated = true;
 			invalidateSize();	
