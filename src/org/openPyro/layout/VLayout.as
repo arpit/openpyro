@@ -4,8 +4,8 @@ package org.openPyro.layout{
 	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIContainer;
-	import org.openPyro.effects.EffectDescriptor;
-	import org.openPyro.effects.PyroEffect;
+/*	import org.openPyro.effects.EffectDescriptor;
+	import org.openPyro.effects.PyroEffect;*/
 
 	public class VLayout implements ILayout, IContainerMeasurementHelper{
 		
@@ -62,21 +62,14 @@ package org.openPyro.layout{
 		public var animationDuration:Number = 0;
 		
 		public function layout(children:Array):void{
-			
 			var nowY:Number=_initY;
-			var effectDescriptors:Array  = new Array();
 			for(var i:uint=0; i<children.length; i++){
 				var c:DisplayObject = children[i] as DisplayObject;
-				//c.y = nowY;
-				var eff:EffectDescriptor = new EffectDescriptor(c, animationDuration, {y:nowY})
-				effectDescriptors.push(eff);
 				c.x = _initX;
+				c.y = nowY;
 				nowY+=c.height;
-				nowY+=this._vGap
+				nowY+=this._vGap;
 			}
-			var move:PyroEffect = new PyroEffect()
-			move.effectDescriptors = effectDescriptors;
-			move.start()		
 		}
 		
 		/**		

@@ -41,7 +41,8 @@ package
 			addChild(target);
 			
 			createButton("Fade", function (event:MouseEvent):void{
-				Effect.on(target).fadeIn(2);
+				Effect.on(target).fadeIn(2).slideDown(1);
+				
 			});
 			createButton("Slide Up", function(event:MouseEvent):void{
 				Effect.on(target).slideUp(1);

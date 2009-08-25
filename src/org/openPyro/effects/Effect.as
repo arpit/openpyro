@@ -1,18 +1,23 @@
 package org.openPyro.effects{
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
+	import flash.events.EventDispatcher;
 	
 	import gs.TweenMax;
 	
 	import org.openPyro.core.MeasurableControl;
 	
-	public class Effect{
+	public class Effect extends EventDispatcher{
 		
 		private var _target:DisplayObject;
 		private var _effectQueue:Array;
 		
 		public function Effect(){
 			_effectQueue = [];
+		}
+		
+		public function get effectQueue():Array{
+			return _effectQueue;
 		}
 		
 		public function set target(tgt:DisplayObject):void{
@@ -22,6 +27,14 @@ package org.openPyro.effects{
 		public static function on(tgt:DisplayObject):Effect{
 			var effect:Effect = new Effect();
 			effect.target = tgt;
+			return effect;
+		}
+		
+		public static function play(effectDescriptor:EffectDescriptor):Effect{
+			var effect:Effect = new Effect();
+			effect.target = effectDescriptor.target;
+			effect.effectQueue.push(effectDescriptor);
+			effect.triggerQueue();
 			return effect;
 		}
 		
@@ -59,13 +72,6 @@ package org.openPyro.effects{
 			return this;
 		}
 			
-		private var areEffectsPlaying:Boolean = false;
-		private function triggerQueue():void{
-			if(!areEffectsPlaying){
-				playNextEffect();
-			}
-		}
-		
 		public function wipeDown(duration:Number=1):Effect{
 			/*
 			 The effectDescriptor target is null because its populated
@@ -130,17 +136,25 @@ package org.openPyro.effects{
 			_effectMask.parent.removeChild(_effectMask);
 			_effectMask = null;					
 		}
+		
+		
+		private var _areEffectsPlaying:Boolean = false;
+		
+		public function triggerQueue():void{
+			if(!_areEffectsPlaying){
+				playNextEffect();
+			}
+		}
+		
+		
 	
 		private function playNextEffect():void{
 			if(_effectQueue.length == 0){
-				/*
-				 * TODO
-				 */ 
-				//dispatchEvent()
-				areEffectsPlaying = false;
+				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
+				_areEffectsPlaying = false;
 				return;
 			}
-			areEffectsPlaying = true;
+			_areEffectsPlaying = true;
 			var nextEff:EffectDescriptor = EffectDescriptor(_effectQueue.shift());
 			var props:Object = nextEff.properties;
 			if(props.onComplete){

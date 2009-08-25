@@ -1,13 +1,13 @@
 package org.openPyro.containers
 {
-	import org.openPyro.core.Direction;
-	import org.openPyro.core.UIContainer;
-	import org.openPyro.effects.EffectDescriptor;
-	import org.openPyro.effects.PyroEffect;
-	
 	import flash.display.DisplayObject;
 	
 	import gs.easing.Quart;
+	
+	import org.openPyro.core.Direction;
+	import org.openPyro.core.UIContainer;
+	import org.openPyro.effects.Effect;
+	import org.openPyro.effects.EffectDescriptor;
 	
 	public class SlidePane extends ViewStack
 	{
@@ -16,12 +16,10 @@ package org.openPyro.containers
 		 
 		 protected var _previouslySelectedChild:UIContainer = null;
 		 protected var _previouslySelectedIndex:int = -1;
-		 protected var animationEffect:PyroEffect;
 		 
 		 public function SlidePane()
 		 {
 		 	super()
-		 	animationEffect = new PyroEffect();
 		 }
 		 
 		 /**
@@ -116,8 +114,8 @@ package org.openPyro.containers
 				oldViewEffectDescriptor.properties = {y:transitionDirectionMultiplier*this.height, ease:Quart.easeOut}
 				newViewEffectDescriptor.properties = {y:0, ease:Quart.easeOut}
 			}
-			animationEffect.effectDescriptors = [oldViewEffectDescriptor, newViewEffectDescriptor];
-			animationEffect.start();
+			Effect.play(oldViewEffectDescriptor);
+			Effect.play(newViewEffectDescriptor);
 		 }
 		 
 	}
