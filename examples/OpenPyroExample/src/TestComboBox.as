@@ -17,7 +17,6 @@ package
 		{
 			stage.scaleMode = "noScale"
 			stage.align = "TL"
-			
 			testCB()
 			
 		}

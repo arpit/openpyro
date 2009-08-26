@@ -6,8 +6,6 @@ package org.openPyro.controls
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	
-	import gs.TweenMax;
-	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.events.ButtonEvent;
 	import org.openPyro.controls.events.ListEvent;
@@ -15,6 +13,7 @@ package org.openPyro.controls
 	import org.openPyro.controls.skins.IComboBoxSkin;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.UIControl;
+	import org.openPyro.effects.Effect;
 	import org.openPyro.managers.OverlayManager;
 	import org.openPyro.painters.FillPainter;
 	import org.openPyro.skins.ISkin;
@@ -30,8 +29,7 @@ package org.openPyro.controls
 		private var _bttn:Button;
 		private var listHolder:Sprite;
 		private var _list:List;
-		protected var _maskShape:Shape;
-		
+	
 		public function ComboBox() {
 			super();
 		}
@@ -43,13 +41,6 @@ package org.openPyro.controls
 			listHolder = new Sprite()
 			addChild(listHolder);
 			
-			_maskShape = new Shape()
-			_maskShape.graphics.beginFill(0xff000);
-			_maskShape.graphics.drawRect(0,0,100,100);
-			_maskShape.graphics.endFill();
-			_maskShape.visible = false;
-			
-			addChild(_maskShape);
 			if(!_bttn){
 				_bttn = new Button()
 				_bttn.addEventListener(ButtonEvent.DOWN, onButtonDown)
@@ -157,18 +148,26 @@ package org.openPyro.controls
 			if(!_list)
 			{
 				_list = new List();
-				_list.skin = new AuroraContainerSkin()
-				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer)
-				renderers.properties = {percentWidth:100, height:25}
+				_list.skin = new AuroraContainerSkin();
+				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer);
+				renderers.properties = {percentWidth:100, height:25};
 				_list.itemRenderer = renderers;
+				
+				/*
+				Hack: For some reason without any background painter, the list renders
+				with a 1px line dividing itemRenderers initially. So we just set the
+				backgroundPainter to white.
+				*/
+				_list.backgroundPainter = new FillPainter(0xffffff);
+		
 				_list.filters = [new DropShadowFilter(2,90, 0, .5,2,2)];
 				
 				listHolder.addChildAt(_list,0);
-				var overlayManager:OverlayManager = OverlayManager.getInstance()
+				var overlayManager:OverlayManager = OverlayManager.getInstance();
 				if(!overlayManager.overlayContainer){
-					var sprite:Sprite = new Sprite()
-					this.stage.addChild(sprite)
-					overlayManager.overlayContainer = sprite
+					var sprite:Sprite = new Sprite();
+					this.stage.addChild(sprite);
+					overlayManager.overlayContainer = sprite;
 				}
 				overlayManager.showOnOverlay(listHolder, this);
 				_list.width = this.width;
@@ -180,26 +179,17 @@ package org.openPyro.controls
 				_list.dataProvider = _dataProvider;	
 				_list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick);
 				_list.addEventListener(ListEvent.CHANGE, onListChange);
-				_list.validateSize()
+				_list.validateSize();
 				
 			}
 			
 			_list.selectedIndex = _selectedIndex;
 			
-			_maskShape.visible = true;
-			_maskShape.width = this.width+8;
-			_maskShape.height = _list.height+4;
-			_maskShape.x = -4;
-			_maskShape.y = this.height+2;
-			listHolder.mask = _maskShape;
+			_list.y = this.height+2;
 			
-			_list.y = this.height-_list.height;
-			
-			/*Hack*/
-			_list.backgroundPainter = new FillPainter(0xffffff);
-			TweenMax.to(_list, .5, {y:height+2, onComplete:function():void{
-					stage.addEventListener(MouseEvent.CLICK, onStageClick)
-				}});
+			Effect.on(_list).slideDown(1).onComplete(function():void{
+				stage.addEventListener(MouseEvent.CLICK, onStageClick)
+			});
 			
 		}
 		
@@ -233,7 +223,8 @@ package org.openPyro.controls
 			if(!_isOpen) return;
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick)
 			_isOpen = false;
-			TweenMax.to(_list, .5, {y:this.height-_list.height})
+			//TweenMax.to(_list, .5, {y:this.height-_list.height})
+			Effect.on(_list).wipeUp(.5);
 		}
 		
 		

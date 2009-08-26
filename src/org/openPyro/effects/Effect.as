@@ -1,11 +1,14 @@
 package org.openPyro.effects{
+	import caurina.transitions.*;
+	
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.events.EventDispatcher;
-	
-	import gs.TweenMax;
+	import flash.utils.getQualifiedClassName;
 	
 	import org.openPyro.core.MeasurableControl;
+	import org.openPyro.core.UIContainer;
 	
 	public class Effect extends EventDispatcher{
 		
@@ -28,6 +31,12 @@ package org.openPyro.effects{
 			var effect:Effect = new Effect();
 			effect.target = tgt;
 			return effect;
+		}
+		
+		private var _onComplete:Function;
+		
+		public function onComplete(fn:Function):void{
+			this._onComplete = fn;	
 		}
 		
 		public static function play(effectDescriptor:EffectDescriptor):Effect{
@@ -116,13 +125,21 @@ package org.openPyro.effects{
 			mask.graphics.beginFill(0xff0000);
 			mask.graphics.drawRect(0,0,_target.width, _target.height);
 			mask.graphics.endFill();
-			
+				trace("create mask: "+getQualifiedClassName(_target.parent))
 			
 			if(_target.parent is MeasurableControl){
-				MeasurableControl(_target.parent).$addChild(mask);
+				var parent:MeasurableControl = MeasurableControl(_target.parent);
+				if(parent is UIContainer){
+					parent.$addChildAt(mask,UIContainer(parent).contentPane.getChildIndex(_target)+1);
+				}
+				else{
+					trace("addchild")
+					parent.$addChildAt(mask,MeasurableControl(parent).getChildIndex(_target));
+				}
+				
 			}
 			else{
-				_target.parent.addChild(mask);
+				_target.parent.addChildAt(mask,(DisplayObjectContainer(_target.parent).getChildIndex(_target)+1));
 			}
 			mask.x = _target.x;
 			mask.y = _target.y;
@@ -150,6 +167,9 @@ package org.openPyro.effects{
 	
 		private function playNextEffect():void{
 			if(_effectQueue.length == 0){
+				if(_onComplete != null){
+					_onComplete();
+				}
 				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
 				_areEffectsPlaying = false;
 				return;
@@ -172,7 +192,9 @@ package org.openPyro.effects{
 				nextEff.beforeStart();
 			}
 			
-			TweenMax.to(nextEff.target, nextEff.duration, props);
+			props.time = nextEff.duration;
+			
+			Tweener.addTween(nextEff.target,props);
 		}		
 	}
 }

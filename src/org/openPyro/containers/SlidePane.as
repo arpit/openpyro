@@ -2,8 +2,6 @@ package org.openPyro.containers
 {
 	import flash.display.DisplayObject;
 	
-	import gs.easing.Quart;
-	
 	import org.openPyro.core.Direction;
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.effects.Effect;
@@ -105,14 +103,14 @@ package org.openPyro.containers
 			
 			if(_transitionDirection == Direction.HORIZONTAL){
 				_selectedChild.x = -1*transitionDirectionMultiplier*this.width;
-				oldViewEffectDescriptor.properties = {x:transitionDirectionMultiplier*this.width, ease:Quart.easeOut}
-				newViewEffectDescriptor.properties = {x:0, ease:Quart.easeOut}	
+				oldViewEffectDescriptor.properties = {x:transitionDirectionMultiplier*this.width, transition:"easeOutQuart"}
+				newViewEffectDescriptor.properties = {x:0, transition:"easeOutQuart"}	
 			}
 			else if(_transitionDirection == Direction.VERTICAL)
 			{
 				_selectedChild.y = -1*transitionDirectionMultiplier*this.height;
-				oldViewEffectDescriptor.properties = {y:transitionDirectionMultiplier*this.height, ease:Quart.easeOut}
-				newViewEffectDescriptor.properties = {y:0, ease:Quart.easeOut}
+				oldViewEffectDescriptor.properties = {y:transitionDirectionMultiplier*this.height, transition:"easeOutQuart"}
+				newViewEffectDescriptor.properties = {y:0, transition:"easeOutQuart"}
 			}
 			Effect.play(oldViewEffectDescriptor);
 			Effect.play(newViewEffectDescriptor);
