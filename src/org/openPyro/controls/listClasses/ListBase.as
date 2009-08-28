@@ -75,15 +75,19 @@ package org.openPyro.controls.listClasses
 			return _dataProvider;
 		}
 		
+		protected var animateRenderers:Boolean = false;
+				
 		/**
 		 * Function invoked when the source dataCollection changes by either having items added
 		 * or removed.
 		 */ 
 		protected function onSourceCollectionChanged(event:CollectionEvent):void{
 			if(event.kind == CollectionEventKind.REMOVE){
+				animateRenderers = true;
 				handleItemsRemoved(event)
 			}
 			else if(event.kind == CollectionEventKind.ADD){
+				animateRenderers = true;
 				handleItemsAdded(event);
 			}
 		}
@@ -214,6 +218,11 @@ package org.openPyro.controls.listClasses
 			super.queueValidateDisplayList(event);
 		}
 		
+		/**
+		 * Array that maintains a list of the newlyCreatedRenderers.
+		 */
+		protected var newlyCreatedRenderers:Array = [];
+		
 		protected function createNewRenderersAndMap(newRenderersUIDs:Array):void{
 			var newRendererMap:Dictionary = new Dictionary();
 			for(var uid:String in this.visibleRenderersMap){
@@ -226,11 +235,15 @@ package org.openPyro.controls.listClasses
 					newRendererMap[uid] = visibleRenderersMap[uid];
 				}
 			}
+			
+			newlyCreatedRenderers = [];
+			
 			for(var i:int=0; i<newRenderersUIDs.length; i++){
 				var newRendererUID:String = newRenderersUIDs[i];
 					
 				if(!newRendererMap[newRendererUID]){
 					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
+					newlyCreatedRenderers.push(newRenderer);
 					newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
 					contentPane.addChild(newRenderer);
 					if(newRenderer is MeasurableControl){
@@ -260,7 +273,8 @@ package org.openPyro.controls.listClasses
 		
 		protected function renderListItems():void{
 			createNewRenderersAndMap(IVirtualizedLayout(this.layout).visibleRenderersData);
-			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
+			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, animateRenderers);
+			animateRenderers = false;
 			displayListInvalidated = true;
 			invalidateDisplayList();
 		}	

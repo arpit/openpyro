@@ -26,7 +26,7 @@ package org.openPyro.controls
 		{
 			var newRenderersData:Array = IVirtualizedLayout(layout).visibleRenderersData;
 			createNewRenderersAndMap(newRenderersData);
-			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap);
+			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, false);
 			dispatchEvent(event);
 			
 		}

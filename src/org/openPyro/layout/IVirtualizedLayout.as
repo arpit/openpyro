@@ -9,6 +9,6 @@ package org.openPyro.layout
 		function set listBase(object:ListBase):void;
 		function get numberOfVerticalRenderersNeededForDisplay():int;
 		function get visibleRenderersData():Array;
-		function positionRendererMap(map:Dictionary):void;
+		function positionRendererMap(map:Dictionary, newlyCreatedRenderers:Array, animate:Boolean):void;
 	}
 }

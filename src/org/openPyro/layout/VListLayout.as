@@ -1,11 +1,14 @@
 package org.openPyro.layout
 {
+	import flash.display.DisplayObject;
 	import flash.utils.Dictionary;
 	
-	import org.openPyro.collections.ArrayCollection;
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.IIterator;
+	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.controls.listClasses.ListBase;
+	import org.openPyro.core.IDataRenderer;
+	import org.openPyro.effects.Effect;
 
 	public class VListLayout extends VLayout implements IVirtualizedLayout
 	{
@@ -59,13 +62,21 @@ package org.openPyro.layout
 			
 			for(var i:int=0; i<numberOfVerticalRenderersNeededForDisplay; i++){
 				var itemUID:String = sourceCollection.getUIDForItemAtIndex(iterator.cursorIndex);
+				if(itemUID == null){
+					break;
+				}
 				newRenderersData.push(itemUID);
 				iterator.cursorIndex++;	
 			}
 			return newRenderersData;
 		}
 		
-		public function positionRendererMap(map:Dictionary):void{
+		public function positionRendererMap(map:Dictionary, newlyCreatedRenderers:Array, animate:Boolean):void{
+			var s:String = "";
+			for(var a in map){
+				s+=IDataRenderer(map[a]).data+"\n"
+			}
+			//trace("map => \n"+s+"\n---------------------")
 			var listBase:ListBase = ListBase(_container);
 			var index:Number = 0;
 			
@@ -75,11 +86,29 @@ package org.openPyro.layout
 								{data:uid, 
 								renderer:map[uid], 
 								itemIndex:listBase.dataProviderCollection.getUIDIndex(uid)
-								})	
+								});	
 			}
 			itemsArray.sortOn("itemIndex");
 			for(var i:int=0; i<itemsArray.length; i++){
-				itemsArray[i].renderer.y = itemsArray[i].itemIndex*listBase.rowHeight;
+				var newRendererY:Number = itemsArray[i].itemIndex*listBase.rowHeight;
+				if(newRendererY == itemsArray[i].renderer.y){
+					continue;
+				}
+				var renderer:DisplayObject = itemsArray[i].renderer;
+				if(animate){
+					if(newlyCreatedRenderers.indexOf(renderer) == -1){
+						Effect.on(renderer).completeCurrent().moveY(newRendererY,.7);
+					}
+					else{
+						Effect.on(renderer).completeCurrent().fadeIn();
+						renderer.y = newRendererY;
+					}	
+				}
+				else{
+					DefaultListRenderer(renderer).y
+					renderer.y = newRendererY;
+				}
+				
 			}
 			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
 			listBase.scrollContentPaneY(listBase.verticalScrollPosition*scrollAbleHeight);

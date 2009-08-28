@@ -5,10 +5,11 @@ package org.openPyro.effects{
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
 	import flash.events.EventDispatcher;
-	import flash.utils.getQualifiedClassName;
+	import flash.events.TimerEvent;
+	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import org.openPyro.core.MeasurableControl;
-	import org.openPyro.core.UIContainer;
 	
 	public class Effect extends EventDispatcher{
 		
@@ -27,9 +28,72 @@ package org.openPyro.effects{
 			_target = tgt;
 		}
 		
+		private static var _currentlyAnimatingTargets:Dictionary = new Dictionary();
+		
+		/**
+		 * Assigns the target on which the <code>Effect</code>
+		 * will play
+		 */ 
 		public static function on(tgt:DisplayObject):Effect{
+			if(_currentlyAnimatingTargets[tgt] != null){
+				return Effect(_currentlyAnimatingTargets[tgt]);
+			}
 			var effect:Effect = new Effect();
 			effect.target = tgt;
+			_currentlyAnimatingTargets[tgt] = effect;
+			return effect;
+		}
+		
+		/**
+		 * Cancels the currently playing effect defined in
+		 * the <code>_currentEffectDescriptor</code>
+		 */ 
+		public function cancelCurrent():Effect{
+			Tweener.removeTweens(this._target);
+			_currentEffectDescriptor = null;
+			_areEffectsPlaying = false;
+			delete(_currentlyAnimatingTargets[this._target]);
+			return this;
+		}
+		
+		/**
+		 * Completes the current transition defined in the 
+		 * <code>_currentEffectDescriptor</code>
+		 */ 
+		public function completeCurrent():Effect{
+			Tweener.removeTweens(this._target);
+			if(_currentEffectDescriptor){
+				for(var a:String in this._currentEffectDescriptor.properties){
+					if(!(_currentEffectDescriptor.properties[a] is Function) && a != "time"){
+						this._target[a] = _currentEffectDescriptor.properties[a];
+					}
+				}
+			}
+			_currentEffectDescriptor = null;
+			_areEffectsPlaying = false;
+			delete(_currentlyAnimatingTargets[this._target]);
+			dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
+			return this;
+		}
+		
+		public function wait(duration:Number = 1):Effect{
+			var timer:Timer = new Timer(duration*1000);
+			timer.addEventListener(TimerEvent.TIMER_COMPLETE, function():void{
+				invalidateEffectQueue();
+			});
+			timer.start();
+			return this;
+		}
+		
+		
+		/**
+		 * Convinience method to play any effectDescriptor
+		 */ 
+		public static function play(effectDescriptor:EffectDescriptor):Effect{
+			var effect:Effect = new Effect();
+			effect.target = effectDescriptor.target;
+			effect.effectQueue.push(effectDescriptor);
+			effect.invalidateEffectQueue();
 			return effect;
 		}
 		
@@ -39,25 +103,23 @@ package org.openPyro.effects{
 			this._onComplete = fn;	
 		}
 		
-		public static function play(effectDescriptor:EffectDescriptor):Effect{
-			var effect:Effect = new Effect();
-			effect.target = effectDescriptor.target;
-			effect.effectQueue.push(effectDescriptor);
-			effect.triggerQueue();
-			return effect;
+		public function moveY(value:Number, duration:Number=1):Effect{
+			_effectQueue.push(new EffectDescriptor(this._target, duration, {y:value}));
+			invalidateEffectQueue();
+			return this;
 		}
 		
 		public function fadeIn(duration:Number=1):Effect{
 			_effectQueue.push(new EffectDescriptor(this._target, duration, {alpha:1},function():void{
 				_target.alpha=0;
 			}));
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;
 		}
 		
 		public function fadeOut(duration:Number=1):Effect{
 			_effectQueue.push(new EffectDescriptor(this._target, duration, {alpha:0}));
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;	
 		}
 		
@@ -70,14 +132,14 @@ package org.openPyro.effects{
 			}
 			_effectQueue.push(new EffectDescriptor(this._target, duration, 
 								{y:originalY, onComplete:removeEffectMask},prepareSlideDown));
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;
 		}
 		
 		public function slideUp(duration:Number=1):Effect{
 			_effectQueue.push(new EffectDescriptor(this._target, duration, 
 								{y:-this._target.height, onComplete:removeEffectMask},createEffectMask));
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;
 		}
 			
@@ -95,7 +157,7 @@ package org.openPyro.effects{
 								})
 			
 			_effectQueue.push(discriptor);
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;
 		}
 		
@@ -113,30 +175,26 @@ package org.openPyro.effects{
 								})
 			
 			_effectQueue.push(discriptor);
-			triggerQueue();
+			invalidateEffectQueue();
 			return this;
 		}
 		
 		private var _effectMask:Shape;
 		
-		
+		/**
+		 * Creates a mask for effects requiring masks. The mask 
+		 * created is added to the target's parent at a level
+		 * one above the target
+		 */ 
 		private function createEffectMask():Shape{
 			var mask:Shape = new Shape();
 			mask.graphics.beginFill(0xff0000);
 			mask.graphics.drawRect(0,0,_target.width, _target.height);
 			mask.graphics.endFill();
-				trace("create mask: "+getQualifiedClassName(_target.parent))
 			
 			if(_target.parent is MeasurableControl){
 				var parent:MeasurableControl = MeasurableControl(_target.parent);
-				if(parent is UIContainer){
-					parent.$addChildAt(mask,UIContainer(parent).contentPane.getChildIndex(_target)+1);
-				}
-				else{
-					trace("addchild")
-					parent.$addChildAt(mask,MeasurableControl(parent).getChildIndex(_target));
-				}
-				
+				parent.$addChildAt(mask,MeasurableControl(parent).getChildIndex(_target)+1);
 			}
 			else{
 				_target.parent.addChildAt(mask,(DisplayObjectContainer(_target.parent).getChildIndex(_target)+1));
@@ -157,26 +215,38 @@ package org.openPyro.effects{
 		
 		private var _areEffectsPlaying:Boolean = false;
 		
-		public function triggerQueue():void{
+		/**
+		 * Invalidates the effect queue. If an effect is playing,
+		 * it doesnt do anything at all, but if none are playing
+		 * it triggers the playNextEffect() function.
+		 * 
+		 */ 
+		public function invalidateEffectQueue():void{
 			if(!_areEffectsPlaying){
+				_currentlyAnimatingTargets[this._target] = this;
 				playNextEffect();
 			}
 		}
 		
+		private var _currentEffectDescriptor:EffectDescriptor;
 		
-	
+		/**
+		 * Plays the next effect in the effectQueue
+		 */ 
 		private function playNextEffect():void{
 			if(_effectQueue.length == 0){
 				if(_onComplete != null){
 					_onComplete();
 				}
+				delete(_currentlyAnimatingTargets[this._target]);
+				_currentEffectDescriptor = null;
 				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
 				_areEffectsPlaying = false;
 				return;
 			}
 			_areEffectsPlaying = true;
-			var nextEff:EffectDescriptor = EffectDescriptor(_effectQueue.shift());
-			var props:Object = nextEff.properties;
+			_currentEffectDescriptor = EffectDescriptor(_effectQueue.shift());
+			var props:Object = _currentEffectDescriptor.properties;
 			if(props.onComplete){
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
@@ -188,13 +258,13 @@ package org.openPyro.effects{
 				props.onComplete = playNextEffect;	
 			}
 			
-			if(nextEff.beforeStart != null){
-				nextEff.beforeStart();
+			if(_currentEffectDescriptor.beforeStart != null){
+				_currentEffectDescriptor.beforeStart();
 			}
 			
-			props.time = nextEff.duration;
+			props.time = _currentEffectDescriptor.duration;
 			
-			Tweener.addTween(nextEff.target,props);
+			Tweener.addTween(_currentEffectDescriptor.target,props);
 		}		
 	}
 }
