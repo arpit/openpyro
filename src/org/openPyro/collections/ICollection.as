@@ -5,7 +5,6 @@ package org.openPyro.collections
 	public interface ICollection extends IEventDispatcher
 	{
 		function get length():int;
-		//function get normalizedArray():Array;
 		function get iterator():IIterator;
 		function set filterFunction(f:Function):void
 		function refresh():void;
@@ -21,5 +20,10 @@ package org.openPyro.collections
 		 */ 
 		function getItemIndex(data:Object):int;
 		function removeItem(data:*):void;
+		function removeItems(items:Array):void;
+		function addItems(items:Array):void;
+		function addItem(obj:*):void;
+		function addItemsAt(items:Array, idx:Number):void;
+		
 	}
 }

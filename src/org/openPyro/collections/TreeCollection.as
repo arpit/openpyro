@@ -4,6 +4,13 @@ package org.openPyro.collections
 	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.utils.ArrayUtil;
 	
+	/**
+	 * The TreeCollection class is a ICollection that can be used by controls
+	 * like Tree etc that represent Heirarchial collections. Under the hood,
+	 * the TreeCollection maintains an XMLCollection of the data XML that it
+	 * was initialized with and a mappedArrayCollection that is actually reflected
+	 * to the UI.
+	*/
 	public class TreeCollection extends CollectionBase implements ICollection
 	{
 		private var _xml:XML;
@@ -51,29 +58,29 @@ package org.openPyro.collections
 		}
 		
 		/**
-		 * This is the array that is currently visible to the 
-		 * List that is behaving like a Tree.
+		 * Returns the length of the collection as its seen.
 		 */ 
-		/*public function get normalizedArray():Array{
-			return _source;
-		}*/
-		
 		public function get length():int
 		{
 			return _mappedArrayCollection.length;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
 		public function get iterator():IIterator
 		{
 			return _iterator;
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
 		public function getItemIndex(item:Object):int{
 			return _mappedArrayCollection.getItemIndex(item);
 		}
 		
 		public function getNodeDescriptorFor(node:XML):XMLNodeDescriptor{
-			
 			for(var i:int=0; i<allXMLNodeDescriptors.length; i++){
 				var src:XMLNodeDescriptor = allXMLNodeDescriptors[i];
 				if(src.node == node){
@@ -83,35 +90,34 @@ package org.openPyro.collections
 			return null;
 		}
 		
-	/*	public function getOpenChildNodes(item:XMLNodeDescriptor):Array{
-			var allChildNodes:Array = getChildNodes(item);
-			var visibleChildNodes:Array = new Array()
-			while(allChildNodes.length > 0){
-				var newNode:XMLNodeDescriptor = allChildNodes.shift();
-				visibleChildNodes.push(newNode);
-				if(!newNode.isLeaf() && !newNode.open){
-					var closedNodeChildren:Array = getChildNodes(newNode);
-					for(var i:int=0; i<closedNodeChildren.length; i++){
-						if(allChildNodes.indexOf(closedNodeChildren[i]) != -1){
-							ArrayUtil.remove(allChildNodes, closedNodeChildren[i]);
-						}
-					}
-				}
-			}
-			return visibleChildNodes;
-		} */
-		
-		
 		public function getItemAt(idx:int):*{
 			return _mappedArrayCollection.getItemAt(idx);
 		}
+		
+		
+		public function closeNode(nodeDescriptor:XMLNodeDescriptor):void{
+			var items:Array = [];
+			nodeDescriptor.open = false;
+			items = getChildNodesArray(nodeDescriptor.node, items);
+			removeItems(items);
+		}
+		
+		protected function getChildNodesArray(node:XML, arr:Array):Array{
+			for(var i:int=0; i<node.elements("*").length(); i++){
+				arr.push(node.elements("*")[i]);
+				if(node.hasComplexContent()){
+					getChildNodesArray(node.elements("*")[i], arr);
+				}
+			}
+			return arr;
+		}
+		
 		
 		/*
 		TODO: This is very close to a copy paste
 		from ArrayCollection
 		*/
 		public function removeItems(items:Array):void{
-			trace("removeutems: "+items.length)
 			var changed:Boolean = false;
 			var delta:Array = [];
 			var location:int = NaN;
@@ -131,7 +137,6 @@ package org.openPyro.collections
 							break;
 						}
 					}
-					
 					changed = true;
 				}
 			}
@@ -145,8 +150,6 @@ package org.openPyro.collections
 		
 		public function openNode(xmlNodeDescriptor:XMLNodeDescriptor):void{
 			xmlNodeDescriptor.open = true;
-			var iterator:ArrayIterator = originalDataSource.iterator as ArrayIterator;
-			iterator.cursorIndex = originalDataSource.getItemIndex(xmlNodeDescriptor.node);
 			
 			var addedEvent:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			addedEvent.kind = CollectionEventKind.ADD;
@@ -175,15 +178,9 @@ package org.openPyro.collections
 			}
 		}
 		
-/*		public function addItems(items:Array, parentNode:XMLNodeDescriptor):void{
-			var nodeIndex:int = _source.indexOf(parentNode);
-			ArrayUtil.insertArrayAtIndex(_source,items, (nodeIndex+1));
-			var collectionEvent:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
-			collectionEvent.delta = items;
-			//collectionEvent.eventNode = parentNode;
-			collectionEvent.kind = CollectionEventKind.ADD;
-			dispatchEvent(collectionEvent);	
-		}*/
+		public function addItemsUnderNode(items:Array, parentNode:XMLNodeDescriptor):void{
+			
+		}
 		
 		protected var _filterFunction:Function;
 		
@@ -195,6 +192,17 @@ package org.openPyro.collections
 		}
 		
 		public function removeItem(item:*):void{
+			removeItems([item]);
+		}
+		
+		public function addItem(obj:*):void{
+			addItems[obj];
+		}
+		public function addItems(items:Array):void{
+			addItemsAt(items,this.length)
+		}
+		
+		public function addItemsAt(items:Array, idx:Number):void{
 			
 		}
 		

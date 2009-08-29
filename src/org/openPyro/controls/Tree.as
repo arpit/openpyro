@@ -24,34 +24,11 @@ package org.openPyro.controls
 				return;
 			}
 			if(nodeDescriptor.open){
-				closeNode(nodeDescriptor);
+				TreeCollection(this.dataProviderCollection).closeNode(nodeDescriptor);
 			}
 			else{
-				openNode(nodeDescriptor);
+				TreeCollection(this.dataProviderCollection).openNode(nodeDescriptor);
 			}
 		}
-		
-		protected function closeNode(nodeDescriptor:XMLNodeDescriptor):void{
-			var items:Array = [];
-			nodeDescriptor.open = false;
-			items = getChildNodesArray(nodeDescriptor.node, items);
-			TreeCollection(this._dataProviderCollection).removeItems(items);
-		}
-		
-		
-		protected function getChildNodesArray(node:XML, arr:Array):Array{
-			for(var i:int=0; i<node.elements("*").length(); i++){
-				arr.push(node.elements("*")[i]);
-				if(node.hasComplexContent()){
-					getChildNodesArray(node.elements("*")[i], arr);
-				}
-			}
-			return arr;
-		}
-		
-		protected function openNode(nodeDescriptor:XMLNodeDescriptor):void{
-			TreeCollection(this.dataProviderCollection).openNode(nodeDescriptor);
-		}
-
 	}
 }

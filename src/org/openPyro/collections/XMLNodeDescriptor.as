@@ -3,6 +3,11 @@ package org.openPyro.collections
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	
+	/**
+	 * The XMLNodeDescriptor class represents an XML node
+	 * and maintains some extra properties like depth, parent
+	 * and whether its open or closed.
+	 */ 
 	public class XMLNodeDescriptor extends EventDispatcher
 	{
 		public var node:XML;
