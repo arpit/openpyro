@@ -111,6 +111,7 @@ package org.openPyro.collections
 		from ArrayCollection
 		*/
 		public function removeItems(items:Array):void{
+			trace("removeutems: "+items.length)
 			var changed:Boolean = false;
 			var delta:Array = [];
 			var location:int = NaN;
@@ -134,7 +135,7 @@ package org.openPyro.collections
 					changed = true;
 				}
 			}
-			if(!changed) return;
+			if(! changed) return;
 			var event:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
 			event.kind = CollectionEventKind.REMOVE;
 			event.delta = delta;
@@ -155,6 +156,7 @@ package org.openPyro.collections
 			var newUIDObs:Array = [];
 			
 			getSubtree(xmlNodeDescriptor.node, newUIDObs, newNodes);
+			
 			_mappedArrayCollection.addItemsAt(newNodes,  addedEvent.location);
 			ArrayUtil.insertArrayAtIndex(_uids, newUIDObs, addedEvent.location);
 			addedEvent.delta = newNodes;
