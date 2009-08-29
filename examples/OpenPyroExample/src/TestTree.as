@@ -1,27 +1,19 @@
 package
 {
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
-	import org.openPyro.aurora.AuroraButtonSkin;
 	import org.openPyro.aurora.AuroraContainerSkin;
-	import org.openPyro.collections.ICollection;
+	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
-	import org.openPyro.controls.Button;
-	import org.openPyro.controls.List;
-	import org.openPyro.controls.TextInput;
 	import org.openPyro.controls.Tree;
-	import org.openPyro.controls.events.ListEvent;
-	import org.openPyro.controls.listClasses.DefaultListRenderer;
+	import org.openPyro.controls.TextInput;
+	import org.openPyro.controls.treeClasses.DefaultTreeItemRenderer;
 	import org.openPyro.core.ClassFactory;
-	import org.openPyro.events.PyroEvent;
 	import org.openPyro.painters.FillPainter;
 
 	public class TestTree extends Sprite
 	{
-		private var tree:Tree;
 		private var ti:TextInput = new TextInput()
 			
 		public function TestTree()
@@ -32,27 +24,58 @@ package
 			//createTree()
 			testList()
 		}
+		
+		private var xmlData:XML = <node label="rootNode">
+									<leaf label="leaf1">value1</leaf>
+									<leaf label="leaf2">value1</leaf>
+									<leaf label="leaf3">
+										<leaf label="leaf3_1">
+											<leaf label="leaf3_2">
+											</leaf>
+										</leaf>
+									</leaf>
+									<leaf label="leaf4">
+										<leaf label="leaf4_1">
+											<leaf label="leaf4_2">
+											</leaf>
+										</leaf>
+									</leaf>
+								</node>
+								
+		private var xmlData2:XML = <node label="rootNode">
+									<leaf label="leaf1">value1</leaf>
+									<leaf label="leaf2">value1</leaf>
+									<leaf label="leaf3">
+										<leaf label="leaf3_1">
+											<leaf label="leaf3_2">
+											</leaf>
+										</leaf>
+									</leaf>
+								</node>
+								
 		private function testList():void{
-			var l:List = new List();
+			
+			var l:Tree = new Tree();
+			var xc:TreeCollection = new TreeCollection(xmlData);
+			
 			l.labelFunction = function(data:XMLNodeDescriptor):String{
-				if(data.node.nodeKind() == "element"){
+				if(data && data.node && data.node.nodeKind() == "element"){
 					return String(data.node.@label)
 				}
-				return String(data.node);
+				return "---";
 			} 
-			l.dataProvider = xmlData;
+			l.dataProvider = xc;
 			l.skin = new AuroraContainerSkin();
 			l.backgroundPainter = new FillPainter(0xffffff);
-			var r:ClassFactory = new ClassFactory(DefaultListRenderer);
+			var r:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);
 			r.properties = {percentUnusedWidth:100, height:25};
 			l.itemRenderer = r;
-			l.size(300, 100);
+			l.size(200, 300);
+			l.x = l.y = 20;
 			addChild(l);
-			
-			
 		}
 		
-		
+		/*
 		private function createTree():void{
 			tree = new Tree()
 			tree.dataProvider = xmlData
@@ -84,7 +107,7 @@ package
 			var bttn2:Button = new Button()
 			bttn2.skin = new AuroraButtonSkin()
 			bttn2.addEventListener(MouseEvent.CLICK, function(event:Event):void{
-				XMLCollection(tree.dataProvider).filterFunction=null;
+				TreeCollection(tree.dataProvider).filterFunction=null;
 				//tree.dataProvider = xmlData2
 			})
 			bttn2.width = 70
@@ -104,27 +127,7 @@ package
 			tree.closeNode(node);
 		}
 		
-		private var xmlData:XML = <node label="rootNode">
-									<leaf label="leaf1">value1</leaf>
-									<leaf label="leaf2">value1</leaf>
-									<leaf label="leaf3">
-										<leaf label="leaf3_1">
-											<leaf label="leaf3_2">
-											</leaf>
-										</leaf>
-									</leaf>
-								</node>
-								
-		private var xmlData2:XML = <node label="rootNode">
-									<leaf label="leaf1">value1</leaf>
-									<leaf label="leaf2">value1</leaf>
-									<leaf label="leaf3">
-										<leaf label="leaf3_1">
-											<leaf label="leaf3_2">
-											</leaf>
-										</leaf>
-									</leaf>
-								</node>
+		
 		
 		public function onTreeCreationComplete(event:PyroEvent):void{
 			tree.addEventListener(ListEvent.ITEM_CLICK, onTreeItemClick);
@@ -141,12 +144,12 @@ package
 				else{
 					return false;
 				}
-			}*/
+			}
 		}
 		
 		private function onTreeItemClick(event:ListEvent):void{
 			trace("tree>> "+XMLNodeDescriptor(tree.selectedItem).isLeaf());
 		}
-		
+		*/
 	}
 }

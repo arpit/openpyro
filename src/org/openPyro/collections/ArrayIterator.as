@@ -1,16 +1,16 @@
 package org.openPyro.collections
 {
+	import flash.events.EventDispatcher;
+	
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.IteratorEvent;
-	
-	import flash.events.EventDispatcher;
 	
 	public class ArrayIterator extends EventDispatcher implements IIterator
 	{
 		protected var _array:Array;
-		protected var _collection:ICollection;
+		protected var _collection:ArrayCollection;
 		
-		public function ArrayIterator(collection:ICollection){
+		public function ArrayIterator(collection:ArrayCollection){
 			_collection = collection;
 			collection.addEventListener(CollectionEvent.COLLECTION_CHANGED, onCollectionChanged);
 			setSource()

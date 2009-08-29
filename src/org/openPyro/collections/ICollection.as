@@ -5,7 +5,7 @@ package org.openPyro.collections
 	public interface ICollection extends IEventDispatcher
 	{
 		function get length():int;
-		function get normalizedArray():Array;
+		//function get normalizedArray():Array;
 		function get iterator():IIterator;
 		function set filterFunction(f:Function):void
 		function refresh():void;

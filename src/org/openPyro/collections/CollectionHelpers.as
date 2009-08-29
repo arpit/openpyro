@@ -9,7 +9,7 @@ package org.openPyro.collections
 				return new ArrayCollection(src as Array);
 			}
 			else if(src is XML){
-				return new XMLCollection(src as XML)
+				return new TreeCollection(src as XML)
 			}
 			else return ICollection(src);
 			

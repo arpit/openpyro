@@ -115,9 +115,11 @@ package org.openPyro.controls.listClasses
 				}
 				for (var uid:String in this.visibleRenderersMap){
 					if(IListDataRenderer(this.visibleRenderersMap[uid]).data == item){
+						
 						var renderer:DisplayObject = this.visibleRenderersMap[uid];
 						delete(this.visibleRenderersMap[uid]);
 						renderer.parent.removeChild(renderer);
+						
 						this.rendererPool.returnToPool(renderer);
 						needsReRendering = true;
 						displayListInvalidated = true;
@@ -133,6 +135,7 @@ package org.openPyro.controls.listClasses
 		}
 		
 		protected function handleItemsAdded(event:CollectionEvent):void{
+			trace("location: "+event.delta.length)
 			if(event.location < _selectedIndex){
 				selectedIndex = _selectedIndex+event.delta.length;
 			}
@@ -242,37 +245,48 @@ package org.openPyro.controls.listClasses
 				var newRendererUID:String = newRenderersUIDs[i];
 					
 				if(!newRendererMap[newRendererUID]){
-					var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
-					newlyCreatedRenderers.push(newRenderer);
-					newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
-					contentPane.addChild(newRenderer);
-					if(newRenderer is MeasurableControl){
-						MeasurableControl(newRenderer).doOnAdded();
-					}
-					if(newRenderer is IListDataRenderer){
-						var listRenderer:IListDataRenderer = newRenderer as IListDataRenderer;
-						var baseListData:BaseListData = new BaseListData()
-						baseListData.list = this;
-						baseListData.rowIndex = i;
-						listRenderer.baseListData = baseListData;
-						if(_dataProviderCollection.getUIDForItemAtIndex(_selectedIndex) == newRendererUID){
-							listRenderer.selected = true;	
-						}
-						else{
-							listRenderer.selected = false;
-						}
-					}
-					if(newRenderer is IDataRenderer){
-						IDataRenderer(newRenderer).data = _dataProviderCollection.getItemForUID(newRendererUID);
-					}
+					var newRenderer:DisplayObject = createNewRenderer(newRendererUID, i)
 					newRendererMap[newRendererUID] = newRenderer;
 				}
 			}
 			this.visibleRenderersMap = newRendererMap;
 		}
 		
+		/**
+		 * Creates a new renderer for a given UID and rowIndex
+		 * 
+		 * Todo: this could use a cleaner signiture for easier extensions
+		 */ 
+		protected function createNewRenderer(newRendererUID:String,rowIndex:Number):DisplayObject{
+			var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
+			newlyCreatedRenderers.push(newRenderer);
+			newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
+			contentPane.addChild(newRenderer);
+			if(newRenderer is MeasurableControl){
+				MeasurableControl(newRenderer).doOnAdded();
+			}
+			if(newRenderer is IListDataRenderer){
+				var listRenderer:IListDataRenderer = newRenderer as IListDataRenderer;
+				var baseListData:BaseListData = new BaseListData()
+				baseListData.list = this;
+				baseListData.rowIndex = rowIndex;
+				listRenderer.baseListData = baseListData;
+				if(_dataProviderCollection.getUIDForItemAtIndex(_selectedIndex) == newRendererUID){
+					listRenderer.selected = true;	
+				}
+				else{
+					listRenderer.selected = false;
+				}
+			}
+			if(newRenderer is IDataRenderer){
+				IDataRenderer(newRenderer).data = _dataProviderCollection.getItemForUID(newRendererUID);
+			}
+			return newRenderer;
+		}
+		
 		protected function renderListItems():void{
-			createNewRenderersAndMap(IVirtualizedLayout(this.layout).visibleRenderersData);
+			var visibleRendererData:Array = IVirtualizedLayout(this.layout).visibleRenderersData;
+			createNewRenderersAndMap(visibleRendererData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, animateRenderers);
 			animateRenderers = false;
 			displayListInvalidated = true;

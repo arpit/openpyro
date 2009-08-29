@@ -72,11 +72,6 @@ package org.openPyro.layout
 		}
 		
 		public function positionRendererMap(map:Dictionary, newlyCreatedRenderers:Array, animate:Boolean):void{
-			var s:String = "";
-			for(var a in map){
-				s+=IDataRenderer(map[a]).data+"\n"
-			}
-			//trace("map => \n"+s+"\n---------------------")
 			var listBase:ListBase = ListBase(_container);
 			var index:Number = 0;
 			

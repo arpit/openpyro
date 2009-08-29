@@ -10,6 +10,7 @@ package org.openPyro.controls.treeClasses
 	import org.openPyro.controls.events.TreeEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.layout.HLayout;
+	import org.openPyro.painters.FillPainter;
 	import org.openPyro.painters.TrianglePainter;
 	
 	[Event(name="rotatorClick", type="org.openPyro.controls.events.TreeEvent")]
@@ -30,8 +31,7 @@ package org.openPyro.controls.treeClasses
 		
 		private var folderIcon:DisplayObject;
 		private var leafIcon:DisplayObject;
-		private var rotator:Sprite;
-		private var arrow:Sprite;
+		private var rotatorButton:Sprite;
 		
 		override protected function createChildren():void{
 			super.createChildren()
@@ -54,29 +54,30 @@ package org.openPyro.controls.treeClasses
 				if(!folderIcon.parent){
 					addChild(folderIcon);
 				}
-				if(!rotator){
-					rotator = new Sprite();
-					rotator.graphics.beginFill(0x000000,0)
-					rotator.graphics.drawRect(0,0, 20,20);
-					rotator.graphics.endFill()
+				if(!rotatorButton){
+					rotatorButton = new Sprite();
+					rotatorButton.graphics.beginFill(0x000000,0)
+					rotatorButton.graphics.drawRect(0,0, 20,20);
+					rotatorButton.graphics.endFill()
 					
 					
-					arrow = new Sprite();
-					
+					var arrow:Sprite = new Sprite();
+					arrow.name = "rotator_arrow";
 					var trianglePainter:TrianglePainter = new TrianglePainter(TrianglePainter.CENTERED);
 					trianglePainter.draw(arrow.graphics, 8,8)
-					//rotator.addChild(arrow)
-					addChild(arrow)
+					rotatorButton.addChild(arrow)
+					arrow.x = 20/2
+					arrow.y = 20/2
 					arrow.cacheAsBitmap = true;
 					
-					rotator.buttonMode = true;
-					rotator.useHandCursor = true
+					rotatorButton.buttonMode = true;
+					rotatorButton.useHandCursor = true
 					
-					rotator.addEventListener(MouseEvent.CLICK, onRotatorClick)//,true,1,true)
-					rotator.mouseChildren=false;
+					rotatorButton.addEventListener(MouseEvent.CLICK, onRotatorClick)//,true,1,true)
+					rotatorButton.mouseChildren=false;
 				}
-				if(!rotator.parent){
-					addChild(rotator);
+				if(!rotatorButton.parent){
+					addChild(rotatorButton);
 				}
 			}
 			else{
@@ -84,9 +85,9 @@ package org.openPyro.controls.treeClasses
 					removeChild(folderIcon);
 					folderIcon =  null;
 				}
-				if(rotator && rotator.parent){
-					removeChild(rotator);
-					rotator = null
+				if(rotatorButton && rotatorButton.parent){
+					removeChild(rotatorButton);
+					rotatorButton = null
 				}
 				if(arrow && arrow.parent){
 					removeChild(arrow);
@@ -109,12 +110,12 @@ package org.openPyro.controls.treeClasses
 		
 		private function setRotatorDirection(event:Event=null):void{
 			
-			if(!rotator || !rotator.parent) return;
+			if(!rotatorButton || !rotatorButton.parent) return;
 			if(XMLNodeDescriptor(_data).open){
-				arrow.rotation = 90
+				rotatorButton.getChildByName("rotator_arrow").rotation = 90
 			}
 			else{
-				arrow.rotation = 0
+				rotatorButton.getChildByName("rotator_arrow").rotation = 0
 			}
 		}
 		
@@ -123,8 +124,8 @@ package org.openPyro.controls.treeClasses
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			if(rotator && rotator.parent){
-				rotator.y = (unscaledHeight-rotator.height)/2
+			if(rotatorButton && rotatorButton.parent){
+				rotatorButton.y = (unscaledHeight-rotatorButton.height)/2
 			}
 			
 			setRotatorDirection()
@@ -132,8 +133,8 @@ package org.openPyro.controls.treeClasses
 			rendererLayout.initX = XMLNodeDescriptor(_data).depth*15+10
 			rendererLayout.initY = 5;
 			var children:Array = []
-			if(rotator && rotator.parent){
-				children.push(rotator)
+			if(rotatorButton && rotatorButton.parent){
+				children.push(rotatorButton)
 			}
 			else{
 				rendererLayout.initX+=10;
@@ -145,14 +146,6 @@ package org.openPyro.controls.treeClasses
 				rendererLayout.initX+=10
 			}
 			children.push(_labelField);
-			
-			if(arrow){
-				arrow.x = rotator.x+ (rotator.width - arrow.width)/2+arrow.width/2
-				arrow.y =  rotator.y+ (rotator.height - arrow.height)/2+arrow.height/2;
-				
-			}
-			
-			
 			rendererLayout.layout(children);
 		}
 	}

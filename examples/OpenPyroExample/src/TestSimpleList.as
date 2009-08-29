@@ -43,7 +43,7 @@ package
 			list.skin = new AuroraContainerSkin()
 			
 			list.width = 200
-			list.height = 200
+			list.height = 500
 			list.x = list.y = 10;
 			addChild(list);
 			
@@ -63,7 +63,7 @@ package
 			bttn2.addEventListener(MouseEvent.CLICK, onBttn2Click);
 			
 			var bttn3:Button = createButton();
-			bttn3.label = "Delete selectedIndex";
+			bttn3.label = "Delete #2";
 			bttn3.addEventListener(MouseEvent.CLICK, function(event:Event):void{
 				list.dataProviderCollection.removeItem(list.dataProviderCollection.getItemAt(2));
 			});
@@ -82,10 +82,6 @@ package
 			layout.initX = list.width+20;
 			layout.initY = 20;
 			layout.layout([bttn, bttn2, bttn3,tf]);
-			
-			
-			
-			
 			
 		}
 		
@@ -106,7 +102,7 @@ package
 		
 		private var newdataIdx:Number = 0;
 		private function onBttnClick(event:MouseEvent):void{
-			ArrayCollection(list.dataProviderCollection).addItemsAt(["new data "+newdataIdx++], 1)
+			ArrayCollection(list.dataProviderCollection).addItemsAt(["new data "+newdataIdx++,"new data "+newdataIdx++,"new data "+newdataIdx++], 0)
 		}
 		
 		private function onListItemClick(event:ListEvent):void{

@@ -1,13 +1,15 @@
 package
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.*;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.List;
-	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.ScrollBar;
+	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.core.*;
+	import org.openPyro.effects.Effect;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.examples.DimensionMarkerSkin;
 	import org.openPyro.examples.HaloTrackSkin;
@@ -190,6 +192,7 @@ package
 			//container.horizontalScrollBar.visible = false;
 			//trace('list height: '+list.height, 'list measuredht: '+list.measuredHeight, 'hScrollBar y'+list.horizontalScrollBar.y)
             trace(List(_e.target).selectedIndex+", "+List(_e.target).selectedItem);
+            Effect.on(DisplayObject(_e.target)).slideDown(1);
 		}
 		
 		public function onStageResize(event:Event):void{

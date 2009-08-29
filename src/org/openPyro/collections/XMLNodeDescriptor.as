@@ -29,7 +29,7 @@ package org.openPyro.collections
 		
 		public function isLeaf():Boolean{
 			if(!node) return false;
-			if (node.children().length() > 0){
+			if (node.hasComplexContent()){
 				return false
 			}
 			return true;
