@@ -1,7 +1,5 @@
 package org.openPyro.collections
 {
-	import flash.events.EventDispatcher;
-	
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.utils.ArrayUtil;
@@ -97,6 +95,16 @@ package org.openPyro.collections
 		
 		public function getItemAt(index:int):*{
 			return _source[index];
+		}
+		
+		public function removeItemAt(index:int):void{
+			var item:* = _source[index];
+			ArrayUtil.removeItemAt(_source, index);
+			var evt:CollectionEvent = new CollectionEvent(CollectionEvent.COLLECTION_CHANGED);
+			evt.kind = CollectionEventKind.REMOVE;
+			evt.delta = [item];
+			evt.location = index;
+			dispatchEvent(evt);
 		}
 		
 		public function removeItem(item:*):void{

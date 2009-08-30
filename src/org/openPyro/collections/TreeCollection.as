@@ -22,9 +22,10 @@ package org.openPyro.collections
 		
 		public function TreeCollection(xml:XML=null)
 		{
-			source = xml;
+			if(xml){
+				source = xml;
+			}
 		}
-		
 		
 		protected function parseNode(node:XML, depth:int, parentNodeDescriptor:XMLNodeDescriptor):void{
 			var desc:XMLNodeDescriptor = new XMLNodeDescriptor()
@@ -50,8 +51,14 @@ package org.openPyro.collections
 			_mappedArrayCollection = new ArrayCollection();
 			allXMLNodeDescriptors = new Array();
 			originalDataSource = new XMLCollection(x);
-			_iterator = new ArrayIterator(_mappedArrayCollection)
 			parseNode(_xml, 0, null);
+			if(!_showRoot){
+				originalDataSource.removeItemAt(0);
+				_mappedArrayCollection.removeItemAt(0);
+				ArrayUtil.removeItemAt(_uids, 0);
+				
+			}
+			_iterator = new ArrayIterator(_mappedArrayCollection)
 			
 			dispatchEvent(new CollectionEvent(CollectionEvent.COLLECTION_CHANGED));
 			
@@ -122,7 +129,6 @@ package org.openPyro.collections
 			var delta:Array = [];
 			var location:int = NaN;
 			for each(var item:* in items){
-				
 				var itemIndex:Number = getItemIndex(item);
 				if(itemIndex != -1){
 					var nodeDes:XMLNodeDescriptor = getNodeDescriptorFor(item);
@@ -204,6 +210,20 @@ package org.openPyro.collections
 		
 		public function addItemsAt(items:Array, idx:Number):void{
 			
+		}
+		
+		private var _showRoot:Boolean = true;
+		
+		/**
+		 * Parameter returns whether or not to show the root of the
+		 * XML data provider. Currently the parameter only works if
+		 * the property is set before the dataProvider is parsed
+		 * 
+		 * ie for a Tree control, set the showRoot property before
+		 * setting the dataProvider
+		 */ 
+		public function set showRoot(val:Boolean):void{
+			_showRoot = val;
 		}
 		
 	}

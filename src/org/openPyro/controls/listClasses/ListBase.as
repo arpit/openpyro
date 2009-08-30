@@ -43,7 +43,10 @@ package org.openPyro.controls.listClasses
 		public function ListBase()
 		{
 			super();
-			this._labelFunction = StringUtil.toStringLabel
+			if(_labelFunction == null){
+				this._labelFunction = StringUtil.toStringLabel
+			}
+			
 		}
 		
 		protected var _dataProvider:Object;
@@ -69,7 +72,11 @@ package org.openPyro.controls.listClasses
 			}
 			convertDataToCollection(src);
 			_dataProviderCollection.addEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
+			displayListInvalidated =true;
 			needsReRendering = true;
+			forceInvalidateDisplayList = true;
+			invalidateSize();
+			invalidateDisplayList();
 		}
 		public function get dataProvider():Object{
 			return _dataProvider;
@@ -92,7 +99,8 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
-		protected var _labelFunction:Function  = StringUtil.toStringLabel
+		protected var _labelFunction:Function
+		
 		public function set labelFunction(func:Function):void{
 			_labelFunction = func;
 		}
@@ -135,7 +143,6 @@ package org.openPyro.controls.listClasses
 		}
 		
 		protected function handleItemsAdded(event:CollectionEvent):void{
-			trace("location: "+event.delta.length)
 			if(event.location < _selectedIndex){
 				selectedIndex = _selectedIndex+event.delta.length;
 			}
@@ -213,12 +220,13 @@ package org.openPyro.controls.listClasses
 		}
 		
 		override public function queueValidateDisplayList(event:PyroEvent=null):void{
+			super.queueValidateDisplayList(event);
 			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering ){
 				return;
 			}
 			_needsReRendering = false;
 			renderListItems();
-			super.queueValidateDisplayList(event);
+			
 		}
 		
 		/**

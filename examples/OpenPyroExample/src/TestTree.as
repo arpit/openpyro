@@ -4,10 +4,10 @@ package
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.collections.TreeCollection;
-	import org.openPyro.collections.XMLCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
-	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.TextInput;
+	import org.openPyro.controls.Tree;
+	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.treeClasses.DefaultTreeItemRenderer;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.painters.FillPainter;
@@ -26,14 +26,14 @@ package
 		}
 		
 		private var xmlData:XML = <node label="rootNode">
-									<leaf label="leaf1">value1</leaf>
-									<leaf label="leaf2">value1</leaf>
 									<leaf label="leaf3">
 										<leaf label="leaf3_1">
 											<leaf label="leaf3_2">
 											</leaf>
 										</leaf>
 									</leaf>
+									<leaf label="leaf1">value1</leaf>
+									<leaf label="leaf2">value1</leaf>
 									<leaf label="leaf4">
 										<leaf label="leaf4_1">
 											<leaf label="leaf4_2">
@@ -58,13 +58,10 @@ package
 			var l:Tree = new Tree();
 			var xc:TreeCollection = new TreeCollection(xmlData);
 			
-			l.labelFunction = function(data:XMLNodeDescriptor):String{
-				if(data && data.node && data.node.nodeKind() == "element"){
-					return String(data.node.@label)
-				}
-				return "---";
-			} 
-			l.dataProvider = xc;
+			l.addEventListener(ListEvent.ITEM_CLICK, function(event:ListEvent):void{
+				trace(l.selectedItem);
+			}); 
+			l.dataProvider = xmlData;
 			l.skin = new AuroraContainerSkin();
 			l.backgroundPainter = new FillPainter(0xffffff);
 			var r:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);

@@ -1,6 +1,5 @@
 package org.openPyro.utils
 {
-	import flexunit.framework.Assert;
 	import flexunit.framework.TestCase;
 	
 
@@ -49,6 +48,11 @@ package org.openPyro.utils
 			ArrayUtil.remove(testArray, "zero");
 			assertTrue("Array value at 0 was unexpected "+testArray[0], testArray[0]=="one");
 			assertTrue("Array length did not reduce after remove", testArray.length == 8);
+		}
+		
+		public function testRemoveAt():void{
+			ArrayUtil.removeItemAt(testArray, 0);
+			assertTrue("Array value at 0 was unexpected "+testArray[0], testArray[0]=="one");
 		}
 		
 		public function testRemoveDuplicates():void{

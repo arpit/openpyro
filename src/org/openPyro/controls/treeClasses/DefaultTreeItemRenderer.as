@@ -29,9 +29,9 @@ package org.openPyro.controls.treeClasses
 			super();
 		}
 		
-		private var folderIcon:DisplayObject;
-		private var leafIcon:DisplayObject;
-		private var rotatorButton:Sprite;
+		protected var icon:DisplayObject;
+		protected var leafIcon:DisplayObject;
+		protected var rotatorButton:Sprite;
 		
 		override protected function createChildren():void{
 			super.createChildren()
@@ -48,11 +48,11 @@ package org.openPyro.controls.treeClasses
 			}
 			
 			if(!XMLNodeDescriptor(value).isLeaf()){
-				if(!folderIcon){
-					folderIcon = new folderIconClass();
+				if(!icon){
+					icon = new folderIconClass();
 				}
-				if(!folderIcon.parent){
-					addChild(folderIcon);
+				if(!icon.parent){
+					addChild(icon);
 				}
 				if(!rotatorButton){
 					rotatorButton = new Sprite();
@@ -81,9 +81,9 @@ package org.openPyro.controls.treeClasses
 				}
 			}
 			else{
-				if(folderIcon && folderIcon.parent){
-					removeChild(folderIcon);
-					folderIcon =  null;
+				if(icon && icon.parent){
+					removeChild(icon);
+					icon =  null;
 				}
 				if(rotatorButton && rotatorButton.parent){
 					removeChild(rotatorButton);
@@ -139,8 +139,8 @@ package org.openPyro.controls.treeClasses
 			else{
 				rendererLayout.initX+=10;
 			}
-			if(folderIcon && folderIcon.parent){
-				children.push(folderIcon)
+			if(icon && icon.parent){
+				children.push(icon)
 			}
 			else{
 				rendererLayout.initX+=10

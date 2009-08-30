@@ -7,6 +7,7 @@ package org.openPyro.controls.listClasses
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.display.Sprite;
 	
 	public class DefaultListRenderer extends UIControl implements IListDataRenderer
 	{
@@ -15,6 +16,7 @@ package org.openPyro.controls.listClasses
 		
 		protected var _rollOverBackgroundPainter:IPainter;
 		protected var _rollOutBackgroundPainter:IPainter;
+		protected var _highlightCursorSprite:Sprite;
 		
 		public function DefaultListRenderer() {
 			super();
@@ -42,19 +44,27 @@ package org.openPyro.controls.listClasses
 			if(!_rollOverBackgroundPainter){
 				_rollOverBackgroundPainter = new FillPainter(0x559DE6)
 			}
-			if(!_rollOutBackgroundPainter){
-				_rollOutBackgroundPainter = new FillPainter(0xffffff)
-			}
-			this.backgroundPainter = this._rollOutBackgroundPainter
+			_highlightCursorSprite = new Sprite();
+			addChildAt(_highlightCursorSprite,0);
 		}
 		
 		protected var _baseListData:BaseListData;
+		
+		/**
+		 * @private
+		 */ 
 		public function set baseListData(value:BaseListData):void{
 			_baseListData = value
 		}
-		public function set rollOutBackgroundPainter(painter:IPainter):void
-		{
-			this._rollOutBackgroundPainter = painter;
+		
+		/**
+		 * The <code>BaseListData</code> property relates the itemRenderer
+		 * to the List (or List subclass) that it belongs to.
+		 * 
+		 * @see org.openPyro.controls.listClasses.BaseListData
+		 */ 
+		public function get baseListData():BaseListData{
+			return _baseListData;
 		}
 		
 		public function set rollOverBackgroundPainter(painter:IPainter):void
@@ -77,13 +87,15 @@ package org.openPyro.controls.listClasses
 		
 		protected function mouseOverHandler(event:MouseEvent):void
 		{
-			this.backgroundPainter = _rollOverBackgroundPainter;
+			_highlightCursorSprite.graphics.clear();
+			_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
+			_highlightCursorSprite.visible = true;
 		}
 		
 		protected function mouseOutHandler(event:MouseEvent):void
 		{
 			if(!_selected){
-				this.backgroundPainter = _rollOutBackgroundPainter;
+				_highlightCursorSprite.visible=false;	
 			}
 		}
 		
@@ -110,10 +122,13 @@ package org.openPyro.controls.listClasses
 		{
 			_selected = b;
 			if(_selected){
-				this.backgroundPainter = _rollOverBackgroundPainter;
+				_highlightCursorSprite.graphics.clear();
+				_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
+				_highlightCursorSprite.visible = true;
 			}
 			else{
-				this.backgroundPainter = _rollOutBackgroundPainter;
+				_highlightCursorSprite.visible = false;
+				
 			}
 			invalidateDisplayList();
 			
