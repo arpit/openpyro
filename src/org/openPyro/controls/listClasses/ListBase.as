@@ -221,7 +221,7 @@ package org.openPyro.controls.listClasses
 		
 		override public function queueValidateDisplayList(event:PyroEvent=null):void{
 			super.queueValidateDisplayList(event);
-			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering ){
+			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering || isNaN(height) || isNaN(width)){
 				return;
 			}
 			_needsReRendering = false;
