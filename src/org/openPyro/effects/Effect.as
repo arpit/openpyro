@@ -6,11 +6,12 @@ package org.openPyro.effects{
 	import flash.display.Shape;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
 	
 	import org.openPyro.core.MeasurableControl;
-	
+
 	public class Effect extends EventDispatcher{
 		
 		private var _target:DisplayObject;
@@ -110,9 +111,22 @@ package org.openPyro.effects{
 		}
 		
 		public function fadeIn(duration:Number=1):Effect{
-			_effectQueue.push(new EffectDescriptor(this._target, duration, {alpha:1},function():void{
-				_target.alpha=0;
-			}));
+			var hadFilters:Boolean = _target.filters.length > 0;
+			_effectQueue.push(new EffectDescriptor(this._target, 
+							
+							duration, {alpha:1, onComplete:function():void{
+								if(!hadFilters){
+									_target.filters = [];
+								}	
+							}},
+							
+							function():void{
+								_target.alpha=0;
+								if(_target.filters.length == 0){
+									_target.filters = [new DropShadowFilter(1,90,0,0)]
+								}
+							}
+			));
 			invalidateEffectQueue();
 			return this;
 		}

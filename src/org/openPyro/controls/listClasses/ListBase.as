@@ -20,6 +20,7 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
 	import org.openPyro.utils.StringUtil;
+	import org.openPyro.painters.IPainter;
 	
 	/**
 	 * The event dispatched when an item is clicked. This event is always broadcast
@@ -337,12 +338,18 @@ package org.openPyro.controls.listClasses
 			_columnWidth = v;
 		}
 		
-		protected var borderStrokePainter:StrokePainter = new StrokePainter(new Stroke(1,0xaaaaaa))
+		protected var _borderStrokePainter:IPainter = new StrokePainter(new Stroke(1,0xaaaaaa))
+		
+		public function set borderStrokePainter(painter:IPainter):void{
+			_borderStrokePainter = painter;
+			invalidateDisplayList();
+		}
+		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number) : void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-			if(borderStrokePainter){
+			if(_borderStrokePainter){
 				borderRect.graphics.clear();
-				borderStrokePainter.draw(borderRect.graphics, unscaledWidth, unscaledHeight);
+				_borderStrokePainter.draw(borderRect.graphics, unscaledWidth, unscaledHeight);
 			}
 		}
 		

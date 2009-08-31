@@ -1,13 +1,13 @@
 package org.openPyro.controls.listClasses
 {
-	import org.openPyro.core.UIControl;
-	import org.openPyro.painters.FillPainter;
-	import org.openPyro.painters.IPainter;
-	
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.display.Sprite;
+	
+	import org.openPyro.core.UIControl;
+	import org.openPyro.painters.FillPainter;
+	import org.openPyro.painters.IPainter;
 	
 	public class DefaultListRenderer extends UIControl implements IListDataRenderer
 	{
@@ -43,6 +43,10 @@ package org.openPyro.controls.listClasses
 			
 			if(!_rollOverBackgroundPainter){
 				_rollOverBackgroundPainter = new FillPainter(0x559DE6)
+			}
+			
+			if(!_backgroundPainter){
+				_backgroundPainter = new FillPainter(0xffffff);
 			}
 			_highlightCursorSprite = new Sprite();
 			addChildAt(_highlightCursorSprite,0);

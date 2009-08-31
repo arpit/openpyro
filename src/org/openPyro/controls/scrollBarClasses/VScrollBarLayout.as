@@ -41,8 +41,8 @@ package org.openPyro.controls.scrollBarClasses
 			}
 			if(_scrollBar.incrementButton)
 			{
-				_scrollBar.incrementButton.y =  _scrollBar.height-_scrollBar.incrementButton.height;
-				allocatedHeight+=_scrollBar.incrementButton.height;
+				_scrollBar.incrementButton.y =  _scrollBar.height-_scrollBar.incrementButton.height-1;
+				allocatedHeight+=(_scrollBar.incrementButton.height+1);
 			}
 			if(_scrollBar.slider && _scrollBar.decrementButton)
 			{
