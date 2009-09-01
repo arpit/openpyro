@@ -1,5 +1,6 @@
 package
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -43,7 +44,7 @@ package
 			list.skin = new AuroraContainerSkin()
 			
 			list.width = 200
-			list.height = 500
+			list.height = 400
 			list.x = list.y = 10;
 			addChild(list);
 			
@@ -68,6 +69,17 @@ package
 				list.dataProviderCollection.removeItem(list.dataProviderCollection.getItemAt(2));
 			});
 			
+			var bttn4:Button = createButton();
+			bttn4.label = "Debug";
+			bttn4.addEventListener(MouseEvent.CLICK, function(event:Event):void{
+				for(var i:int=0; i<list.contentPane.numChildren; i++){
+			 		var a:DisplayObject = getChildAt(i);
+			 		with(a){
+			 			trace(x, y, width, height);
+			 		}
+			 	}
+			});
+			
 			tf = new TextField();
 			tf.border = true;
 			tf.borderColor = 0xdfdfdf;
@@ -81,7 +93,7 @@ package
 			var layout:VLayout = new VLayout(10);
 			layout.initX = list.width+20;
 			layout.initY = 20;
-			layout.layout([bttn, bttn2, bttn3,tf]);
+			layout.layout([bttn, bttn2, bttn3,bttn4, tf]);
 			
 		}
 		

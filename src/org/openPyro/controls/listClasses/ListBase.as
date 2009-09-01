@@ -156,7 +156,11 @@ package org.openPyro.controls.listClasses
 				dispatchEvent(listEvent);
 			}
 			
+			viewportInvalidated = true;
+			
 		}
+		
+		protected var viewportInvalidated:Boolean = false;
 		
 		protected function handleItemsAdded(event:CollectionEvent):void{
 			if(event.location < _selectedIndex){
@@ -164,6 +168,7 @@ package org.openPyro.controls.listClasses
 			}
 			needsReRendering = true;
 			displayListInvalidated = true;
+			viewportInvalidated = true;
 			invalidateSize();	
 		}
 		
@@ -318,6 +323,7 @@ package org.openPyro.controls.listClasses
 		}	
 		
 		protected var _rowHeight:Number = NaN;
+		
 		public function set rowHeight(value:Number):void{
 			_rowHeight = value
 		}
@@ -435,6 +441,20 @@ package org.openPyro.controls.listClasses
 		
 		public function set selectedItem(item:*):void{
 			selectedIndex = _dataProviderCollection.getItemIndex(item)
+		}
+		
+		/**
+		 * Unlike UIContainers, the contentHeight of List controls is
+		 * not measured using the number of children in the contentPane
+		 * but rather based on the _dataProviderCollection length.
+		 */ 
+		override public function get contentHeight():Number{
+			if(_dataProviderCollection){
+				return _rowHeight*_dataProviderCollection.length
+			}
+			else{
+				return 0;
+			}
 		}
 		
 	}

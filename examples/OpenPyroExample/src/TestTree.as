@@ -30,8 +30,14 @@ package
 									<leaf label="leaf2">value1</leaf>
 									<leaf label="leaf3">
 										<leaf label="leaf3_1">
-											<leaf label="leaf3_2">
-											</leaf>
+											<leaf label="leaf3_2_1"></leaf>
+											<leaf label="leaf3_2_2"></leaf>
+											<leaf label="leaf3_2_3"></leaf>
+											<leaf label="leaf3_2_4"></leaf>
+											<leaf label="leaf3_2_5"></leaf>
+											<leaf label="leaf3_2_6"></leaf>
+											<leaf label="leaf3_2_7"></leaf>
+											<leaf label="leaf3_2_8"></leaf>
 										</leaf>
 									</leaf>
 									<leaf label="leaf4">
@@ -81,7 +87,7 @@ package
 			var r:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);
 			r.properties = {percentUnusedWidth:100, height:25};
 			l.itemRenderer = r;
-			l.size(200, 170);
+			l.size(200, 400);
 			l.x = l.y = 20;
 			addChild(l);
 		}

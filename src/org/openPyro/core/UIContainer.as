@@ -436,6 +436,7 @@ package org.openPyro.core{
 			
 			if(!needsHorizontalScrollBar && _horizontalScrollBar && _horizontalScrollBar.visible==true)
 			{
+				_horizontalScrollBar.value = 0;
 				_horizontalScrollBar.visible = false;
 				scrollBarsChanged = true;
 			}
@@ -457,6 +458,7 @@ package org.openPyro.core{
 			
 			if(!needsVerticalScrollBar && _verticalScrollBar && _verticalScrollBar.visible == true)
 			{
+				_verticalScrollBar.value = 0;
 				_verticalScrollBar.visible = false;
 				scrollBarsChanged = true;
 			}
@@ -667,7 +669,9 @@ package org.openPyro.core{
 			if(value > 1){
 				throw new Error("UIContainer scrollpositions range from 0 to 1")
 			}
-			this._verticalScrollBar.value = value;
+			if(_verticalScrollBar){
+				this._verticalScrollBar.value = value;
+			}
 		}
 		
 		public function get verticalScrollPosition():Number{

@@ -4,7 +4,6 @@ package org.openPyro.layout
 	import flash.utils.Dictionary;
 	
 	import org.openPyro.controls.Tree;
-	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.effects.Effect;
 
 	public class TreeLayout extends VListLayout
@@ -21,7 +20,9 @@ package org.openPyro.layout
 			
 			var firstNewRenderer:DisplayObject = null;
 			
-			var appearFromTop:Boolean = false;
+			// decide whether the new renderers animate from the top or bottom
+			var appearFromTop:Boolean = (Tree(_listBase).treeState == Tree.ITEM_OPENING);
+								
 			var newRenderersGroupSize:Number = newlyCreatedRenderers.length*_listBase.rowHeight - _listBase.rowHeight;
 			
 			var animDuration:Number = Math.min(0.5,.3*newlyCreatedRenderers.length);
@@ -38,9 +39,6 @@ package org.openPyro.layout
 							Effect.on(renderer).completeCurrent().moveY(newRendererY,animDuration);
 						}
 						else{
-							if(Tree(_listBase).treeState == Tree.ITEM_OPENING){
-								appearFromTop = true;
-							}
 							
 							Effect.on(renderer).cancelCurrent();
 							if(appearFromTop){
@@ -64,8 +62,11 @@ package org.openPyro.layout
 						
 					}
 				}
-				var scrollAbleHeight:Number = _listBase.contentHeight - _listBase.height;
-				_listBase.scrollContentPaneY(_listBase.verticalScrollPosition*scrollAbleHeight);
+				//if(Tree(_listBase).treeState == "scrolling" || _listBase.contentHeight < _listBase.height){
+				//	trace("setting vp")
+				//	var scrollAbleHeight:Number = Math.max(0,_listBase.contentHeight - _listBase.height);
+				//	_listBase.scrollContentPaneY(_listBase.verticalScrollPosition*scrollAbleHeight);
+				//}
 				firstTime = false;
 		}
 	}

@@ -4,6 +4,7 @@ package org.openPyro.controls
 	
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
+	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.events.TreeEvent;
 	import org.openPyro.layout.TreeLayout;
 
@@ -27,6 +28,11 @@ package org.openPyro.controls
 			super();
 			this.layout = new TreeLayout();
 			
+		}
+		
+		override protected function onVerticalScroll(event:ScrollEvent):void{
+			this.treeState = "scrolling";
+			super.onVerticalScroll(event);
 		}
 		
 		override protected function convertDataToCollection(dp:Object):void{

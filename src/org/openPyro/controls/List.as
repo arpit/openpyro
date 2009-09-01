@@ -4,6 +4,7 @@ package org.openPyro.controls
 	
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.listClasses.ListBase;
+	import org.openPyro.events.PyroEvent;
 	import org.openPyro.layout.IVirtualizedLayout;
 	import org.openPyro.layout.VListLayout;
 
@@ -20,6 +21,12 @@ package org.openPyro.controls
 		{
 			this.layout = new VListLayout();
 			IVirtualizedLayout(this.layout).listBase = this;
+			this.addEventListener(PyroEvent.CREATION_COMPLETE, onCreationComplete);
+		}
+		
+		private function onCreationComplete(event:PyroEvent):void{
+			this.autoPositionViewport = false;
+			this.addEventListener(PyroEvent.SCROLLBARS_CHANGED, updateScrollRect);
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
@@ -28,7 +35,12 @@ package org.openPyro.controls
 			createNewRenderersAndMap(newRenderersData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, false);
 			dispatchEvent(event);
-			
+			updateScrollRect();
+		}
+		
+		protected function updateScrollRect(event:Event=null):void{
+			var scrollAbleHeight:Number = contentHeight - height;
+			scrollContentPaneY(verticalScrollPosition*scrollAbleHeight);
 		}
 		
 		private var _topRendererIndex:Number = 0;

@@ -48,9 +48,19 @@ package org.openPyro.layout
 		}
 		
 		public function get visibleRenderersData():Array{
+			/* 
+			Calculate the scrollable height:
+			Originally this was calling 
+			*/
 			var scrollAbleHeight:Number = Math.max(0,_listBase.contentHeight - _listBase.height);
+			
+			if(scrollAbleHeight == 0){
+				_listBase.verticalScrollPosition = 0;
+			}
+			
 			var scrollPos:Number = _listBase.verticalScrollPosition*scrollAbleHeight;
 			var newTopRendererIndex:int = Math.floor(scrollPos/_listBase.rowHeight);
+			
 			var newRenderersData:Array = []
 			
 			
