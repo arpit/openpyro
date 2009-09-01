@@ -91,9 +91,7 @@ package org.openPyro.controls.listClasses
 		
 		protected function mouseOverHandler(event:MouseEvent):void
 		{
-			_highlightCursorSprite.graphics.clear();
-			_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
-			_highlightCursorSprite.visible = true;
+			drawHighlightCursor();
 		}
 		
 		protected function mouseOutHandler(event:MouseEvent):void
@@ -126,9 +124,7 @@ package org.openPyro.controls.listClasses
 		{
 			_selected = b;
 			if(_selected){
-				_highlightCursorSprite.graphics.clear();
-				_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
-				_highlightCursorSprite.visible = true;
+				drawHighlightCursor();
 			}
 			else{
 				_highlightCursorSprite.visible = false;
@@ -145,11 +141,19 @@ package org.openPyro.controls.listClasses
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-		
+			if(_highlightCursorSprite.visible){
+				drawHighlightCursor();
+			}
 			_labelField.x = _labelField.y = 5;
 			_labelField.width = unscaledWidth-10
 			_labelField.height = Math.max(unscaledHeight-10,20);
 			
+		}
+		
+		protected function drawHighlightCursor():void{
+			_highlightCursorSprite.graphics.clear();
+			_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
+			_highlightCursorSprite.visible = true;
 		}
 
 	}

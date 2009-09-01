@@ -5,9 +5,7 @@ package org.openPyro.layout
 	
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.IIterator;
-	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.controls.listClasses.ListBase;
-	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.effects.Effect;
 
 	public class VListLayout extends VLayout implements IVirtualizedLayout
@@ -17,7 +15,7 @@ package org.openPyro.layout
 			
 		}
 		
-		private var _listBase:ListBase;
+		protected var _listBase:ListBase;
 		public function set listBase(object:ListBase):void{
 			_listBase = object;
 		}
@@ -72,20 +70,11 @@ package org.openPyro.layout
 		}
 		
 		public function positionRendererMap(map:Dictionary, newlyCreatedRenderers:Array, animate:Boolean):void{
-			var listBase:ListBase = ListBase(_container);
-			var index:Number = 0;
 			
-			var itemsArray:Array = [];
-			for(var uid:String in map){
-				itemsArray.push(
-								{data:uid, 
-								renderer:map[uid], 
-								itemIndex:listBase.dataProviderCollection.getUIDIndex(uid)
-								});	
-			}
-			itemsArray.sortOn("itemIndex");
+			var itemsArray:Array = sortRenderersByPosition(map);
+			
 			for(var i:int=0; i<itemsArray.length; i++){
-				var newRendererY:Number = itemsArray[i].itemIndex*listBase.rowHeight;
+				var newRendererY:Number = itemsArray[i].itemIndex*_listBase.rowHeight;
 				if(newRendererY == itemsArray[i].renderer.y){
 					continue;
 				}
@@ -100,13 +89,33 @@ package org.openPyro.layout
 					}	
 				}
 				else{
-					DefaultListRenderer(renderer).y
 					renderer.y = newRendererY;
 				}
 				
 			}
-			var scrollAbleHeight:Number = listBase.contentHeight - listBase.height;
-			listBase.scrollContentPaneY(listBase.verticalScrollPosition*scrollAbleHeight);
+			var scrollAbleHeight:Number = _listBase.contentHeight - _listBase.height;
+			_listBase.scrollContentPaneY(_listBase.verticalScrollPosition*scrollAbleHeight);
 		}
+		
+		/**
+		 * Returns an Array of itemRenderers sorted in the order they are supposed
+		 * to be laid out
+		 */ 
+		protected function sortRenderersByPosition(map:Dictionary):Array{
+			
+			var index:Number = 0;
+			
+			var itemsArray:Array = [];
+			for(var uid:String in map){
+				itemsArray.push(
+								{data:uid, 
+								renderer:map[uid], 
+								itemIndex:_listBase.dataProviderCollection.getUIDIndex(uid)
+								});	
+			}
+			itemsArray.sortOn("itemIndex");
+			return itemsArray;
+		}
+		
 	}
 }

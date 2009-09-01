@@ -26,20 +26,34 @@ package
 		}
 		
 		private var xmlData:XML = <node label="rootNode">
+									<leaf label="leaf1">value1</leaf>
+									<leaf label="leaf2">value1</leaf>
 									<leaf label="leaf3">
 										<leaf label="leaf3_1">
 											<leaf label="leaf3_2">
 											</leaf>
 										</leaf>
 									</leaf>
-									<leaf label="leaf1">value1</leaf>
-									<leaf label="leaf2">value1</leaf>
 									<leaf label="leaf4">
 										<leaf label="leaf4_1">
 											<leaf label="leaf4_2">
 											</leaf>
 										</leaf>
 									</leaf>
+									<leaf label="leaf5">
+										<leaf label="leaf5_1">
+											<leaf label="leaf5_2">
+											</leaf>
+										</leaf>
+									</leaf>
+									<leaf label="leaf6">
+										<leaf label="leaf6_1">
+											<leaf label="leaf6_2">
+											</leaf>
+										</leaf>
+									</leaf>
+									
+									
 								</node>
 								
 		private var xmlData2:XML = <node label="rootNode">
@@ -67,7 +81,7 @@ package
 			var r:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);
 			r.properties = {percentUnusedWidth:100, height:25};
 			l.itemRenderer = r;
-			l.size(200, 300);
+			l.size(200, 170);
 			l.x = l.y = 20;
 			addChild(l);
 		}

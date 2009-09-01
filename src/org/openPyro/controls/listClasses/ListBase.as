@@ -16,12 +16,13 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.events.PyroEvent;
+	import org.openPyro.layout.ILayout;
 	import org.openPyro.layout.IVirtualizedLayout;
+	import org.openPyro.painters.IPainter;
 	import org.openPyro.painters.Stroke;
 	import org.openPyro.painters.StrokePainter;
 	import org.openPyro.utils.StringUtil;
-	import org.openPyro.painters.IPainter;
-	
+
 	/**
 	 * The event dispatched when an item is clicked. This event is always broadcast
 	 * whether the selectedIndex has changed or not, unlike the change event.
@@ -48,6 +49,20 @@ package org.openPyro.controls.listClasses
 				this._labelFunction = StringUtil.toStringLabel
 			}
 			
+		}
+		
+		/**
+		 * Overrides the <code>UIContainer</code>'s default layout
+		 * setter to use IVirtualizedLayouts. 
+		 * 
+		 * Note: This will throw an Error if the layout being passed
+		 * in is not a <code>IVirtualizedLayout</code>
+		 * 
+		 * @see org.openpyro.layouts.IVirtualizedLayout
+		 */ 
+		override public function set layout(l:ILayout):void{
+			super.layout = l;
+			IVirtualizedLayout(l).listBase = this;
 		}
 		
 		protected var _dataProvider:Object;
@@ -270,7 +285,7 @@ package org.openPyro.controls.listClasses
 			var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 			newlyCreatedRenderers.push(newRenderer);
 			newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
-			contentPane.addChild(newRenderer);
+			contentPane.addChildAt(newRenderer,0);
 			if(newRenderer is MeasurableControl){
 				MeasurableControl(newRenderer).doOnAdded();
 			}

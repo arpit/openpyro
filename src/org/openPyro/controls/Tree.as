@@ -5,9 +5,15 @@ package org.openPyro.controls
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
 	import org.openPyro.controls.events.TreeEvent;
+	import org.openPyro.layout.TreeLayout;
 
 	public class Tree extends List
 	{
+		
+		public static const ITEM_OPENING:String = "treeItemOpening";
+		public static const ITEM_CLOSING:String = "treeItemClosing";
+		
+		
 		public function Tree()
 		{
 			if(_labelFunction == null){
@@ -19,6 +25,8 @@ package org.openPyro.controls
 				}
 			}
 			super();
+			this.layout = new TreeLayout();
+			
 		}
 		
 		override protected function convertDataToCollection(dp:Object):void{
@@ -33,15 +41,19 @@ package org.openPyro.controls
 			return renderer;
 		}
 		
+		public var treeState:String = "";
+		
 		protected function handleRotatorClick(event:TreeEvent):void{
 			var nodeDescriptor:XMLNodeDescriptor = event.nodeDescriptor;
 			if(nodeDescriptor.isLeaf()) {
 				return;
 			}
 			if(nodeDescriptor.open){
+				treeState = ITEM_CLOSING;
 				TreeCollection(this.dataProviderCollection).closeNode(nodeDescriptor);
 			}
 			else{
+				treeState = ITEM_OPENING;
 				TreeCollection(this.dataProviderCollection).openNode(nodeDescriptor);
 			}
 			this.sizeInvalidated = true;
