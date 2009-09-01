@@ -2,6 +2,7 @@ package org.openPyro.controls
 {
 	import flash.display.DisplayObject;
 	
+	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
 	import org.openPyro.controls.events.ScrollEvent;
@@ -36,9 +37,14 @@ package org.openPyro.controls
 		}
 		
 		override protected function convertDataToCollection(dp:Object):void{
-			this._dataProviderCollection = new TreeCollection();
-			TreeCollection(_dataProviderCollection).showRoot = _showRoot;
-			TreeCollection(_dataProviderCollection).source = XML(dp);
+			if( dp is ICollection){
+				this._dataProviderCollection = ICollection(dp);
+			}
+			else{
+				this._dataProviderCollection = new TreeCollection();
+				TreeCollection(_dataProviderCollection).showRoot = _showRoot;
+				TreeCollection(_dataProviderCollection).source = XML(dp);
+			}
 		}
 		
 		override protected function createNewRenderer(newRendererUID:String,rowIndex:Number):DisplayObject{
