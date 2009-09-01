@@ -523,7 +523,7 @@ package org.openPyro.core{
 				})
 			});
 			_verticalScrollBar.addEventListener(PyroEvent.SIZE_VALIDATED, onVerticalScrollBarSizeValidated);
-			_verticalScrollBar.addEventListener(PyroEvent.UPDATE_COMPLETE, onVScrollBarUpdateComplete);
+			_verticalScrollBar.addEventListener(PyroEvent.CREATION_COMPLETE, onVScrollBarCreationComplete);
 			_verticalScrollBar.skin = IScrollableContainerSkin(_skin).verticalScrollBarSkin;
 			_verticalScrollBar.addEventListener(ScrollEvent.SCROLL, onVerticalScroll)
 			_verticalScrollBar.doOnAdded()
@@ -712,6 +712,19 @@ package org.openPyro.core{
 		}
 		
 		/**
+		 * The autoPositionViewport property determines whether the scrollRect
+		 * is applied immediately on updateDisplaylist or not. Certain controls
+		 * like Lists want to control the viewport positioning more explicitly.
+		 * For example, when an item is removed from the List or Tree, the default
+		 * setting of the autoPositionViewport will try to adjust the scroll to
+		 * the same percent value as before causing the list items to "jump". So
+		 * Lists turn this property to false and explicitly tell the viewport to
+		 * position only when its scrolled and not when items are added or removed
+		 * 
+		 */ 
+		protected var autoPositionViewport:Boolean = true;
+		
+		/**
 		 * Unlike UIControls, UIContainers do not apply a skin directly on 
 		 * themselves but interpret the skin file and apply them to the 
 		 * different children. So updateDisplayList here does not call
@@ -734,7 +747,7 @@ package org.openPyro.core{
 				_horizontalScrollBar.y = this.height - _horizontalScrollBar.height-1;
 			}	
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
-			if(_clipContent){
+			if(_clipContent && autoPositionViewport){
 				this.setContentMask()
 			}
 		}
@@ -769,7 +782,7 @@ package org.openPyro.core{
 		 * Event listener for the vertical scrollbar's
 		 * creation and validation event.
 		 */ 
-		protected function onVScrollBarUpdateComplete(event:PyroEvent):void
+		protected function onVScrollBarCreationComplete(event:PyroEvent):void
 		{
 			if(_horizontalScrollBar){
 				_horizontalScrollBar.y = _verticalScrollBar.height;
@@ -805,7 +818,7 @@ package org.openPyro.core{
 				viewportHeight-=_horizontalScrollBar.height
 			}
 			if(_verticalScrollBar){
-				scrollY = _verticalScrollBar.value*(_contentHeight-viewportHeight);
+				scrollY = Math.max(0,_verticalScrollBar.value*(_contentHeight-viewportHeight));
 			}
 			if(_horizontalScrollBar){
 				scrollX = _horizontalScrollBar.value*(_contentWidth-viewportWidth);
