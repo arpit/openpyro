@@ -75,7 +75,7 @@ package org.openPyro.layout
 			
 			for(var i:int=0; i<itemsArray.length; i++){
 				var newRendererY:Number = itemsArray[i].itemIndex*_listBase.rowHeight;
-				if(newRendererY == itemsArray[i].renderer.y){
+				if(newRendererY == itemsArray[i].renderer.y && newlyCreatedRenderers.indexOf(itemsArray[i].renderer) == -1){
 					continue;
 				}
 				var renderer:DisplayObject = itemsArray[i].renderer;
