@@ -81,5 +81,10 @@ package org.openPyro.controls
 				TreeCollection(_dataProviderCollection).showRoot = val;
 			}
 		}
+		
+		public function closeNode(des:XMLNodeDescriptor):void{
+			if(!_dataProviderCollection) return;
+			TreeCollection(_dataProviderCollection).closeNode(des);
+		}
 	}
 }

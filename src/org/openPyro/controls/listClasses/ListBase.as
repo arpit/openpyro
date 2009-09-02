@@ -145,12 +145,15 @@ package org.openPyro.controls.listClasses
 						renderer.parent.removeChild(renderer);
 						
 						this.rendererPool.returnToPool(renderer);
-						needsReRendering = true;
-						displayListInvalidated = true;
-						invalidateSize();
 					}
 				}
 			}
+			
+			needsReRendering = true;
+			forceInvalidateDisplayList = true;
+			invalidateSize();
+			invalidateDisplayList();
+			
 			if(needsEventDispatch){
 				var listEvent:ListEvent = new ListEvent(ListEvent.CHANGE);
 				dispatchEvent(listEvent);
