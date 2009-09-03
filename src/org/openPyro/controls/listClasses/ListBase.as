@@ -88,6 +88,9 @@ package org.openPyro.controls.listClasses
 			}
 			convertDataToCollection(src);
 			_dataProviderCollection.addEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
+			
+			removeAllRenderers();
+			
 			displayListInvalidated =true;
 			needsReRendering = true;
 			forceInvalidateDisplayList = true;
@@ -96,6 +99,15 @@ package org.openPyro.controls.listClasses
 		}
 		public function get dataProvider():Object{
 			return _dataProvider;
+		}
+		
+		protected function removeAllRenderers():void{
+			for (var uid:String in this.visibleRenderersMap){
+				var renderer:DisplayObject = this.visibleRenderersMap[uid];
+				delete(this.visibleRenderersMap[uid]);
+				renderer.parent.removeChild(renderer);
+				this.rendererPool.returnToPool(renderer);
+			}
 		}
 		
 		protected var animateRenderers:Boolean = false;
@@ -250,6 +262,7 @@ package org.openPyro.controls.listClasses
 			}
 			_needsReRendering = false;
 			renderListItems();
+			
 			
 		}
 		

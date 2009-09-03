@@ -1,16 +1,23 @@
 package
 {
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
+	import org.openPyro.aurora.AuroraPainterButtonSkin;
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
+	import org.openPyro.controls.Button;
 	import org.openPyro.controls.TextInput;
 	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.treeClasses.DefaultTreeItemRenderer;
 	import org.openPyro.core.ClassFactory;
+	import org.openPyro.core.UIContainer;
+	import org.openPyro.layout.VLayout;
 	import org.openPyro.painters.FillPainter;
+	import org.openPyro.painters.GradientFillPainter;
 
 	public class TestTree extends Sprite
 	{
@@ -26,10 +33,8 @@ package
 		}
 		
 		private var xmlData:XML = <node label="rootNode">
-									<leaf label="leaf1">value1</leaf>
-									<leaf label="leaf2">value1</leaf>
-									<leaf label="leaf3">
-										<leaf label="leaf3_1">
+									<leaf label="leaf3" open="false">
+										
 											<leaf label="leaf3_2_1"></leaf>
 											<leaf label="leaf3_2_2"></leaf>
 											<leaf label="leaf3_2_3"></leaf>
@@ -38,24 +43,23 @@ package
 											<leaf label="leaf3_2_6"></leaf>
 											<leaf label="leaf3_2_7"></leaf>
 											<leaf label="leaf3_2_8"></leaf>
-										</leaf>
+											<leaf label="leaf3_2_9"></leaf>
+											<leaf label="leaf3_2_10"></leaf>
+											<leaf label="leaf3_2_11"></leaf>
+											<leaf label="leaf3_2_12"></leaf>
+											<leaf label="leaf3_2_13"></leaf>
+											<leaf label="leaf3_2_14"></leaf>
 									</leaf>
 									<leaf label="leaf4">
 										<leaf label="leaf4_1">
-											<leaf label="leaf4_2">
-											</leaf>
 										</leaf>
 									</leaf>
 									<leaf label="leaf5">
 										<leaf label="leaf5_1">
-											<leaf label="leaf5_2">
-											</leaf>
 										</leaf>
 									</leaf>
 									<leaf label="leaf6">
 										<leaf label="leaf6_1">
-											<leaf label="leaf6_2">
-											</leaf>
 										</leaf>
 									</leaf>
 									
@@ -75,13 +79,20 @@ package
 								
 		private function testList():void{
 			
+			var uic:UIContainer = new UIContainer();
+			addChild(uic);
+			uic.backgroundPainter = new FillPainter(0xdfdfdf);
+			uic.size(400,600)
+			
+			
 			var l:Tree = new Tree();
 			var xc:TreeCollection = new TreeCollection(xmlData);
-			
+			l.dataProvider = xc;
+			uic.addChild(l);
 			l.addEventListener(ListEvent.ITEM_CLICK, function(event:ListEvent):void{
 				trace(l.selectedItem);
 			}); 
-			l.dataProvider = xmlData;
+			
 			l.skin = new AuroraContainerSkin();
 			l.backgroundPainter = new FillPainter(0xffffff);
 			var r:ClassFactory = new ClassFactory(DefaultTreeItemRenderer);
@@ -90,8 +101,40 @@ package
 			l.size(200, 400);
 			l.x = l.y = 20;
 			addChild(l);
+			
+			var layout:VLayout = new VLayout(10);
+			layout.initX = l.x+l.width+25;
+			layout.initY = l.y;
+			
+			var bttn:Button = createButton('Click', function(event:Event):void{
+				for(var i:int = 0; i<xc.length; i++){
+					var des:XMLNodeDescriptor = xc.getNodeDescriptorFor(xc.getItemAt(i))
+					if(des.depth == 1){
+						l.closeNode(des)
+					}
+				}
+			});
+			
+			layout.layout([bttn]);
+			
+			
+		
+			
 		}
 		
+		private function createButton(label:String, clickHandler:Function):Button{
+			var bttn:Button = new Button();
+			bttn.label = label;
+			bttn.height = 25
+			var bttnSkin:AuroraPainterButtonSkin  = new AuroraPainterButtonSkin();
+			bttnSkin.painters = new GradientFillPainter([0xdfdfdf, 0xffffff])
+			bttn.skin = bttnSkin;
+			addChild(bttn);
+			bttn.width = 140;
+			bttn.addEventListener(MouseEvent.CLICK, clickHandler);
+			
+			return bttn;
+		}
 		/*
 		private function createTree():void{
 			tree = new Tree()

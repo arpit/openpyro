@@ -27,6 +27,7 @@ package org.openPyro.controls
 		private function onCreationComplete(event:PyroEvent):void{
 			this.autoPositionViewport = false;
 			this.addEventListener(PyroEvent.SCROLLBARS_CHANGED, updateScrollRect);
+			this.addEventListener(PyroEvent.SIZE_CHANGED, updateScrollRect);
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
