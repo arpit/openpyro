@@ -81,8 +81,11 @@ package org.openPyro.controls.listClasses
 			/*
 			 * Reset the scroll positions 
 			 */
-			verticalScrollPosition = 0
-			horizontalScrollPosition = 0
+			verticalScrollPosition = 0;
+			horizontalScrollPosition = 0;
+			_selectedIndex = -1;
+			_selectedItem = null;
+			
 			if(_dataProviderCollection){
 				_dataProviderCollection.removeEventListener(CollectionEvent.COLLECTION_CHANGED, onSourceCollectionChanged);
 			}
