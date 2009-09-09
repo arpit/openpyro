@@ -15,7 +15,9 @@ package
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.core.ClassFactory;
+	import org.openPyro.core.UIContainer;
 	import org.openPyro.layout.VLayout;
+	import org.openPyro.painters.FillPainter;
 	import org.openPyro.painters.GradientFillPainter;
 
 	public class TestSimpleList extends Sprite
@@ -32,6 +34,12 @@ package
 		private var tf:TextField;
 		
 		private function init(event:Event):void{
+			var uic:UIContainer = new UIContainer();
+			addChild(uic);
+			uic.backgroundPainter = new FillPainter(0xdfdfdf);
+			uic.size(400,600)
+		
+			
 			this.removeEventListener(Event.ENTER_FRAME, init)
 			list = new List();
 			
@@ -43,10 +51,10 @@ package
 			
 			list.skin = new AuroraContainerSkin()
 			
-			list.width = 200
-			list.height = 400
+			list.width = 200;
+			list.percentUnusedHeight = 30
 			list.x = list.y = 10;
-			addChild(list);
+			uic.addChild(list);
 			
 			var dp:Array = new Array()
 			for(var i:int=0; i< 5; i++){

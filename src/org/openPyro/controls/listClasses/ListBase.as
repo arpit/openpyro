@@ -184,10 +184,12 @@ package org.openPyro.controls.listClasses
 			if(event.location < _selectedIndex){
 				selectedIndex = _selectedIndex+event.delta.length;
 			}
-			needsReRendering = true;
+			forceInvalidateDisplayList = true;
 			displayListInvalidated = true;
+			needsReRendering = true;
 			viewportInvalidated = true;
-			invalidateSize();	
+			invalidateSize();
+			invalidateDisplayList();	
 		}
 		
 		protected var _dataProviderCollection:ICollection;
