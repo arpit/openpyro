@@ -1,9 +1,10 @@
 package org.openPyro.containers
 {
+	import flash.display.DisplayObject;
+	
+	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.utils.ArrayUtil;
-	
-	import flash.display.DisplayObject;
 
 	public class ViewStack extends UIContainer{
 		
@@ -16,8 +17,8 @@ package org.openPyro.containers
 		 */ 
 		public function ViewStack(){
 			super();
-			this._horizontalScrollPolicy = false;
-			this._verticalScrollPolicy = false;
+			this._horizontalScrollPolicy = ScrollPolicy.OFF
+			this._verticalScrollPolicy = ScrollPolicy.OFF;
 			viewChildren = new Array();
 		}
 		

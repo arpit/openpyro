@@ -6,8 +6,11 @@ package org.openPyro.core{
 	import flash.geom.Rectangle;
 	
 	import org.openPyro.controls.ScrollBar;
+	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ScrollEvent;
+	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
 	import org.openPyro.controls.skins.IScrollableContainerSkin;
+	import org.openPyro.effects.Effect;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.layout.AbsoluteLayout;
 	import org.openPyro.layout.IContainerMeasurementHelper;
@@ -27,8 +30,8 @@ package org.openPyro.core{
 		
 		public var contentPane:UIControl;
 		public var focusRectHolder:Sprite;
-		protected var _horizontalScrollPolicy:Boolean = true
-		protected var _verticalScrollPolicy:Boolean = true;
+		protected var _horizontalScrollPolicy:String = ScrollPolicy.AUTO;
+		protected var _verticalScrollPolicy:String = ScrollPolicy.AUTO;
 		
 		public function UIContainer(){
 			super();
@@ -60,31 +63,57 @@ package org.openPyro.core{
 			contentPane.percentUnusedHeight = 100;
 			contentPane.doOnAdded()
 			
-			this.addEventListener(MouseEvent.MOUSE_OVER, handleMouseOver, true)
+			this.addEventListener(MouseEvent.ROLL_OVER, handleMouseOver)
+			this.addEventListener(MouseEvent.ROLL_OUT, handleMouseOut)
 		
 		}
 		
 		public static var mouseOverDisabled:Boolean = false;
 		
-		private function handleMouseOver(event:MouseEvent):void{
+		protected function handleMouseOver(event:MouseEvent):void{
 			if(UIContainer.mouseOverDisabled){
-				event.stopImmediatePropagation()
-				event.preventDefault()
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				return;
+			}
+			if(this._horizontalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(_horizontalScrollBar){
+					Effect.on(_horizontalScrollBar).cancelCurrent().fadeIn(1);
+				}
+			}
+			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(_verticalScrollBar){
+					Effect.on(_verticalScrollBar).cancelCurrent().fadeIn(1);
+				}
+			}
+			
+		}
+		
+		protected function handleMouseOut(event:MouseEvent):void{
+			if(this._horizontalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(_horizontalScrollBar){
+					Effect.on(_horizontalScrollBar).cancelCurrent().fadeOut(1);
+				}
+			}
+			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(_verticalScrollBar){
+					Effect.on(_verticalScrollBar).cancelCurrent().fadeOut(1);
+				}
 			}
 		}
 		
-		public function set horizontalScrollPolicy(b:Boolean):void{
-			_horizontalScrollPolicy = b;
+		public function set horizontalScrollPolicy(policy:String):void{
+			_horizontalScrollPolicy = policy;
 		}
-		public function get horizontalScrollPolicy():Boolean{
-			return _horizontalScrollPolicy
-		}
-		
-		public function set verticalScrollPolicy(b:Boolean):void{
-			_verticalScrollPolicy = b;
+		public function get horizontalScrollPolicy():String{
+			return _horizontalScrollPolicy;
 		}
 		
-		public function get verticalScrollPolicy():Boolean{
+		public function set verticalScrollPolicy(policy:String):void{
+			_verticalScrollPolicy = policy;
+		}
+		
+		public function get verticalScrollPolicy():String{
 			return _verticalScrollPolicy;
 		}
 
@@ -207,15 +236,24 @@ package org.openPyro.core{
 			}
 			super.validateSize();
 			
+			/*
+			Check if scrollbar is visible.
+			Note: We only check the ScrollPolicy.VISIBLE_ON_HOVER parameter since other scrollPolicys are 
+			validated by the existance of the scrollbar itself.
+			*/
 			if(this._verticalScrollBar && _verticalScrollBar.visible)
 			{
-				this.explicitlyAllocatedWidth-=_verticalScrollBar.width;
+				if(_verticalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
+					this.explicitlyAllocatedWidth-=_verticalScrollBar.width;
+				}
 				_verticalScrollBar.setScrollProperty(this.scrollHeight, this._contentHeight);
 			}
 			
 			if(this._horizontalScrollBar && _horizontalScrollBar.visible)
 			{
-				this.explicitlyAllocatedHeight-=_horizontalScrollBar.height
+				if(_horizontalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
+					this.explicitlyAllocatedHeight-=_horizontalScrollBar.height
+				}
 				_horizontalScrollBar.setScrollProperty(this.scrollWidth, contentWidth);	
 			}
 			
@@ -312,7 +350,7 @@ package org.openPyro.core{
 		override public function widthForMeasurement():Number
 		{
 			var containerWidth:Number = this.width - this._explicitlyAllocatedWidth
-			if(this._verticalScrollBar && _verticalScrollBar.visible==true)
+			if(this._verticalScrollBar && _verticalScrollBar.visible==true && _verticalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER)
 			{
 				containerWidth-=_verticalScrollBar.width;
 			}
@@ -325,7 +363,7 @@ package org.openPyro.core{
 		override public function heightForMeasurement():Number
 		{
 			var containerHeight:Number =  this.height-this._explicitlyAllocatedHeight;
-			if(this._horizontalScrollBar && _horizontalScrollBar.visible==true)
+			if(this._horizontalScrollBar && _horizontalScrollBar.visible==true && _horizontalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER)
 			{
 				containerHeight-=_horizontalScrollBar.height;
 			}
@@ -410,10 +448,10 @@ package org.openPyro.core{
 		
 		protected function checkRevalidation():void
 		{
-			if(_horizontalScrollPolicy){
+			if(_horizontalScrollPolicy != ScrollPolicy.OFF){
 				checkNeedsHScrollBar();
 			}
-			if(_verticalScrollPolicy)
+			if(_verticalScrollPolicy != ScrollPolicy.OFF)
 			{
 				checkNeedsVScrollBar();
 			}
@@ -815,10 +853,10 @@ package org.openPyro.core{
 		public function setContentMask():void{
 			var viewportWidth:Number = width
 			var viewportHeight:Number = height;
-			if(_verticalScrollBar && _verticalScrollBar.visible==true){
+			if(_verticalScrollBar && _verticalScrollBar.visible==true && _verticalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
 				viewportWidth-=_verticalScrollBar.width	
 			}
-			if(_horizontalScrollBar && _horizontalScrollBar.visible==true){
+			if(_horizontalScrollBar && _horizontalScrollBar.visible==true && _horizontalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
 				viewportHeight-=_horizontalScrollBar.height
 			}
 			if(_verticalScrollBar){
