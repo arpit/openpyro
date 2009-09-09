@@ -29,10 +29,27 @@ package
 			stage.align = "TL"
 			
 			//createTree()
-			testList()
+			testTree()
 		}
 		
 		private var xmlData:XML = <node label="rootNode">
+									<leaf label="leaf2" open="false">
+										
+											<leaf label="leaf2_2_1"></leaf>
+											<leaf label="leaf2_2_2"></leaf>
+											<leaf label="leaf2_2_3"></leaf>
+											<leaf label="leaf2_2_4"></leaf>
+											<leaf label="leaf2_2_5"></leaf>
+											<leaf label="leaf2_2_6"></leaf>
+											<leaf label="leaf2_2_7"></leaf>
+											<leaf label="leaf2_2_8"></leaf>
+											<leaf label="leaf2_2_9"></leaf>
+											<leaf label="leaf2_2_10"></leaf>
+											<leaf label="leaf2_2_11"></leaf>
+											<leaf label="leaf2_2_12"></leaf>
+											<leaf label="leaf2_2_13"></leaf>
+											<leaf label="leaf2_2_14"></leaf>
+									</leaf>
 									<leaf label="leaf3" open="false">
 										
 											<leaf label="leaf3_2_1"></leaf>
@@ -77,7 +94,7 @@ package
 									</leaf>
 								</node>
 								
-		private function testList():void{
+		private function testTree():void{
 			
 			var uic:UIContainer = new UIContainer();
 			addChild(uic);
