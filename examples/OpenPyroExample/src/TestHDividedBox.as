@@ -1,12 +1,13 @@
 package
 {
-	import org.openPyro.aurora.AuroraHDividedBoxSkin;
-	import org.openPyro.containers.HDividedBox;
-	import org.openPyro.core.UIControl;
-	import org.openPyro.examples.DimensionMarkerSkin;
-	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	
+	import org.openPyro.aurora.AuroraHDividedBoxSkin;
+	import org.openPyro.containers.HDividedBox;
+	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
+	import org.openPyro.core.UIControl;
+	import org.openPyro.examples.DimensionMarkerSkin;
 	
 	public class TestHDividedBox extends Sprite
 	{
@@ -22,7 +23,7 @@ package
 			
 			var hdbox:HDividedBox = new HDividedBox()
 			hdbox.skin = new AuroraHDividedBoxSkin();
-			hdbox.horizontalScrollPolicy = false;
+			hdbox.horizontalScrollPolicy = ScrollPolicy.OFF;
 			hdbox.width = 600
 			hdbox.height = 400
 			
