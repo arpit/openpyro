@@ -6,6 +6,7 @@ package org.openPyro.controls.events
 	{
 		public static const CHANGE:String = "change";
 		public static const ITEM_CLICK:String = "itemClick";
+		public static const RENDERERS_REPOSITIONED:String = "renderersRepositioned";
 		
 		public function ListEvent(type:String)
 		{

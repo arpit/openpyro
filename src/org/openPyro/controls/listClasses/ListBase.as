@@ -120,6 +120,7 @@ package org.openPyro.controls.listClasses
 		 * or removed.
 		 */ 
 		protected function onSourceCollectionChanged(event:CollectionEvent):void{
+			//Effect.cancelAll();
 			if(event.kind == CollectionEventKind.REMOVE){
 				animateRenderers = true;
 				handleItemsRemoved(event)
@@ -272,9 +273,11 @@ package org.openPyro.controls.listClasses
 			}
 			_needsReRendering = false;
 			renderListItems();
-			dispatchEvent(new ListEvent(ListEvent.RENDERERS_REPOSITIONED));
+			///dispatchEvent(new ListEvent(ListEvent.RENDERERS_REPOSITIONED));
 			
 		}
+		
+		public var positionAnchorRenderer:DisplayObject = null;
 		
 		/**
 		 * Array that maintains a list of the newlyCreatedRenderers.

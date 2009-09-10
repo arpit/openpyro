@@ -21,7 +21,7 @@ package org.openPyro.controls
 		{
 			this.layout = new VListLayout();
 			IVirtualizedLayout(this.layout).listBase = this;
-			this.addEventListener(PyroEvent.CREATION_COMPLETE, onCreationComplete);
+			//this.addEventListener(PyroEvent.CREATION_COMPLETE, onCreationComplete);
 		}
 		
 		private function onCreationComplete(event:PyroEvent):void{
@@ -40,8 +40,9 @@ package org.openPyro.controls
 		}
 		
 		protected function updateScrollRect(event:Event=null):void{
-			var scrollAbleHeight:Number = contentHeight - height;
-			scrollContentPaneY(verticalScrollPosition*scrollAbleHeight);
+			//var scrollAbleHeight:Number = contentHeight - height;
+			//scrollContentPaneY(verticalScrollPosition*scrollAbleHeight);
+			setContentMask();
 		}
 		
 		private var _topRendererIndex:Number = 0;

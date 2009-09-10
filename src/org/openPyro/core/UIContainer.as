@@ -6,7 +6,6 @@ package org.openPyro.core{
 	import flash.geom.Rectangle;
 	
 	import org.openPyro.controls.ScrollBar;
-	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
 	import org.openPyro.controls.skins.IScrollableContainerSkin;
@@ -38,6 +37,7 @@ package org.openPyro.core{
 			contentPane = new UIControl();
 			contentPane.name = "contentPane_"+this.name;
 			focusRectHolder = new Sprite();
+			focusRectHolder.mouseEnabled = false;
 			
 		}
 		
@@ -764,7 +764,7 @@ package org.openPyro.core{
 		 * position only when its scrolled and not when items are added or removed
 		 * 
 		 */ 
-		protected var autoPositionViewport:Boolean = true;
+		public var autoPositionViewport:Boolean = true;
 		
 		/**
 		 * Unlike UIControls, UIContainers do not apply a skin directly on 
@@ -850,28 +850,38 @@ package org.openPyro.core{
 			}
 		}
 		
-		public function setContentMask():void{
-			var viewportWidth:Number = width
-			var viewportHeight:Number = height;
+		
+		protected var _viewportWidth:Number;
+		protected var _viewportHeight:Number;
+		public function calculateViewport():void{
+			_viewportWidth = width
+			_viewportHeight = height;
 			if(_verticalScrollBar && _verticalScrollBar.visible==true && _verticalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
-				viewportWidth-=_verticalScrollBar.width	
+				_viewportWidth-=_verticalScrollBar.width	
 			}
 			if(_horizontalScrollBar && _horizontalScrollBar.visible==true && _horizontalScrollPolicy != ScrollPolicy.VISIBLE_ON_HOVER){
-				viewportHeight-=_horizontalScrollBar.height
+				_viewportHeight-=_horizontalScrollBar.height
 			}
+		}
+		
+		public function setContentMask():void{
+			calculateViewport();
 			if(_verticalScrollBar){
-				scrollY = Math.max(0,_verticalScrollBar.value*(_contentHeight-viewportHeight));
+				scrollY = Math.max(0,_verticalScrollBar.value*(_contentHeight-_viewportHeight));
 			}
 			if(_horizontalScrollBar){
-				scrollX = _horizontalScrollBar.value*(_contentWidth-viewportWidth);
+				scrollX = _horizontalScrollBar.value*(_contentWidth-_viewportWidth);
 			}
-			var rect:Rectangle = new Rectangle(scrollX,scrollY,viewportWidth,viewportHeight);
+			var rect:Rectangle = new Rectangle(scrollX,scrollY,_viewportWidth,_viewportHeight);
 			setScrollRect(rect);	
 		}
 		
 		public function scrollContentPaneY(value:Number):void{
+			calculateViewport();
 			scrollY = value;
-			setContentMask();
+			var rect:Rectangle = new Rectangle(scrollX,scrollY,_viewportWidth,_viewportHeight);
+			setScrollRect(rect);
+			
 		}
 		
 		public function scrollContentPaneX(value:Number):void{
@@ -879,8 +889,16 @@ package org.openPyro.core{
 			setContentMask();
 		}
 		
+		public var debugScrollRect:Boolean = false
 		public function setScrollRect(rect:Rectangle):void{
-			this.contentPane.scrollRect = rect	
+			if(!debugScrollRect){
+				this.contentPane.scrollRect = rect
+			}
+			else{
+				this.focusRectHolder.graphics.clear();
+				this.focusRectHolder.graphics.beginFill(0xff0000,.4);
+				this.focusRectHolder.graphics.drawRect(rect.left, rect.top, rect.width, rect.height);
+			}
 		}
 	}
 }

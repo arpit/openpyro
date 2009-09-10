@@ -1,10 +1,12 @@
 package org.openPyro.controls
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	
 	import org.openPyro.collections.ICollection;
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
+	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.events.TreeEvent;
 	import org.openPyro.layout.TreeLayout;
@@ -56,13 +58,22 @@ package org.openPyro.controls
 		public var treeState:String = "";
 		
 		protected function handleRotatorClick(event:TreeEvent):void{
+			this.autoPositionViewport = false;
 			var nodeDescriptor:XMLNodeDescriptor = event.nodeDescriptor;
 			if(nodeDescriptor.isLeaf()) {
 				return;
 			}
+			
+			positionAnchorRenderer = itemToItemRenderer(nodeDescriptor);
+			this.addEventListener(ListEvent.RENDERERS_REPOSITIONED, function(event:Event):void{
+				removeEventListener(ListEvent.RENDERERS_REPOSITIONED, arguments.callee);
+				this.autoPositionViewport = true;
+			});
+			
 			if(nodeDescriptor.open){
 				treeState = ITEM_CLOSING;
 				TreeCollection(this.dataProviderCollection).closeNode(nodeDescriptor);
+				
 			}
 			else{
 				treeState = ITEM_OPENING;

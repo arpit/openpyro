@@ -45,6 +45,10 @@ package org.openPyro.effects{
 			return effect;
 		}
 		
+		public static function isPlayingOn(ob:DisplayObject):Boolean{
+			return _currentlyAnimatingTargets[ob] != null;
+		}
+		
 		/**
 		 * Cancels the currently playing effect defined in
 		 * the <code>_currentEffectDescriptor</code>
@@ -55,6 +59,10 @@ package org.openPyro.effects{
 			_areEffectsPlaying = false;
 			delete(_currentlyAnimatingTargets[this._target]);
 			return this;
+		}
+		
+		public static function cancelAll():void{
+			Tweener.removeAllTweens();
 		}
 		
 		/**
@@ -249,10 +257,10 @@ package org.openPyro.effects{
 		 */ 
 		private function playNextEffect():void{
 			if(_effectQueue.length == 0){
+				delete(_currentlyAnimatingTargets[this._target]);
 				if(_onComplete != null){
 					_onComplete();
 				}
-				delete(_currentlyAnimatingTargets[this._target]);
 				_currentEffectDescriptor = null;
 				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
 				_areEffectsPlaying = false;

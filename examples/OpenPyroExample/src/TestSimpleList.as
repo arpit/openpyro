@@ -52,12 +52,12 @@ package
 			list.skin = new AuroraContainerSkin()
 			
 			list.width = 200;
-			list.percentUnusedHeight = 30
+			list.percentUnusedHeight = 60
 			list.x = list.y = 10;
 			uic.addChild(list);
 			
 			var dp:Array = new Array()
-			for(var i:int=0; i< 5; i++){
+			for(var i:int=0; i< 25; i++){
 				dp.push("original data: "+i)
 			}
 			
@@ -75,6 +75,12 @@ package
 			bttn3.label = "Delete #2";
 			bttn3.addEventListener(MouseEvent.CLICK, function(event:Event):void{
 				list.dataProviderCollection.removeItem(list.dataProviderCollection.getItemAt(2));
+			});
+			
+			var bttn5:Button = createButton();
+			bttn5.label = "scroll to 10";
+			bttn5.addEventListener(MouseEvent.CLICK, function(event:Event):void{
+				list.scrollToItemAtIndex(10)
 			});
 			
 			var bttn4:Button = createButton();
@@ -101,7 +107,7 @@ package
 			var layout:VLayout = new VLayout(10);
 			layout.initX = list.width+20;
 			layout.initY = 20;
-			layout.layout([bttn, bttn2, bttn3,bttn4, tf]);
+			layout.layout([bttn, bttn2, bttn3,bttn5, bttn4, tf]);
 			
 		}
 		

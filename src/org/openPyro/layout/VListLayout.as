@@ -58,6 +58,14 @@ package org.openPyro.layout
 				_listBase.verticalScrollPosition = 0;
 			}
 			
+			if(!_listBase.autoPositionViewport && _listBase.verticalScrollBar && _listBase.positionAnchorRenderer){
+				var percent:Number = Math.min((_listBase.positionAnchorRenderer.y - 
+									(_listBase.positionAnchorRenderer.y-_listBase.contentPane.scrollRect.top))/(_listBase.contentHeight-_listBase.height), 1);
+				_listBase.verticalScrollBar.value = percent;
+				_listBase.positionAnchorRenderer = null;
+				
+			}
+			
 			var scrollPos:Number = _listBase.verticalScrollPosition*scrollAbleHeight;
 			var newTopRendererIndex:int = Math.floor(scrollPos/_listBase.rowHeight);
 			
@@ -103,8 +111,8 @@ package org.openPyro.layout
 				}
 				
 			}
-			var scrollAbleHeight:Number = _listBase.contentHeight - _listBase.height;
-			_listBase.scrollContentPaneY(_listBase.verticalScrollPosition*scrollAbleHeight);
+			/*var scrollAbleHeight:Number = _listBase.contentHeight - _listBase.height;
+			_listBase.scrollContentPaneY(_listBase.verticalScrollPosition*scrollAbleHeight);*/
 		}
 		
 		/**
