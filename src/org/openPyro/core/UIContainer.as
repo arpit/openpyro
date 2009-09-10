@@ -764,7 +764,17 @@ package org.openPyro.core{
 		 * position only when its scrolled and not when items are added or removed
 		 * 
 		 */ 
-		public var autoPositionViewport:Boolean = true;
+		protected var _autoPositionViewport:Boolean = true;
+		
+		public function get autoPositionViewport():Boolean{
+			return _autoPositionViewport;	
+		}
+		
+		public function set autoPositionViewport(val:Boolean):void{
+			_autoPositionViewport = val;
+		}
+		
+		
 		
 		/**
 		 * Unlike UIControls, UIContainers do not apply a skin directly on 

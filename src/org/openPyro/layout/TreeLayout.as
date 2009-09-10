@@ -6,6 +6,8 @@ package org.openPyro.layout
 	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.effects.Effect;
+	
+	import org.openPyro.core.IDataRenderer;
 
 	public class TreeLayout extends VListLayout
 	{
@@ -37,7 +39,7 @@ package org.openPyro.layout
 					
 					if(animate){
 						if(newlyCreatedRenderers.indexOf(renderer) == -1){
-							Effect.on(renderer).completeCurrent().wait(2).moveY(newRendererY,animDuration).onComplete(dispatchComplete);
+							Effect.on(renderer).completeCurrent().moveY(newRendererY,animDuration).onComplete(dispatchComplete);
 						}
 						else{
 							
@@ -48,18 +50,18 @@ package org.openPyro.layout
 							else{
 								renderer.y = newRendererY + newRenderersGroupSize
 							}
-							Effect.on(renderer).wait(2).moveY(newRendererY,animDuration).onComplete(dispatchComplete);
+							Effect.on(renderer).moveY(newRendererY,animDuration).onComplete(dispatchComplete);
 						}
 					}
 					
 					else{
-						//if(!firstTime){
-						//	renderer.y = newRendererY;
-						//}
-						//else{
+						if(!firstTime){
+							renderer.y = newRendererY;
+						}
+						else{
 							renderer.y = newRendererY - newRenderersGroupSize
-							Effect.on(renderer).wait(2).moveY(newRendererY, animDuration).onComplete(dispatchComplete);
-						//}
+							Effect.on(renderer).moveY(newRendererY, animDuration).onComplete(dispatchComplete);
+						}
 						
 					}
 				}

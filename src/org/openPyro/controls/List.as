@@ -21,17 +21,19 @@ package org.openPyro.controls
 		{
 			this.layout = new VListLayout();
 			IVirtualizedLayout(this.layout).listBase = this;
-			//this.addEventListener(PyroEvent.CREATION_COMPLETE, onCreationComplete);
-		}
-		
-		private function onCreationComplete(event:PyroEvent):void{
-			this.autoPositionViewport = false;
-			this.addEventListener(PyroEvent.SCROLLBARS_CHANGED, updateScrollRect);
-			this.addEventListener(PyroEvent.SIZE_CHANGED, updateScrollRect);
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
 		{
+			/*
+			autoPositionScroll is set to false only when items are being added and removed
+			which means the VListLayout will automatically cause the VScroll event. So
+			dont position itemRenderers when that happens.
+			*/
+			if(autoPositionViewport == false) {
+				return;
+			}
+			
 			var newRenderersData:Array = IVirtualizedLayout(layout).visibleRenderersData;
 			createNewRenderersAndMap(newRenderersData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, false);

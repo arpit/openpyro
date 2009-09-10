@@ -63,7 +63,6 @@ package org.openPyro.layout
 									(_listBase.positionAnchorRenderer.y-_listBase.contentPane.scrollRect.top))/(_listBase.contentHeight-_listBase.height), 1);
 				_listBase.verticalScrollBar.value = percent;
 				_listBase.positionAnchorRenderer = null;
-				
 			}
 			
 			var scrollPos:Number = _listBase.verticalScrollPosition*scrollAbleHeight;

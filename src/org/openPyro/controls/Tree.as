@@ -34,7 +34,7 @@ package org.openPyro.controls
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void{
-			this.treeState = "scrolling";
+			//this.treeState = "scrolling";
 			super.onVerticalScroll(event);
 		}
 		
@@ -63,11 +63,11 @@ package org.openPyro.controls
 			if(nodeDescriptor.isLeaf()) {
 				return;
 			}
-			
+			animateRenderers = true;
 			positionAnchorRenderer = itemToItemRenderer(nodeDescriptor);
 			this.addEventListener(ListEvent.RENDERERS_REPOSITIONED, function(event:Event):void{
 				removeEventListener(ListEvent.RENDERERS_REPOSITIONED, arguments.callee);
-				this.autoPositionViewport = true;
+				autoPositionViewport = true;
 			});
 			
 			if(nodeDescriptor.open){
