@@ -260,6 +260,11 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
+		override public function set dimensionsChanged(val:Boolean) : void{
+			needsReRendering=true;
+			super.dimensionsChanged = val;
+		}
+		
 		override public function queueValidateDisplayList(event:PyroEvent=null):void{
 			super.queueValidateDisplayList(event);
 			if(!_dataProvider || !_itemRendererFactory || !_needsReRendering || isNaN(height) || isNaN(width)){
@@ -267,7 +272,7 @@ package org.openPyro.controls.listClasses
 			}
 			_needsReRendering = false;
 			renderListItems();
-			
+			dispatchEvent(new ListEvent(ListEvent.RENDERERS_REPOSITIONED));
 			
 		}
 		
@@ -476,6 +481,24 @@ package org.openPyro.controls.listClasses
 			else{
 				return 0;
 			}
+		}
+		
+		/**
+		 * Scrolls the list such that the item on the index specified
+		 * is the one visible as the first renderer or the list is at
+		 * maximum scroll.
+		 */ 
+		public function scrollToItemAtIndex(index:int):void{
+			/*
+			 Right now the presence or absence of a 
+			 scrollbar is a metric of whether or not
+			 the list is scrollable. This needs to be fixed for
+			 cases for example when ScrollPolicy is set to None
+			 */
+			if(! this._verticalScrollBar) return;
+			var yval:Number = index*_rowHeight;
+			var percent:Number = Math.min(yval/(_contentHeight-height), 1);
+			_verticalScrollBar.value = percent;
 		}
 		
 	}
