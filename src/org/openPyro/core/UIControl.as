@@ -145,7 +145,7 @@ package org.openPyro.core{
 		 */ 
 		override public function set measuredWidth(w:Number):void{
 			if(w  == _measuredWidth) return;
-			_dimensionsChanged = true;
+			dimensionsChanged = true;
 			_measuredWidth = w;
 			for(var i:uint=0; i<this.numChildren; i++){
 				var child:UIControl = this.getChildAt(i) as UIControl;
@@ -164,7 +164,7 @@ package org.openPyro.core{
 		 */
 		override public function set measuredHeight(h:Number):void{
 			if(h == _measuredHeight) return;
-			this._dimensionsChanged = true;
+			this.dimensionsChanged = true;
 			_measuredHeight = h;
 			for(var i:uint=0; i<this.numChildren; i++){
 				var child:UIControl = this.getChildAt(i) as UIControl;

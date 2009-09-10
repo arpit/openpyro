@@ -139,7 +139,7 @@ package org.openPyro.core{
 		override public function set width(n:Number):void{
 			if(n == _explicitWidth) return;
 			this._explicitWidth = n
-			_dimensionsChanged = true;
+			dimensionsChanged = true;
 			displayListInvalidated = true;
 			if(!initialized) return;
 			invalidateSize();
@@ -162,7 +162,7 @@ package org.openPyro.core{
 			if (n == _explicitHeight) return;
 			this._explicitHeight = n
 			displayListInvalidated = true;
-			_dimensionsChanged=true;	
+			dimensionsChanged=true;	
 			if(!initialized) return;
 			invalidateSize();
 			//invalidateDisplayList();
@@ -418,6 +418,13 @@ package org.openPyro.core{
 		
 		protected var _dimensionsChanged:Boolean=true;
 		
+		public function get dimensionsChanged():Boolean{
+			return _dimensionsChanged;
+		}
+		public function set dimensionsChanged(val:Boolean):void{
+			_dimensionsChanged = val;
+		}
+		
 		/**
 		 * Measure is called during the validateSize if
 		 * the needsmeasurement flag is set. 
@@ -490,7 +497,7 @@ package org.openPyro.core{
 			if(h == _measuredHeight) return;
 			_measuredHeight = h;
 			displayListInvalidated = true;
-			_dimensionsChanged = true;
+			dimensionsChanged = true;
 		}
 		
 		
@@ -512,7 +519,7 @@ package org.openPyro.core{
 			if(w  == _measuredWidth) return;
 			_measuredWidth = w;
 			displayListInvalidated = true;
-			_dimensionsChanged = true
+			dimensionsChanged = true
 		}
 		
 		/**
@@ -550,7 +557,7 @@ package org.openPyro.core{
 		 * affects the size of the control.
 		 */ 
 		public function checkDisplayListValidation():void{
-			if(_dimensionsChanged){
+			if(dimensionsChanged){
 				queueValidateDisplayList()
 			}	
 		}
@@ -564,7 +571,7 @@ package org.openPyro.core{
 		 * and waits till the validateDisplaylist is called.
 		 */ 
 		public function queueValidateDisplayList(event:PyroEvent=null):void{
-			if(this._parentContainer && _dimensionsChanged){
+			if(this._parentContainer && dimensionsChanged){
 				dispatchEvent(new PyroEvent(PyroEvent.SIZE_CHANGED));
 			}else{
 				if(this.stage){
@@ -592,8 +599,8 @@ package org.openPyro.core{
 				child.validateDisplayList()
 			}
 			this.updateDisplayList(this.getExplicitOrMeasuredWidth(), this.getExplicitOrMeasuredHeight());
-			if(_dimensionsChanged){
-				_dimensionsChanged = false;
+			if(dimensionsChanged){
+				dimensionsChanged = false;
 				resizeHandler();
 			}
 			this.displayListInvalidated=false
