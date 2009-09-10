@@ -85,9 +85,12 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		private var _isWaiting:Boolean= false;
 		public function wait(duration:Number = 1):Effect{
-			var timer:Timer = new Timer(duration*1000);
+			var timer:Timer = new Timer(duration*1000,1);
+			_isWaiting = true;
 			timer.addEventListener(TimerEvent.TIMER_COMPLETE, function():void{
+				_isWaiting = false;
 				invalidateEffectQueue();
 			});
 			timer.start();
@@ -244,7 +247,7 @@ package org.openPyro.effects{
 		 * 
 		 */ 
 		public function invalidateEffectQueue():void{
-			if(!_areEffectsPlaying){
+			if(!_areEffectsPlaying && !_isWaiting){
 				_currentlyAnimatingTargets[this._target] = this;
 				playNextEffect();
 			}
