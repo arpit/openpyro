@@ -24,13 +24,17 @@ package org.openPyro.painters
 		}
 		
 		
+		public var initX:Number = 0;
+		public var initY:Number = 0;
+		
+		
 		
 		public function draw(gr:Graphics, w:Number, h:Number):void
 		{
-			var drawX:int = 0;
-			var drawY:int = 0;
-			var drawW:int = w;
-			var drawH:int = h;
+			var drawX:Number = initX;
+			var drawY:Number = initY;
+			var drawW:Number = w;
+			var drawH:Number = h;
 			
 			if(_padding){
 				drawX += _padding.left
