@@ -45,10 +45,6 @@ package org.openPyro.controls.listClasses
 		public function ListBase()
 		{
 			super();
-			if(_labelFunction == null){
-				this._labelFunction = StringUtil.toStringLabel
-			}
-			
 		}
 		
 		/**
@@ -212,6 +208,9 @@ package org.openPyro.controls.listClasses
 		private var borderRect:Sprite;
 		override protected function createChildren() : void{
 			super.createChildren();
+			if(_labelFunction == null){
+				this._labelFunction = StringUtil.toStringLabel
+			}
 			borderRect = new Sprite();
 			$addChild(borderRect);
 		}
