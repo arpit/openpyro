@@ -43,7 +43,7 @@ package org.openPyro.layout
 			// dont layout
 		}
 		
-		public function get numberOfVerticalRenderersNeededForDisplay():int{
+		public function get numberOfRenderersNeededForDisplay():int{
 			return Math.ceil(_container.height/ListBase(_container).rowHeight)+1;
 		}
 		
@@ -75,7 +75,7 @@ package org.openPyro.layout
 			var iterator:IIterator = sourceCollection.iterator;
 			iterator.cursorIndex = newTopRendererIndex;
 			
-			for(var i:int=0; i<numberOfVerticalRenderersNeededForDisplay; i++){
+			for(var i:int=0; i<numberOfRenderersNeededForDisplay; i++){
 				var itemUID:String = sourceCollection.getUIDForItemAtIndex(iterator.cursorIndex);
 				if(itemUID == null){
 					break;

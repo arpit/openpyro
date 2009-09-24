@@ -143,15 +143,15 @@ package org.openPyro.controls.listClasses
 		
 		protected function handleItemsRemoved(event:CollectionEvent):void{
 			var items:Array = event.delta;
-			var needsEventDispatch:Boolean = false;
+			/*var needsEventDispatch:Boolean = false;
 			if(event.location < _selectedIndex){
 				_selectedIndex-=items.length;
 				needsEventDispatch = true;
-			}
+			}*/
 			for each(var item:* in items){
 				if(item == this._selectedItem){
 					this.selectedIndex = -1;
-					needsEventDispatch = false;
+			//		needsEventDispatch = false;
 				}
 				for (var uid:String in this.visibleRenderersMap){
 					if(IListDataRenderer(this.visibleRenderersMap[uid]).data == item){
@@ -170,11 +170,11 @@ package org.openPyro.controls.listClasses
 			invalidateSize();
 			invalidateDisplayList();
 			
-			if(needsEventDispatch){
+			/*if(needsEventDispatch){
 				var listEvent:ListEvent = new ListEvent(ListEvent.CHANGE);
 				dispatchEvent(listEvent);
 			}
-			
+			*/
 			viewportInvalidated = true;
 			
 		}
