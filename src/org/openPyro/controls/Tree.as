@@ -7,7 +7,6 @@ package org.openPyro.controls
 	import org.openPyro.collections.TreeCollection;
 	import org.openPyro.collections.XMLNodeDescriptor;
 	import org.openPyro.controls.events.ListEvent;
-	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.events.TreeEvent;
 	import org.openPyro.layout.TreeLayout;
 
@@ -33,11 +32,14 @@ package org.openPyro.controls
 			
 		}
 		
-		override protected function onVerticalScroll(event:ScrollEvent):void{
-			//this.treeState = "scrolling";
-			super.onVerticalScroll(event);
+		override public function set dataProvider(src:Object):void{
+			if(!(src is XML) && !(src is TreeCollection)){
+				throw new ArgumentError("Tree controls currently cannot render non XML/TreeCollection data");
+				return;
+			} 
+			super.dataProvider = src;
 		}
-		
+
 		override protected function convertDataToCollection(dp:Object):void{
 			if( dp is ICollection){
 				this._dataProviderCollection = ICollection(dp);
