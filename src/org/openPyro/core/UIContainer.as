@@ -14,7 +14,13 @@ package org.openPyro.core{
 	import org.openPyro.layout.AbsoluteLayout;
 	import org.openPyro.layout.IContainerMeasurementHelper;
 	import org.openPyro.layout.ILayout;
-
+	
+	/**
+	 * Event dispatched when content resizing causes the scrollbars to 
+	 * change (either appear or disappear)
+	 */ 
+	[Event(name="scrollBarsChanged", type="org.openPyro.events.PyroEvent")]
+	
 	/**
 	 * UIContainers extend UIControls and introduce
 	 * the concept of scrolling and layouts. If the 

@@ -21,6 +21,7 @@ package org.openPyro.controls
 		{
 			this.layout = new VListLayout();
 			IVirtualizedLayout(this.layout).listBase = this;
+			this.addEventListener(PyroEvent.SCROLLBARS_CHANGED, updateScrollRect);
 		}
 		
 		override protected function onVerticalScroll(event:ScrollEvent):void
@@ -40,6 +41,8 @@ package org.openPyro.controls
 			dispatchEvent(event);
 			updateScrollRect();
 		}
+		
+		
 		
 		protected function updateScrollRect(event:Event=null):void{
 			//var scrollAbleHeight:Number = contentHeight - height;
