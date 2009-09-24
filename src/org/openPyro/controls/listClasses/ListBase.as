@@ -57,6 +57,9 @@ package org.openPyro.controls.listClasses
 		 * @see org.openpyro.layouts.IVirtualizedLayout
 		 */ 
 		override public function set layout(l:ILayout):void{
+			if(!(l is IVirtualizedLayout)){
+				throw new ArgumentError("ListBase can only accept IVirualizedLayout layouts");
+			}
 			super.layout = l;
 			IVirtualizedLayout(l).listBase = this;
 		}
