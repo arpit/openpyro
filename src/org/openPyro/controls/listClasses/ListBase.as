@@ -443,8 +443,12 @@ package org.openPyro.controls.listClasses
 			}
 			
 			_selectedIndex = val;
+			this.dataProviderCollection.iterator.cursorIndex = val;
 			_selectedItem = _dataProviderCollection.getItemAt(_selectedIndex);
-			
+			var targetRenderer:IListDataRenderer = this.itemToItemRenderer(_selectedItem) as IListDataRenderer;
+			if(targetRenderer){
+				targetRenderer.selected = true;
+			}
 			var event:ListEvent = new ListEvent(ListEvent.CHANGE);
 			dispatchEvent(event);
 		}
