@@ -14,7 +14,8 @@ package org.openPyro.core{
 	import org.openPyro.layout.AbsoluteLayout;
 	import org.openPyro.layout.IContainerMeasurementHelper;
 	import org.openPyro.layout.ILayout;
-	
+	import org.openPyro.utils.MouseUtil;
+
 	/**
 	 * Event dispatched when content resizing causes the scrollbars to 
 	 * change (either appear or disappear)
@@ -577,7 +578,12 @@ package org.openPyro.core{
 			$addChild(_verticalScrollBar);
 			_verticalScrollBar.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
 				mouseOverDisabled = false;
-			})
+			});
+			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(!MouseUtil.isMouseOver(this)){
+					_verticalScrollBar.alpha = 0;
+				}
+			}
 		}
 		
 		/**
@@ -625,6 +631,11 @@ package org.openPyro.core{
 			_horizontalScrollBar.skin = IScrollableContainerSkin(_skin).horizontalScrollBarSkin;	
 			_horizontalScrollBar.visible = false;
 			$addChild(_horizontalScrollBar);
+			if(this._horizontalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
+				if(!MouseUtil.isMouseOver(this)){
+					_horizontalScrollBar.alpha = 0;
+				}
+			}
 		}
 		
 		protected function onHorizontalScrollBarSizeValidated(event:PyroEvent):void
