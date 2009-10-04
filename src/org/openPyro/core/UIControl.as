@@ -515,5 +515,20 @@ package org.openPyro.core{
 			return this;
 		}
 		
+		/**
+		 * Calls a function after a given number of frames (defaults to 1 frame).
+		 * This a good way to break processing of large data between frames to
+		 * keep ActionScript responsive.
+		 */ 
+		public function doLater(callback:Function, numFrames:int=1):void{
+			var count:int=0;
+			this.addEventListener(Event.ENTER_FRAME, function(event:Event):void{
+				count++;
+				if(count==numFrames){
+					removeEventListener(Event.ENTER_FRAME, arguments.callee);
+					callback();
+				}
+			});
+		}		
 	}
 }
