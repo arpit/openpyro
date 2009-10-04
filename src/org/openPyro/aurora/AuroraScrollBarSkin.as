@@ -87,5 +87,19 @@ package org.openPyro.aurora{
 			}
 		}
 		
+		public function get scrollbarWidth():Number{
+			if(this.direction == Direction.VERTICAL){
+				return 15;
+			}
+			return NaN;
+		}
+		
+		public function get scrollbarHeight():Number{
+			if(this.direction == Direction.HORIZONTAL){
+				return 15;
+			}
+			return NaN;	
+		}
+		
 	}
 }

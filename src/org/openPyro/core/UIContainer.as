@@ -8,6 +8,7 @@ package org.openPyro.core{
 	import org.openPyro.controls.ScrollBar;
 	import org.openPyro.controls.events.ScrollEvent;
 	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
+	import org.openPyro.controls.skins.IScrollBarSkin;
 	import org.openPyro.controls.skins.IScrollableContainerSkin;
 	import org.openPyro.effects.Effect;
 	import org.openPyro.events.PyroEvent;
@@ -560,7 +561,15 @@ package org.openPyro.core{
 			_verticalScrollBar.minimum = 0;
 			_verticalScrollBar.incrementalScrollDelta = _verticalScrollIncrement;
 			_verticalScrollBar.name = "vscrollbar_"+this.name;
-			_verticalScrollBar.width = 15;
+			
+			var verticalScrollBarSkin:IScrollBarSkin = IScrollableContainerSkin(_skin).verticalScrollBarSkin;
+			
+			if(isNaN(verticalScrollBarSkin.scrollbarWidth)){
+				_verticalScrollBar.width = 15;
+			}
+			else{
+				_verticalScrollBar.width = verticalScrollBarSkin.scrollbarWidth;
+			}
 			_verticalScrollBar.addEventListener(Event.ADDED_TO_STAGE, function():void{
 				_verticalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
 					mouseOverDisabled = true;
@@ -571,7 +580,7 @@ package org.openPyro.core{
 			});
 			_verticalScrollBar.addEventListener(PyroEvent.SIZE_VALIDATED, onVerticalScrollBarSizeValidated);
 			_verticalScrollBar.addEventListener(PyroEvent.CREATION_COMPLETE, onVScrollBarCreationComplete);
-			_verticalScrollBar.skin = IScrollableContainerSkin(_skin).verticalScrollBarSkin;
+			_verticalScrollBar.skin = verticalScrollBarSkin;
 			_verticalScrollBar.addEventListener(ScrollEvent.SCROLL, onVerticalScroll)
 			_verticalScrollBar.doOnAdded()
 			_verticalScrollBar.visible = false;
@@ -613,7 +622,14 @@ package org.openPyro.core{
 			_horizontalScrollBar.minimum = 0
 			_horizontalScrollBar.incrementalScrollDelta = _horizontalScrollIncrement
 			_horizontalScrollBar.name = "hscrollbar_"+this.name;
-			_horizontalScrollBar.height = 15;
+			
+			var horizontalScrollBarSkin:IScrollBarSkin = IScrollableContainerSkin(_skin).verticalScrollBarSkin;
+			if(isNaN(horizontalScrollBarSkin.scrollbarHeight)){
+				_horizontalScrollBar.height = 15;
+			}
+			else{
+				_horizontalScrollBar.height = horizontalScrollBarSkin.scrollbarHeight;
+			}
 			
 			_horizontalScrollBar.addEventListener(Event.ADDED_TO_STAGE, function(event:Event):void{
 				_horizontalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
@@ -628,7 +644,7 @@ package org.openPyro.core{
 			_horizontalScrollBar.addEventListener(ScrollEvent.SCROLL, onHorizontalScroll);
 			_horizontalScrollBar.parentContainer = this;
 			_horizontalScrollBar.doOnAdded()
-			_horizontalScrollBar.skin = IScrollableContainerSkin(_skin).horizontalScrollBarSkin;	
+			_horizontalScrollBar.skin = horizontalScrollBarSkin;	
 			_horizontalScrollBar.visible = false;
 			$addChild(_horizontalScrollBar);
 			if(this._horizontalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
