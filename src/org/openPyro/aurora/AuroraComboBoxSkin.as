@@ -1,15 +1,18 @@
 package org.openPyro.aurora
 {
+	import flash.filters.DropShadowFilter;
+	
 	import org.openPyro.controls.skins.IComboBoxSkin;
 	import org.openPyro.core.UIControl;
 	import org.openPyro.skins.ISkin;
-	
-	import flash.filters.DropShadowFilter;
 	
 	public class AuroraComboBoxSkin implements IComboBoxSkin
 	{
 		protected var _buttonSkin:AuroraButtonSkin;
 		protected var _listSkin:AuroraContainerSkin;
+		
+		public var cornerRadius:Number = 10;
+		public var dropShadowEnabled:Boolean = true;
 		
 		public function AuroraComboBoxSkin() {
 			
@@ -19,8 +22,10 @@ package org.openPyro.aurora
 		{
 			_buttonSkin = new AuroraButtonSkin();
 			_buttonSkin.labelAlign = "left";
-			_buttonSkin.cornerRadius = 10;
-			_buttonSkin.filters = [new DropShadowFilter(.5,90,0,1,0,0)]
+			_buttonSkin.cornerRadius = this.cornerRadius;
+			if(dropShadowEnabled){
+				_buttonSkin.filters = [new DropShadowFilter(.5,90,0,1,0,0)];
+			}
 			return _buttonSkin;
 		}
 		

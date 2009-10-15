@@ -1,6 +1,5 @@
 package org.openPyro.controls
 {
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -26,7 +25,7 @@ package org.openPyro.controls
 
 	public class ComboBox extends UIControl
 	{
-		private var _bttn:Button;
+		private var _bttn:UIControl;
 		private var listHolder:Sprite;
 		private var _list:List;
 	
@@ -43,10 +42,12 @@ package org.openPyro.controls
 			
 			if(!_bttn){
 				_bttn = new Button()
-				_bttn.addEventListener(ButtonEvent.DOWN, onButtonDown)
+				_bttn.addEventListener(MouseEvent.MOUSE_DOWN, onButtonDown)
 				addChild(_bttn);
 				if(_dataProvider){
-					_bttn.label = _bttnLabelFunction(_dataProvider[_selectedIndex]);
+					if(_bttn.hasOwnProperty("label")){
+						_bttn["label"] = _bttnLabelFunction(_dataProvider[_selectedIndex]);
+					}
 				}
 				if(this._skin){
 					if(this._skin is IComboBoxSkin)
@@ -75,20 +76,23 @@ package org.openPyro.controls
 		{
 			_dataProvider = data;
 			_selectedIndex = 0;
-			if(_bttn)
+			if(_bttn && _bttn.hasOwnProperty("label"))
 			{
-				_bttn.label = _bttnLabelFunction(data[0]);
+				_bttn["label"] = _bttnLabelFunction(data[0]);
 			}
 		}
 		
 		public var _bttnLabelFunction:Function = StringUtil.toStringLabel;
 			
-		public function set button(bttn:Button):void{
+		public function set button(bttn:UIControl):void{
 			if(_bttn){
-				_bttn.removeEventListener(ButtonEvent.DOWN, onButtonDown)	
+				_bttn.removeEventListener(MouseEvent.MOUSE_DOWN, onButtonDown);	
 			}
 			_bttn = bttn;
-			_bttn.addEventListener(ButtonEvent.DOWN, onButtonDown)
+			if(!bttn.parent){
+				addChild(bttn);
+			}
+			_bttn.addEventListener(MouseEvent.MOUSE_DOWN, onButtonDown)
 		}
 		
 		public function set list(l:List):void{
@@ -201,7 +205,9 @@ package org.openPyro.controls
 		
 		protected function onListItemClick(event:ListEvent):void
 		{
-			this._bttn.label = _bttnLabelFunction(_list.selectedItem);
+			if(_bttn.hasOwnProperty("label")){
+				this._bttn["label"] = _bttnLabelFunction(_list.selectedItem);
+			}
 			_selectedIndex = _list.selectedIndex;
 			dispatchEvent(event);
 			close()
