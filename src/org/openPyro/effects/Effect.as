@@ -121,6 +121,13 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		public function exec(fn:Function):Effect{
+			var eff:EffectDescriptor = new EffectDescriptor(this._target, 0, {onComplete:fn});
+			_effectQueue.push(eff);
+			this.invalidateEffectQueue();
+			return this;
+		}
+		
 		public function fadeIn(duration:Number=1):Effect{
 			var hadFilters:Boolean = _target.filters.length > 0;
 			_effectQueue.push(new EffectDescriptor(this._target, 
@@ -272,6 +279,9 @@ package org.openPyro.effects{
 			_areEffectsPlaying = true;
 			_currentEffectDescriptor = EffectDescriptor(_effectQueue.shift());
 			var props:Object = _currentEffectDescriptor.properties;
+			if(!props){
+				props = {};
+			}
 			if(props.onComplete){
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
