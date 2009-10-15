@@ -3,6 +3,7 @@ package org.openPyro.core{
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Rectangle;
 	
 	import org.openPyro.controls.ScrollBar;
@@ -35,6 +36,7 @@ package org.openPyro.core{
 	 */ 
 	public class UIContainer extends UIControl{
 		
+		public var dropShadowSprite:Sprite;
 		public var contentPane:UIControl;
 		public var focusRectHolder:Sprite;
 		protected var _horizontalScrollPolicy:String = ScrollPolicy.AUTO;
@@ -832,6 +834,10 @@ package org.openPyro.core{
 				_horizontalScrollBar.y = this.height - _horizontalScrollBar.height-1;
 			}	
 			super.updateDisplayList(unscaledWidth, unscaledHeight);	
+			if(dropShadowSprite){
+					dropShadowSprite.width = width;
+					dropShadowSprite.height = height;
+				}
 			if(_clipContent && autoPositionViewport){
 				this.setContentMask()
 			}
@@ -935,12 +941,35 @@ package org.openPyro.core{
 		public var debugScrollRect:Boolean = false
 		public function setScrollRect(rect:Rectangle):void{
 			if(!debugScrollRect){
-				this.contentPane.scrollRect = rect
+				this.contentPane.scrollRect = rect;
+				
 			}
 			else{
 				this.focusRectHolder.graphics.clear();
 				this.focusRectHolder.graphics.beginFill(0xff0000,.4);
 				this.focusRectHolder.graphics.drawRect(rect.left, rect.top, rect.width, rect.height);
+			}
+		}
+		
+		/**
+		 * Creates/removes a Sprite on which the drop shadow can be applied to. This is done
+		 * since setting the dropShadow on the control itself may cause the control's
+		 * bitmap to be generated and cached by the Flash Player before the control is 
+		 * fully created.
+		 */ 
+		public function set dropShadowEnabled(val:Boolean):void{
+			if(val){
+				dropShadowSprite = new Sprite();
+				dropShadowSprite.graphics.beginFill(0xffffff);
+				dropShadowSprite.graphics.drawRect(0,0,100,100);
+				$addChildAt(dropShadowSprite,0);
+				dropShadowSprite.width = width;
+				dropShadowSprite.height = height;
+				dropShadowSprite.filters = [new DropShadowFilter(4,90,0,.4)];
+			}
+			else{
+				dropShadowSprite.parent.removeChild(dropShadowSprite);
+				dropShadowSprite = null;
 			}
 		}
 	}
