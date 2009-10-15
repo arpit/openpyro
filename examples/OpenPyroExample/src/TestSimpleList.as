@@ -56,6 +56,7 @@ package
 			list.x = list.y = 10;
 			uic.addChild(list);
 			
+			list.dropShadowEnabled  = true;
 			var dp:Array = new Array()
 			for(var i:int=0; i< 25; i++){
 				dp.push("original data: "+i)
