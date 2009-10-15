@@ -186,7 +186,7 @@ package org.openPyro.controls
 			_list.selectedIndex = _selectedIndex;
 			
 			_list.y = this.height+2;
-			
+			_list.visible = true;
 			Effect.on(_list).slideDown(1).onComplete(function():void{
 				stage.addEventListener(MouseEvent.CLICK, onStageClick)
 			});
@@ -224,7 +224,9 @@ package org.openPyro.controls
 			stage.removeEventListener(MouseEvent.CLICK, onStageClick)
 			_isOpen = false;
 			//TweenMax.to(_list, .5, {y:this.height-_list.height})
-			Effect.on(_list).wipeUp(.5);
+			Effect.on(_list).wipeUp(.5).onComplete(function():void{
+				_list.visible = false;
+			});
 		}
 		
 		

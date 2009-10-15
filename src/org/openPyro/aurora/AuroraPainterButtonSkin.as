@@ -17,6 +17,8 @@ package org.openPyro.aurora{
 	 */ 
 	public class AuroraPainterButtonSkin extends UIControl implements IStateFulClient
 	{
+		
+		public var labelIconGap:Number = 5;
 		/**
 		 * A skin for buttons using different painters.
 		 * Note: Only padding left and padding top are respected if align is set to
@@ -116,8 +118,9 @@ package org.openPyro.aurora{
 				invalidateDisplayList();
 			}
 		}
-	
+		
 		//////////// Colors ///////////////
+		
 		
 		public var upPainter:IPainter;
 		public var overPainter:IPainter;
@@ -205,7 +208,8 @@ package org.openPyro.aurora{
 						label.x += _icon.width+5;
 					}
 					else{
-						_icon.x = label.x-_icon.width-5;
+						label.x+=_icon.width/2+labelIconGap/2;
+						_icon.x = label.x-_icon.width-labelIconGap;
 					}
 				}
 				_icon.y = (unscaledHeight-_icon.height)/2;
