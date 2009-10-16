@@ -403,7 +403,6 @@ package org.openPyro.controls
 		
 		public function set thumbButtonWidth(value:Number):void
 		{
-			trace("====>>>>  thumbbuttonwidth: "+value)
 			_thumbButtonWidth = value;
 			if(_thumbButton)
 			{
