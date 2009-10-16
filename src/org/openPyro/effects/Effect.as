@@ -121,6 +121,12 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		public function moveXBy(value:Number, duration:Number=1):Effect{
+			_effectQueue.push(new EffectDescriptor(this._target, duration, {x:_target.x+value}));
+			invalidateEffectQueue();
+			return this;
+		}
+		
 		public function exec(fn:Function):Effect{
 			var eff:EffectDescriptor = new EffectDescriptor(this._target, 0, {onComplete:fn});
 			_effectQueue.push(eff);
@@ -221,7 +227,7 @@ package org.openPyro.effects{
 		private function createEffectMask():Shape{
 			var mask:Shape = new Shape();
 			mask.graphics.beginFill(0xff0000);
-			mask.graphics.drawRect(0,0,_target.width, _target.height);
+			mask.graphics.drawRect(-5,-5,_target.width+10, _target.height+10);
 			mask.graphics.endFill();
 			
 			if(_target.parent is MeasurableControl){
