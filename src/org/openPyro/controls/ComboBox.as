@@ -151,6 +151,7 @@ package org.openPyro.controls
 			if(!_list)
 			{
 				_list = new List();
+				_list.selectedIndex = _selectedIndex;
 				_list.skin = new AuroraContainerSkin();
 				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer);
 				renderers.properties = {percentWidth:100, height:25};
@@ -188,9 +189,9 @@ package org.openPyro.controls
 				_list.visible = false;
 				
 			}
-			
-			_list.selectedIndex = _selectedIndex;
-			
+			else{
+				_list.selectedIndex = _selectedIndex;
+			}
 			_list.y = this.height+2;
 			
 			_list.visible = true;

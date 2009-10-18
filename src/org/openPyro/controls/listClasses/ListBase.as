@@ -430,8 +430,21 @@ package org.openPyro.controls.listClasses
 			return _selectedIndex;
 		}
 		
+		/**
+		 * Sets the selectedIndex of the ListBase based control.
+		 * If the selectedIndex is set before the control has been
+		 * initialized, the <code>change</code> event is not fired.
+		 * This hook lets us set initial values for the List and wait
+		 * for change events on it. For example, the <code>ComboBox</code>
+		 * set the List's value this way when the list is about to be
+		 * revealed.
+		 */ 
 		public function set selectedIndex(val:int):void{
 			if(_selectedIndex == val) return;
+			if(!initialized){
+				_selectedIndex = val;
+				return;
+			}
 			for(var uid:String in visibleRenderersMap){
 				if(_selectedIndex == _dataProviderCollection.getUIDIndex(uid)){
 					

@@ -292,6 +292,15 @@ package org.openPyro.effects{
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
 					fn();
+					if(_currentEffectDescriptor.onComplete != null){
+						_currentEffectDescriptor.onComplete();
+					}
+					playNextEffect();
+				}
+			}
+			else if(_currentEffectDescriptor.onComplete != null){
+				props.onComplete = function():void{
+					_currentEffectDescriptor.onComplete();
 					playNextEffect();
 				}
 			}

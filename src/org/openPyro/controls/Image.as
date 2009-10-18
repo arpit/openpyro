@@ -125,7 +125,7 @@ package org.openPyro.controls
 			}
 			if(isNaN(this._explicitHeight) && isNaN(this._percentHeight) && isNaN(_percentUnusedHeight))
 			{
-				measuredHeight = _originalContentWidth + _padding.top + _padding.bottom;
+				measuredHeight = _originalContentHeight + _padding.top + _padding.bottom;
 			}
 		}
 		
@@ -191,8 +191,8 @@ package org.openPyro.controls
 		
 			var scaleX:Number;
 			var scaleY:Number;	
-			scaleX = width / _originalContentWidth;
-			scaleY = height / _originalContentHeight;
+			scaleX = width / (_originalContentWidth+_padding.left+_padding.right);
+			scaleY = height / (_originalContentHeight+_padding.top+_padding.bottom);
 			
 			if(_maintainAspectRatio)
 			{

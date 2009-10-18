@@ -52,9 +52,11 @@ package org.openPyro.containers
 		
 		 override public function set selectedIndex(idx:int):void
 		 {
-		 	_previouslySelectedChild = _selectedChild
-		 	_previouslySelectedIndex = _selectedIndex
-		 	super.selectedIndex = idx;
+			 if(creationCompleteFired){
+		 		_previouslySelectedChild = _selectedChild
+				_previouslySelectedIndex = _selectedIndex
+			 }
+			super.selectedIndex = idx;
 		 }
 		 
 		 private var trans:Number = -1;
@@ -69,11 +71,10 @@ package org.openPyro.containers
 		 
 		 override protected function showSelectedChild():void
 		 {
-		 	
 		 	if(_previouslySelectedIndex == -1)
 		 	{
 		 		super.showSelectedChild();
-		 	}
+			}
 		 	
 		 	for(var i:uint=0; i<viewChildren.length; i++)
 		 	{
@@ -98,7 +99,10 @@ package org.openPyro.containers
 		
 			//animate
 			
-			var oldViewEffectDescriptor:EffectDescriptor = new EffectDescriptor(_previouslySelectedChild, 1)
+			var oldViewEffectDescriptor:EffectDescriptor = new EffectDescriptor(_previouslySelectedChild, 1);
+			oldViewEffectDescriptor.onComplete = function():void{
+				_previouslySelectedChild.visible = false;
+			}
 			var newViewEffectDescriptor:EffectDescriptor = new EffectDescriptor(_selectedChild, 1)
 			
 			if(_transitionDirection == Direction.HORIZONTAL){
