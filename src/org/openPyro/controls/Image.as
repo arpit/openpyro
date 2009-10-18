@@ -178,6 +178,14 @@ package org.openPyro.controls
 			return _maintainAspectRatio;
 		}
 		
+		/**
+		 * Unloads the image loaded by the <code>Loader</code> 
+		 * instance
+		 */ 
+		public function unload():void{
+			this._loader.unload();
+		}
+		
 		protected function scaleImageContent():void
 		{
 		

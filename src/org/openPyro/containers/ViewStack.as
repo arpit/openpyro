@@ -48,7 +48,7 @@ package org.openPyro.containers
 				throw new Error("ViewStacks can only hold UIContainers");
 				return;
 			}
-			return super.addChild(child);
+			return addChildAt(child, this.contentPane.numChildren);
 		}
 		
 		override public function addChildAt(child:DisplayObject, index:int):DisplayObject
@@ -62,6 +62,10 @@ package org.openPyro.containers
 			_selectedChild = viewChildren[viewChildren.length-1];
 			_selectedIndex = viewChildren.length -1;
 			viewsChanged = true;
+			for(var i:int=0; i<viewChildren.length; i++){
+				viewChildren[i].visible = false;
+			}
+			_selectedChild.visible = true;
 			return super.addChildAt(child, index);
 		}
 		

@@ -6,7 +6,6 @@ package org.openPyro.controls
 	import flash.filters.DropShadowFilter;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
-	import org.openPyro.controls.events.ButtonEvent;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.controls.skins.IComboBoxSkin;
@@ -164,7 +163,8 @@ package org.openPyro.controls
 				*/
 				_list.backgroundPainter = new FillPainter(0xffffff);
 		
-				_list.filters = [new DropShadowFilter(2,90, 0, .5,2,2)];
+				//_list.filters = 
+				
 				
 				listHolder.addChildAt(_list,0);
 				var overlayManager:OverlayManager = OverlayManager.getInstance();
@@ -181,19 +181,25 @@ package org.openPyro.controls
 					_list.height = _maxDropDownHeight;	
 				}
 				_list.dataProvider = _dataProvider;	
+				_list.dropShadowEnabled = true;
 				_list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick);
 				_list.addEventListener(ListEvent.CHANGE, onListChange);
 				_list.validateSize();
+				_list.visible = false;
 				
 			}
 			
 			_list.selectedIndex = _selectedIndex;
 			
 			_list.y = this.height+2;
+			
 			_list.visible = true;
 			Effect.on(_list).slideDown(1).onComplete(function():void{
-				stage.addEventListener(MouseEvent.CLICK, onStageClick)
+					stage.addEventListener(MouseEvent.CLICK, onStageClick)
 			});
+			
+			
+			
 			
 		}
 		
@@ -213,9 +219,12 @@ package org.openPyro.controls
 			close()
 		}
 		
-		public function get selectedIndex():int
-		{
+		public function get selectedIndex():int{
 			return _selectedIndex;
+		}
+		
+		public function get selectedItem():*{
+			return _dataProvider[_selectedIndex];
 		}
 		
 		protected function onListChange(event:ListEvent):void

@@ -1,15 +1,15 @@
 package
 {
+	import flash.display.Sprite;
+	import flash.filters.DropShadowFilter;
+	
 	import org.openPyro.aurora.AuroraComboBoxSkin;
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.ComboBox;
 	import org.openPyro.controls.List;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.core.ClassFactory;
-	import org.openPyro.layout.VLayout;
-	
-	import flash.display.Sprite;
-	import flash.filters.DropShadowFilter;
+	import org.openPyro.events.PyroEvent;
 
 	public class TestComboBox extends Sprite
 	{
@@ -24,8 +24,8 @@ package
 		private var _list:List;
 		private function testBasicList():void
 		{
-			_list = new List()
-			_list.skin = new AuroraContainerSkin()
+			_list = new List();
+			_list.skin = new AuroraContainerSkin();
 			var renderers:ClassFactory = new ClassFactory(DefaultListRenderer)
 			renderers.properties = {percentWidth:100, height:25}
 			_list.itemRenderer = renderers;
