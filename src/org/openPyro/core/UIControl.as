@@ -250,15 +250,20 @@ package org.openPyro.core{
 		}
 		
 		/**
-		 * @private
+		 * Sets the an IPainter as the backgroundPainter of this control. 
+		 * 
+		 * BackgroundPainters paint the graphics context of the UIControl everytime 
+		 * updateDisplaylist is called.
+		 * 
+		 * If the value is set to null, the graphics context is cleared.
+		 * 
+		 * @see org.openpyro.painters 
 		 */ 
 		public function set backgroundPainter(painter:IPainter):void{
 			this._backgroundPainter = painter;
-			this.invalidateDisplayList();
-		}
-		
-		public function removeBackgroundPainter():void{
-			this._backgroundPainter = null;
+			if(painter == null){
+				this.graphics.clear();
+			}
 			this.invalidateDisplayList();
 		}
 		
