@@ -18,6 +18,7 @@ package org.openPyro.controls
 		
 		override protected function createChildren():void{
 			_textField = new TextField();
+			this.mouseChildren = false;
 			setTextFieldProperties()
 			addChild(_textField);
 			if(!_format){
