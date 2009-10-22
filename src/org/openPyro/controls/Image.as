@@ -73,9 +73,16 @@ package org.openPyro.controls
 			if(url == _sourceURL) return;
 			_sourceURL = url;
 			if(_loader && _autoLoad){
-				_isContentLoaded = false;
-				_loader.load(new URLRequest(url), _loaderContext);
+				load();
 			}
+		}
+		
+		protected function load():void{
+			_loader.unload();
+			needsRecalculation = true;
+			_loader.visible = false;
+			_isContentLoaded = false;
+			_loader.load(new URLRequest(_sourceURL), _loaderContext);
 		}
 		
 		private var _loaderContext:LoaderContext
@@ -188,7 +195,6 @@ package org.openPyro.controls
 		
 		protected function scaleImageContent():void
 		{
-		
 			var scaleX:Number;
 			var scaleY:Number;	
 			scaleX = width / (_originalContentWidth+_padding.left+_padding.right);
@@ -207,14 +213,24 @@ package org.openPyro.controls
 			}
 		}
 		
+		public var needsRecalculation:Boolean = false;
+		override public function resizeHandler() : void{
+			needsRecalculation = true;
+			super.resizeHandler();
+		}
+		
+		
+		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
+			
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 			if(_loader && _loader.content){
-				_loader.visible = true;
-				if(_scaleToFit){
+				if(_scaleToFit && needsRecalculation){
 					scaleImageContent();
+					needsRecalculation = false;
 				}
+				_loader.visible = true;
 			}
 			_loader.x = _padding.left
 			_loader.y = _padding.top;
