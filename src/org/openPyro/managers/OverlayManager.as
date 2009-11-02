@@ -44,12 +44,17 @@ package org.openPyro.managers
 				throw new Error("No overlay displayObject defined on which to draw")
 			}
 			if(modal){
-				bgSprite = new Sprite()
-				bgSprite.graphics.beginFill(0x00000, .5)
-				bgSprite.graphics.drawRect(0,0,_overlayDisplayObject.stage.stageWidth, _overlayDisplayObject.stage.stageHeight);
-				_overlayDisplayObject.addChild(bgSprite);
-				_overlayDisplayObject.stage.addEventListener(Event.RESIZE, onBaseStageResize)
-				// capture mouse interactions here.
+				if(!bgSprite){
+					bgSprite = new Sprite()
+					bgSprite.graphics.beginFill(0x00000, .5)
+					bgSprite.graphics.drawRect(0,0,50,50);
+					_overlayDisplayObject.addChild(bgSprite);
+					_overlayDisplayObject.stage.addEventListener(Event.RESIZE, onBaseStageResize)
+					// capture mouse interactions here.
+				}
+				bgSprite.width = _overlayDisplayObject.stage.stageWidth;
+				bgSprite.height = _overlayDisplayObject.stage.stageHeight
+				bgSprite.visible = true;
 			}
 			
 			_overlayDisplayObject.addChild(popupObject);
@@ -67,13 +72,16 @@ package org.openPyro.managers
 				var orig:Point = new Point(0,0)
 				var pt:Point = target.localToGlobal(orig)
 				pt = _overlayDisplayObject.globalToLocal(pt);
-				trace(pt.x, pt.y);
 				object.x = pt.x
 				object.y = pt.y
 			}
 			
 		}
 		
+		public function remove(popup:DisplayObject):void{
+			popup.parent.removeChild(popup);
+			bgSprite.visible = false;
+		}
 		
 		private function onBaseStageResize(event:Event):void{
 			if(bgSprite){
