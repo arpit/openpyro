@@ -18,7 +18,6 @@ package org.openPyro.controls
 		
 		override protected function createChildren():void{
 			_textField = new TextField();
-			this.mouseChildren = false;
 			setTextFieldProperties()
 			addChild(_textField);
 			if(!_format){
@@ -32,8 +31,8 @@ package org.openPyro.controls
 		
 		protected function setTextFieldProperties():void{
 			_textField.selectable = false;
-			//_textField.border = true;
-            _textField.embedFonts = _embedFonts;
+			this.mouseChildren = false;
+			_textField.embedFonts = _embedFonts;
 		}
 		
 		/**

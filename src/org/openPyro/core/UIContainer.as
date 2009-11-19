@@ -80,6 +80,15 @@ package org.openPyro.core{
 		
 		public static var mouseOverDisabled:Boolean = false;
 		
+		
+		/**
+		 * This flag is used to check at any time if the content is being scrolled verically.
+		 * Its useful when, for example, scrollpolicy is set to visible on hover but the act
+		 * of rolling off the content fades the scrollbar only if the content is not being
+		 * scrolled.
+		 */ 
+		protected var _scrollingVertically:Boolean = false;
+		
 		protected function handleMouseOver(event:MouseEvent):void{
 			if(UIContainer.mouseOverDisabled){
 				event.stopImmediatePropagation();
@@ -92,7 +101,7 @@ package org.openPyro.core{
 				}
 			}
 			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
-				if(_verticalScrollBar){
+				if(_verticalScrollBar && !_scrollingVertically){
 					Effect.on(_verticalScrollBar).cancelCurrent().fadeIn(1);
 				}
 			}
@@ -106,23 +115,44 @@ package org.openPyro.core{
 				}
 			}
 			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
-				if(_verticalScrollBar){
+				if(_verticalScrollBar && !_scrollingVertically){
 					Effect.on(_verticalScrollBar).cancelCurrent().fadeOut(1);
 				}
 			}
 		}
 		
+		/**
+		 * @private
+		 */ 
 		public function set horizontalScrollPolicy(policy:String):void{
 			_horizontalScrollPolicy = policy;
 		}
+		
+		/**
+		 * Sets the behavior of the scrollbar for a UIContainer.
+		 * Note that if you set the scrollpolicy to FADE_ON_HOVER, 
+		 * its advisable to set the backgroundPainter so that
+		 * the calculation of rollout/rollover does not get buggy as
+		 * the mouse rolls over the children of the UIContainer
+		 */ 
 		public function get horizontalScrollPolicy():String{
 			return _horizontalScrollPolicy;
 		}
 		
+		/**
+		 * @private
+		 */ 
 		public function set verticalScrollPolicy(policy:String):void{
 			_verticalScrollPolicy = policy;
 		}
 		
+		/**
+		 * Sets the behavior of the scrollbar for a UIContainer.
+		 * Note that if you set the scrollpolicy to FADE_ON_HOVER, 
+		 * its advisable to set the backgroundPainter so that
+		 * the calculation of rollout/rollover does not get buggy as
+		 * the mouse rolls over the children of the UIContainer
+		 */ 
 		public function get verticalScrollPolicy():String{
 			return _verticalScrollPolicy;
 		}
@@ -575,9 +605,11 @@ package org.openPyro.core{
 			_verticalScrollBar.addEventListener(Event.ADDED_TO_STAGE, function():void{
 				_verticalScrollBar.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
 					mouseOverDisabled = true;
+					_scrollingVertically = true;
 				})
 				_verticalScrollBar.stage.addEventListener(MouseEvent.MOUSE_UP, function(event:MouseEvent):void{
 					mouseOverDisabled = false;
+					_scrollingVertically = false;
 				})
 			});
 			_verticalScrollBar.addEventListener(PyroEvent.SIZE_VALIDATED, onVerticalScrollBarSizeValidated);

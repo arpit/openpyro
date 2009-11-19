@@ -1,5 +1,6 @@
 package org.openPyro.utils{
 	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	/**
 	 * A collection of Utility methods for working with Strings
@@ -93,6 +94,13 @@ package org.openPyro.utils{
 	                tf.text = s + indicator;
 	            }
 	        }
+		}
+		
+		public static function getWidthForTextWithFormat(text:String, fmt:TextFormat):Number{
+			var tf:TextField = new TextField();
+			tf.defaultTextFormat = fmt;
+			tf.text = text;
+			return tf.textWidth;
 		}
  	}
 }
