@@ -141,7 +141,6 @@ package org.openPyro.controls
 			_textField.y = this._padding.top;
 			_textField.width = unscaledWidth - _padding.left - _padding.right;
 			_textField.height = unscaledHeight - _padding.top - _padding.bottom;
-			_textField.text = _text;
 			if(_textField.textWidth > _textField.width){
 				StringUtil.omitWordsToFit(_textField);
 			}

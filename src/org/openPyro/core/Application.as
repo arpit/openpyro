@@ -19,13 +19,18 @@ package org.openPyro.core
 		{
 			_applicationWidth = applicationWidth;
 			_applicationHeight = applicationHeight;
-			
+			_applicationInstance = this;
 			if(!this.stage){
 				this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			}
 			else{
 				onAddedToStage();
 			}
+		}
+		
+		protected static var _applicationInstance:Application
+		public static function get application():Application{
+			return _applicationInstance;
 		}
 		
 		protected function onAddedToStage(event:Event=null):void{
