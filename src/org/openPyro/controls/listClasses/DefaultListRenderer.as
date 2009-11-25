@@ -119,7 +119,7 @@ package org.openPyro.controls.listClasses
 			return _data;
 		}
 		
-		private var _selected:Boolean = false;
+		protected var _selected:Boolean = false;
 		public function set selected(b:Boolean):void
 		{
 			_selected = b;
