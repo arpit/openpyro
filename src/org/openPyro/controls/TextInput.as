@@ -32,7 +32,7 @@ package org.openPyro.controls
 			
 			this.addEventListener(PyroEvent.CREATION_COMPLETE, function(event:Event):void{
 				removeEventListener(PyroEvent.CREATION_COMPLETE, arguments.callee);
-				if(!_text || _text=="" && _promptText){
+				if((!_text || _text=="") && _promptText){
 					_textField.text = _promptText;
 					_textField.setTextFormat(_promptFormat);
 				}	
