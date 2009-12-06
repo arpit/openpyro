@@ -14,6 +14,10 @@ package org.openPyro.aurora
 		public var cornerRadius:Number = 10;
 		public var dropShadowEnabled:Boolean = true;
 		
+		public var upColors:Array = [0xdfdfdf, 0xffffff];
+		public var overColors:Array = [0xffffff,0xdfdfdf];
+		public var downColors:Array = [0xdfdfdf,0xdfdfdf];
+		
 		public function AuroraComboBoxSkin() {
 			
 		}
@@ -23,6 +27,9 @@ package org.openPyro.aurora
 			_buttonSkin = new AuroraButtonSkin();
 			_buttonSkin.labelAlign = "left";
 			_buttonSkin.cornerRadius = this.cornerRadius;
+			_buttonSkin.upColors = upColors;
+			_buttonSkin.overColors = overColors;
+			_buttonSkin.downColors = downColors;
 			if(dropShadowEnabled){
 				_buttonSkin.filters = [new DropShadowFilter(.5,90,0,1,0,0)];
 			}

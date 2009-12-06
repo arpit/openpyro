@@ -99,6 +99,10 @@ package org.openPyro.controls
 				_list.removeEventListener(ListEvent.ITEM_CLICK,onListItemClick);
 				_list.removeEventListener(ListEvent.CHANGE, onListChange);
 			}
+			_list = l;
+			if(this._dataProvider){
+				_list.dataProvider = _dataProvider;
+			}
 			_list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick)
 			_list.addEventListener(ListEvent.CHANGE, onListChange);
 		}
@@ -163,45 +167,38 @@ package org.openPyro.controls
 				backgroundPainter to white.
 				*/
 				_list.backgroundPainter = new FillPainter(0xffffff);
-		
 				//_list.filters = 
 				
-				
-				listHolder.addChildAt(_list,0);
-				var overlayManager:OverlayManager = OverlayManager.getInstance();
-				if(!overlayManager.overlayContainer){
-					var sprite:Sprite = new Sprite();
-					this.stage.addChild(sprite);
-					overlayManager.overlayContainer = sprite;
-				}
-				overlayManager.showOnOverlay(listHolder, this);
-				_list.width = this.width;
-				
-				if(!isNaN(_maxDropDownHeight))
-				{
-					_list.height = _maxDropDownHeight;	
-				}
-				_list.dataProvider = _dataProvider;	
-				_list.dropShadowEnabled = true;
-				_list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick);
-				_list.addEventListener(ListEvent.CHANGE, onListChange);
-				_list.validateSize();
-				_list.visible = false;
-				
-			}
-			else{
+			} else{
 				_list.selectedIndex = _selectedIndex;
-			}
-			_list.y = this.height+2;
+			}	
 			
+			listHolder.addChildAt(_list,0);
+			var overlayManager:OverlayManager = OverlayManager.getInstance();
+			if(!overlayManager.overlayContainer){
+				var sprite:Sprite = new Sprite();
+				this.stage.addChild(sprite);
+				overlayManager.overlayContainer = sprite;
+			}
+			overlayManager.showOnOverlay(listHolder, this);
+			_list.width = this.width;
+			
+			if(!isNaN(_maxDropDownHeight))
+			{
+				_list.height = _maxDropDownHeight;	
+			}
+			_list.dataProvider = _dataProvider;	
+			_list.dropShadowEnabled = true;
+			_list.addEventListener(ListEvent.ITEM_CLICK, onListItemClick);
+			_list.addEventListener(ListEvent.CHANGE, onListChange);
+			_list.validateSize();
+			_list.visible = false;
+			
+			_list.y = this.height+2;
 			_list.visible = true;
 			Effect.on(_list).slideDown(1).onComplete(function():void{
 					stage.addEventListener(MouseEvent.CLICK, onStageClick)
 			});
-			
-			
-			
-			
 		}
 		
 		protected function onStageClick(event:MouseEvent):void{

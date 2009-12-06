@@ -79,6 +79,9 @@ package org.openPyro.managers
 		}
 		
 		public function remove(popup:DisplayObject):void{
+			
+			if(!popup || !popup.parent) return;
+			
 			popup.parent.removeChild(popup);
 			bgSprite.visible = false;
 		}
