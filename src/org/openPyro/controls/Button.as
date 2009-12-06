@@ -105,6 +105,13 @@ package org.openPyro.controls{
 					this._selected = b;
 					dispatchEvent(new PyroEvent(PyroEvent.PROPERTY_CHANGE));
 					dispatchEvent(new Event(Event.CHANGE));
+					if(b){
+						changeState(ButtonEvent.TOGGLED_OFF, ButtonEvent.TOGGLED_ON);	
+					}
+					else{
+						changeState(ButtonEvent.TOGGLED_ON, ButtonEvent.TOGGLED_OFF);
+					}
+					
 				}
 			}
 		}
@@ -143,13 +150,15 @@ package org.openPyro.controls{
 		
 		public var currentState:String;
 		
-		public function changeState(fromState:String, toState:String):void{}
+		public function changeState(fromState:String, toState:String):void{
+			if(_buttonSkin && _buttonSkin is IStateFulClient){
+				IStateFulClient(this._buttonSkin).changeState(fromState,toState);
+			}
+		}
 		
 		private function onMouseOver(event:MouseEvent):void
 		{
-			if(_buttonSkin && _buttonSkin is IStateFulClient){
-				IStateFulClient(this._buttonSkin).changeState(this.currentState,ButtonEvent.OVER);
-			}
+			changeState(this.currentState,ButtonEvent.OVER);
 			this.currentState = ButtonEvent.OVER;
 			dispatchEvent(new ButtonEvent(ButtonEvent.OVER));
 		}

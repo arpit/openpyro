@@ -3,7 +3,6 @@ package org.openPyro.controls
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.DropShadowFilter;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
 	import org.openPyro.controls.events.ListEvent;
@@ -41,6 +40,7 @@ package org.openPyro.controls
 			
 			if(!_bttn){
 				_bttn = new Button()
+				Button(_bttn).toggle = true;
 				_bttn.addEventListener(MouseEvent.MOUSE_DOWN, onButtonDown)
 				addChild(_bttn);
 				if(_dataProvider){
@@ -108,6 +108,14 @@ package org.openPyro.controls
 		}
 		
 		protected var _isOpen:Boolean = false;
+		
+		/**
+		 * Check to see if the ComboBox is open or not. The only way
+		 * to set this value is by calling open().
+		 */ 
+		public function get isOpen():Boolean{
+			return _isOpen;
+		}
 		
 		private function onButtonDown(event:Event):void{
 			if(_isOpen)
@@ -203,6 +211,9 @@ package org.openPyro.controls
 		
 		protected function onStageClick(event:MouseEvent):void{
 			if(this._isOpen){
+				if(_bttn is Button){
+					Button(_bttn).selected=false;
+				}
 				close();
 			}
 		}
@@ -214,6 +225,9 @@ package org.openPyro.controls
 			}
 			_selectedIndex = _list.selectedIndex;
 			dispatchEvent(event);
+			if(_bttn is Button){
+				Button(_bttn).selected=false;
+			}
 			close()
 		}
 		
