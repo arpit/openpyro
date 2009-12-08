@@ -16,10 +16,25 @@ package org.openPyro.managers
 		protected var _overlayDisplayObject:DisplayObjectContainer
 		
 		/**
-		 * The overlay layer on which the popups are 
-		 * rendered
+		 * The overlay layer on which the popups are rendered. If a new layer
+		 * is set as the overlayContainer, the old one is removed from the 
+		 * stage, so please set displayobjects for this value to be dedicated
+		 * to just displaying overlays.
 		 */ 
 		public function set overlayContainer(dp:DisplayObjectContainer):void{
+			/*
+			If there already was an overlay created, remove
+			it and all its children
+			*/
+			if(_overlayDisplayObject){
+				while(_overlayDisplayObject.numChildren > 0){
+					_overlayDisplayObject.removeChildAt(0)
+				}
+				bgSprite = null;
+				if(_overlayDisplayObject.parent){
+					_overlayDisplayObject.parent.removeChild(_overlayDisplayObject);
+				}	
+			}
 			_overlayDisplayObject = dp;
 		}
 		
@@ -43,7 +58,9 @@ package org.openPyro.managers
 			if(!_overlayDisplayObject){
 				throw new Error("No overlay displayObject defined on which to draw")
 			}
+			
 			if(modal){
+					
 				if(!bgSprite){
 					bgSprite = new Sprite()
 					bgSprite.graphics.beginFill(0x00000, .5)
