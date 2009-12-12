@@ -96,12 +96,15 @@ package org.openPyro.core{
 				return;
 			}
 			if(this._horizontalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
-				if(_horizontalScrollBar){
+				if(_horizontalScrollBar && needsHorizontalScrollBar){
+					/*
+					 * TODO: needs a check for the if _scrollingHorizontally
+					 */
 					Effect.on(_horizontalScrollBar).cancelCurrent().fadeIn(1);
 				}
 			}
 			if(this._verticalScrollPolicy == ScrollPolicy.VISIBLE_ON_HOVER){
-				if(_verticalScrollBar && !_scrollingVertically){
+				if(_verticalScrollBar && !_scrollingVertically && needsVerticalScrollBar){
 					Effect.on(_verticalScrollBar).cancelCurrent().fadeIn(1);
 				}
 			}

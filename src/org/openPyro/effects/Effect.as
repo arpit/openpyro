@@ -121,6 +121,12 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		public function moveX(value:Number, duration:Number=1):Effect{
+		    _effectQueue.push(new EffectDescriptor(this._target, duration, {x:value}));
+		    invalidateEffectQueue();
+		    return this;
+		}
+		
 		public function moveXBy(value:Number, duration:Number=1):Effect{
 			_effectQueue.push(new EffectDescriptor(this._target, duration, {x:_target.x+value}));
 			invalidateEffectQueue();
@@ -135,10 +141,10 @@ package org.openPyro.effects{
 		}
 		
 		public function fadeIn(duration:Number=1):Effect{
-			var hadFilters:Boolean = _target.filters.length > 0;
+		    var hadFilters:Boolean = _target.filters.length > 0;
 			_effectQueue.push(new EffectDescriptor(this._target, 
 							
-							duration, {alpha:1, onComplete:function():void{
+							duration, {alpha:1, visible:true, onComplete:function():void{
 								if(!hadFilters){
 									_target.filters = [];
 								}	
@@ -147,6 +153,7 @@ package org.openPyro.effects{
 							function():void{
 								_target.alpha=0;
 								if(_target.filters.length == 0){
+								    /* force the displayobject to be cached as bitmap */
 									_target.filters = [new DropShadowFilter(1,90,0,0)]
 								}
 							}
