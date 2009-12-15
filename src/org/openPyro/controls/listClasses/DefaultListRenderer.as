@@ -82,6 +82,7 @@ package org.openPyro.controls.listClasses
 			_labelFormat = format;
 			if(_labelField){
 				_labelField.defaultTextFormat = format;
+				_labelField.setTextFormat(format);
 			}
 		}
 		
