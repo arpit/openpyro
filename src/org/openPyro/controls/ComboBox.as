@@ -23,6 +23,16 @@ package org.openPyro.controls
 
 	public class ComboBox extends UIControl
 	{
+		
+		/**
+		 * Defines whether changes in selectedItem change the 
+		 * label of the button defined. Note, even if this property
+		 * is set to true but the <code>button</code> does not
+		 * have a <code>label</code> property, nothing will 
+		 * change on the button
+		 */ 
+		public var bindButtonLabelToSelectedItem:Boolean = true;
+		
 		private var _bttn:UIControl;
 		private var listHolder:Sprite;
 		private var _list:List;
@@ -75,7 +85,7 @@ package org.openPyro.controls
 		{
 			_dataProvider = data;
 			_selectedIndex = 0;
-			if(_bttn && _bttn.hasOwnProperty("label"))
+			if(_bttn && _bttn.hasOwnProperty("label") && bindButtonLabelToSelectedItem)
 			{
 				_bttn["label"] = _bttnLabelFunction(data[0]);
 			}
@@ -188,7 +198,7 @@ package org.openPyro.controls
 				this.stage.addChild(sprite);
 				overlayManager.overlayContainer = sprite;
 			}
-			overlayManager.showOnOverlay(listHolder, this);
+			overlayManager.showOnOverlay(listHolder, this._bttn);
 			_list.width = this.width;
 			
 			if(!isNaN(_maxDropDownHeight))
@@ -202,10 +212,10 @@ package org.openPyro.controls
 			_list.validateSize();
 			_list.visible = false;
 			
-			_list.y = this.height+2;
+			_list.y = _bttn.height+2;
 			_list.visible = true;
 			Effect.on(_list).slideDown(1).onComplete(function():void{
-					stage.addEventListener(MouseEvent.CLICK, onStageClick)
+					overlayManager.overlayContainer.stage.addEventListener(MouseEvent.CLICK, onStageClick)
 			});
 		}
 		
@@ -220,7 +230,7 @@ package org.openPyro.controls
 		
 		protected function onListItemClick(event:ListEvent):void
 		{
-			if(_bttn.hasOwnProperty("label")){
+			if(_bttn.hasOwnProperty("label") && bindButtonLabelToSelectedItem){
 				this._bttn["label"] = _bttnLabelFunction(_list.selectedItem);
 			}
 			_selectedIndex = _list.selectedIndex;
@@ -248,9 +258,8 @@ package org.openPyro.controls
 		public function close():void
 		{
 			if(!_isOpen) return;
-			stage.removeEventListener(MouseEvent.CLICK, onStageClick)
+			OverlayManager.getInstance().overlayContainer.stage.removeEventListener(MouseEvent.CLICK, onStageClick)
 			_isOpen = false;
-			//TweenMax.to(_list, .5, {y:this.height-_list.height})
 			Effect.on(_list).wipeUp(.5).onComplete(function():void{
 				_list.visible = false;
 			});
