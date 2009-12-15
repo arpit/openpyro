@@ -1,10 +1,10 @@
 package org.openPyro.layout
 {
-	import org.openPyro.core.UIContainer;
-	
 	import flash.display.DisplayObject;
+	
+	import org.openPyro.core.UIContainer;
 
-	public class ColumnGridLayout implements ILayout, IContainerMeasurementHelper
+	public class ColumnGridLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper
 	{
 		
 		private var _initX:Number = 0;
@@ -39,9 +39,10 @@ package org.openPyro.layout
 			_container = c;	
 		}
 		
-		public function layout(children:Array):void
-		{
-			if(children.length == 0 ) return;
+		override public function calculatePositions(children:Array):Array{
+			if(children.length == 0 ) return [] ;
+			layoutDescriptors = [];
+			
 			var nowX:Number = _initX;
 			var nowY:Number = _initY;
 			
@@ -56,10 +57,12 @@ package org.openPyro.layout
 					nowX+=_columnWidth+_columnGap;
 					nowY = _initY;
 				}
-				child.x = nowX;
-				child.y = nowY;
+				
+				var descriptor:LayoutDescriptor = new LayoutDescriptor(child, nowX, nowY);				
+				layoutDescriptors.push(descriptor);
 				nowY+=child.height + _rowGap;
 			}
+			return layoutDescriptors;
 		}
 		
 		public function getMaxWidth(children:Array):Number

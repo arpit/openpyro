@@ -29,14 +29,18 @@ package org.openPyro.effects{
 			_target = tgt;
 		}
 		
+		public function get target():DisplayObject{
+			return _target;
+		}
+		
 		private static var _currentlyAnimatingTargets:Dictionary = new Dictionary();
 		
 		/**
 		 * Assigns the target on which the <code>Effect</code>
 		 * will play
 		 */ 
-		public static function on(tgt:DisplayObject):Effect{
-			if(_currentlyAnimatingTargets[tgt] != null){
+		public static function on(tgt:DisplayObject, parallel:Boolean=false):Effect{
+			if(_currentlyAnimatingTargets[tgt] != null && !parallel){
 				return Effect(_currentlyAnimatingTargets[tgt]);
 			}
 			var effect:Effect = new Effect();
@@ -187,6 +191,14 @@ package org.openPyro.effects{
 			invalidateEffectQueue();
 			return this;
 		}
+		
+		public function zoom(scale:Number, duration:Number=1):Effect{
+			var xdiff:Number = _target.width*(_target.scaleX - scale)/2;
+			var ydiff:Number = _target.height*(_target.scaleY - scale)/2;
+			_effectQueue.push(new EffectDescriptor(this._target, duration, {scaleX:scale, scaleY:scale, x:_target.x+xdiff,y:_target.y+ydiff}));
+			invalidateEffectQueue();
+			return this;
+		}
 			
 		public function wipeDown(duration:Number=1):Effect{
 			/*
@@ -279,6 +291,7 @@ package org.openPyro.effects{
 		 * Plays the next effect in the effectQueue
 		 */ 
 		private function playNextEffect():void{
+			var self:Effect = this;
 			if(_effectQueue.length == 0){
 				delete(_currentlyAnimatingTargets[this._target]);
 				if(_onComplete != null){
@@ -298,7 +311,7 @@ package org.openPyro.effects{
 			if(props.onComplete){
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
-					fn();
+					fn(self);
 					if(_currentEffectDescriptor.onComplete != null){
 						_currentEffectDescriptor.onComplete();
 					}
