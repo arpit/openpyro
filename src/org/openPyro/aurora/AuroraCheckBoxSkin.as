@@ -102,27 +102,20 @@ package org.openPyro.aurora
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-				if(!label){
-					if(_checkIcon)
-						_checkIcon.x = (unscaledWidth-_checkIcon.width)/2;
-					if(_uncheckIcon)
-						_uncheckIcon.x = 	(unscaledWidth-_uncheckIcon.width)/2
-				}
-				else{
-						if(_checkIcon){
-							_checkIcon.x = _skinnedControl.padding.left;
-							_checkIcon.y = (unscaledHeight-_checkIcon.height)/2;
-			
-						}
-						if(_uncheckIcon){
-							_uncheckIcon.x =  _skinnedControl.padding.left;;
-							_uncheckIcon.y = (unscaledHeight-_uncheckIcon.height)/2;
-						}
-						var checkIconW:Number = _checkIcon ? _checkIcon.width:0
-						var uncheckIconW:Number = _uncheckIcon?_uncheckIcon.width:0
-						label.x = Math.max(checkIconW, uncheckIconW)+boxLabelGap;
-					}
-			
+			if(!label){
+				_checkIcon.x = (unscaledWidth-_checkIcon.width)/2;
+				_uncheckIcon.x = 	(unscaledWidth-_uncheckIcon.width)/2
+			}
+			else{
+				_checkIcon.x = _skinnedControl.padding.left;
+				_checkIcon.y = (unscaledHeight-_checkIcon.height)/2;
+				_uncheckIcon.x =  _skinnedControl.padding.left;;
+				_uncheckIcon.y = (unscaledHeight-_uncheckIcon.height)/2;
+				
+				var checkIconW:Number = _checkIcon ? _checkIcon.width:0
+				var uncheckIconW:Number = _uncheckIcon?_uncheckIcon.width:0
+				label.x = Math.max(checkIconW, uncheckIconW)+boxLabelGap;
+			}
 		}
 		
 		protected function createDefaultUnCheckIcon():Sprite{
@@ -151,7 +144,5 @@ package org.openPyro.aurora
 			sp.mouseChildren=false;
 			return sp
 		}
-		
-
 	}
 }
