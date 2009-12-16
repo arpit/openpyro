@@ -40,12 +40,25 @@ package org.openPyro.aurora
 		override public function set skinnedControl(uic:UIControl):void
 		{
 			super.skinnedControl = uic
-			checkSelectedStatus()
+			if(creationCompleteFired){
+				checkSelectedStatus()
+			}
 		}
 		
 		override protected function onSkinnedControlPropertyChange(event:PyroEvent):void{
 			super.onSkinnedControlPropertyChange(event);
 			checkSelectedStatus()
+		}
+		
+		override protected function createChildren():void{
+			super.createChildren();
+			if(!_checkIcon){
+				_checkIcon = createDefaultCheckIcon()
+			}
+			if(!_uncheckIcon){
+				_uncheckIcon = createDefaultUnCheckIcon()	
+			}
+			checkSelectedStatus();
 		}
 		
 		override public function changeState(fromState:String, toState:String):void
@@ -77,24 +90,12 @@ package org.openPyro.aurora
 		protected function checkSelectedStatus():void{
 			if(Button(_skinnedControl).toggle){
 				if(Button(_skinnedControl).selected){
-					if(!_checkIcon){
-						_checkIcon = createDefaultCheckIcon()
-						
-					}
 					_checkIcon.visible = true
-					if(_uncheckIcon){
-						_uncheckIcon.visible = false;
-					}	
+					_uncheckIcon.visible = false;
 				}
 				else {
-					if(!_uncheckIcon){
-						_uncheckIcon = createDefaultUnCheckIcon()
-						
-					}
 					_uncheckIcon.visible = true
-					if(_checkIcon){
-						_checkIcon.visible=false
-					}
+					_checkIcon.visible=false
 				}
 			}
 		}
@@ -132,6 +133,7 @@ package org.openPyro.aurora
 			gr.cornerRadius = cornerRadius
 			gr.draw(sp.graphics, 15,15)
 			addChild(sp)
+			sp.cacheAsBitmap = true;
 			return sp
 		}
 		
@@ -143,7 +145,7 @@ package org.openPyro.aurora
 			gr.cornerRadius = cornerRadius
 			gr.draw(sp.graphics, 15,15)
 			addChild(sp)
-			
+			sp.cacheAsBitmap = true;
 			var tick:DisplayObject = new TickGraphic()
 			sp.addChild(tick)
 			sp.mouseChildren=false;
