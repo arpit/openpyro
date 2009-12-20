@@ -3,6 +3,7 @@ package org.openPyro.utils
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.filters.ColorMatrixFilter;
 	
 	/**
 	 * GraphicUtil contains a series of static helper functions
@@ -20,6 +21,18 @@ package org.openPyro.utils
 			data.draw(source);
 			var bmp:Bitmap = new Bitmap(data)
 			return bmp;
+		}
+		
+		public static function desaturate(source:DisplayObject):void{
+			var matrix:Array= new Array();
+    
+			matrix = matrix.concat([1, 1, 1, 0, 0]); // red
+			matrix = matrix.concat([1, 1, 1, 0, 0]); // green
+			matrix = matrix.concat([1, 1, 1, 0, 0]); // blue
+			matrix = matrix.concat([0, 0, 0, 1, 0]); // alpha
+    
+			var cmFilter:ColorMatrixFilter = new ColorMatrixFilter(matrix);
+			source.filters=[cmFilter];
 		}
 	}
 }

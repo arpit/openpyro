@@ -125,6 +125,10 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		public function moveYBy(value:Number, duration:Number=-1):Effect{
+			return moveY(this._target.y+value, duration);
+		}
+		
 		public function moveX(value:Number, duration:Number=1):Effect{
 		    _effectQueue.push(new EffectDescriptor(this._target, duration, {x:value}));
 		    invalidateEffectQueue();

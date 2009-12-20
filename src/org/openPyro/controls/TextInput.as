@@ -74,6 +74,11 @@ package org.openPyro.controls
 		}
 		
 		protected function onTextInputChange(event:Event):void{
+			
+			/*cancel the default bubbling text change event*/
+			event.stopImmediatePropagation();
+			event.preventDefault();
+			
 			_text = _textField.text;
 			_hasUserEnteredContent = true;
 			dispatchEvent(event);

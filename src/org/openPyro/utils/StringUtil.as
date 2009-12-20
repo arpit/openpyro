@@ -102,5 +102,11 @@ package org.openPyro.utils{
 			tf.text = text;
 			return tf.textWidth;
 		}
+		
+		public static function insertAt(originalString:String, index:uint, stringToInsert:String):String{
+			var part1:String = originalString.substring(0, index);
+			var part2:String = originalString.substring(index+1, originalString.length);
+			return part1+stringToInsert+part2;
+		} 
  	}
 }

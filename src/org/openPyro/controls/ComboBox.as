@@ -184,9 +184,7 @@ package org.openPyro.controls
 				with a 1px line dividing itemRenderers initially. So we just set the
 				backgroundPainter to white.
 				*/
-				_list.backgroundPainter = new FillPainter(0xffffff);
-				//_list.filters = 
-				
+				_list.backgroundPainter = new FillPainter(0xffffff);	
 			} else{
 				_list.selectedIndex = _selectedIndex;
 			}	
