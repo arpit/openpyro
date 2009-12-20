@@ -79,6 +79,7 @@ package org.openPyro.controls
 			if(_text == str) return;
 			this._text = str;
 			if(!_textField)return;
+			_textField.text = str;
 			this.invalidateSize();
 			this.forceInvalidateDisplayList=true
 			this.invalidateDisplayList();
