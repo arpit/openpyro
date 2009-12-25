@@ -11,8 +11,6 @@ package org.openPyro.controls
 	public class List extends ListBase
 	{
 		/**
-		*	IN DEVELOPMENT, PLEASE DO NOT USE YET	
-		*	
 		*	The optimizedList class is a List implementation that recycles itemRenderers
 		*	as it scrolls.
 		*/	
