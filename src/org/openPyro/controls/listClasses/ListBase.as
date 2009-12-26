@@ -10,6 +10,7 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.collections.events.CollectionEvent;
 	import org.openPyro.collections.events.CollectionEventKind;
 	import org.openPyro.controls.events.ListEvent;
+	import org.openPyro.controls.events.ListEventReason;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.IDataRenderer;
 	import org.openPyro.core.MeasurableControl;
@@ -149,7 +150,7 @@ package org.openPyro.controls.listClasses
 			}*/
 			for each(var item:* in items){
 				if(item == this._selectedItem){
-					this.selectedIndex = -1;
+					doSetSelectedIndex( -1, ListEventReason.DATAPROVIDER_UPDATED);
 			//		needsEventDispatch = false;
 				}
 				for (var uid:String in this.visibleRenderersMap){
@@ -182,7 +183,7 @@ package org.openPyro.controls.listClasses
 		
 		protected function handleItemsAdded(event:CollectionEvent):void{
 			if(event.location < _selectedIndex){
-				selectedIndex = _selectedIndex+event.delta.length;
+				doSetSelectedIndex( _selectedIndex+event.delta.length, ListEventReason.DATAPROVIDER_UPDATED);
 			}
 			forceInvalidateDisplayList = true;
 			displayListInvalidated = true;
@@ -413,7 +414,7 @@ package org.openPyro.controls.listClasses
 				if(visibleRenderersMap[uid] == event.currentTarget){
 					//_selectedItem = rendererData;
 					var selectedRenderer:DisplayObject = visibleRenderersMap[uid];
-					selectedIndex = _dataProviderCollection.getUIDIndex(uid);
+					doSetSelectedIndex( _dataProviderCollection.getUIDIndex(uid), ListEventReason.USER_ACTION );
 					if(selectedRenderer is IListDataRenderer){
 						IListDataRenderer(selectedRenderer).selected = true;
 					}
@@ -440,6 +441,10 @@ package org.openPyro.controls.listClasses
 		 * revealed.
 		 */ 
 		public function set selectedIndex(val:int):void{
+			doSetSelectedIndex(val, ListEventReason.OTHER);
+		}
+		
+		protected function doSetSelectedIndex(val:int, reason:String):void{
 			if(_selectedIndex == val) return;
 			if(!initialized){
 				_selectedIndex = val;
@@ -463,6 +468,7 @@ package org.openPyro.controls.listClasses
 				targetRenderer.selected = true;
 			}
 			var event:ListEvent = new ListEvent(ListEvent.CHANGE);
+			event.reason  = reason;
 			dispatchEvent(event);
 		}
 		
@@ -488,7 +494,7 @@ package org.openPyro.controls.listClasses
 		}
 		
 		public function set selectedItem(item:*):void{
-			selectedIndex = _dataProviderCollection.getItemIndex(item)
+			doSetSelectedIndex(_dataProviderCollection.getItemIndex(item), ListEventReason.OTHER);
 		}
 		
 		/**

@@ -8,6 +8,8 @@ package org.openPyro.controls.events
 		public static const ITEM_CLICK:String = "itemClick";
 		public static const RENDERERS_REPOSITIONED:String = "renderersRepositioned";
 		
+		public var reason:String = "other";
+		
 		public function ListEvent(type:String)
 		{
 			super(type)
