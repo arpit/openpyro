@@ -77,6 +77,10 @@ package org.openPyro.controls
 			}
 		}
 		
+		public function get source():String{
+			return _sourceURL;
+		}
+		
 		protected function load():void{
 			_loader.unload();
 			needsRecalculation = true;

@@ -1,8 +1,8 @@
 package org.openPyro.layout{
+	import flash.display.DisplayObject;
+	
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIContainer;
-	
-	import flash.display.DisplayObject;
 	
 	public class HLayout implements ILayout, IContainerMeasurementHelper{
 		
@@ -10,6 +10,14 @@ package org.openPyro.layout{
 		private var _hGap:Number;
 		public function HLayout(hGap:Number=0):void{
 			_hGap = hGap;
+		}
+		
+		/**
+		 * The horizontal gap between the displayObjects that
+		 * are being layed out.
+		 */ 
+		public function get hGap():Number{
+			return _hGap;
 		}
 		
 		protected var _container:UIContainer;
