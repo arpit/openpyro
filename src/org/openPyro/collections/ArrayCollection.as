@@ -111,6 +111,10 @@ package org.openPyro.collections
 			removeItems([item]);
 		}
 		
+		public function removeAll():void{
+			removeItems(_source.slice());
+		}
+		
 		public function removeItems(items:Array):void{
 			var changed:Boolean = false;
 			var delta:Array = [];

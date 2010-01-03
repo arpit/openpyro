@@ -5,6 +5,7 @@ package org.openPyro.controls
 	import flash.events.MouseEvent;
 	
 	import org.openPyro.aurora.AuroraContainerSkin;
+	import org.openPyro.controls.events.DropDownEvent;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.controls.listClasses.DefaultListRenderer;
 	import org.openPyro.controls.skins.IComboBoxSkin;
@@ -16,9 +17,45 @@ package org.openPyro.controls
 	import org.openPyro.skins.ISkin;
 	import org.openPyro.utils.StringUtil;
 	
+	/**
+	 * The opening event is dispatched when the ComboBox is about to display the 
+	 * drop down list. The ComboBox itself listens to this event to display the drop down.
+	 * You can prevent the drop down from appearing
+	 * by calling <code>event.stopImmediatePropogation()</code> to cancel the event.
+	 */ 
+	[Event(name='opening',type='org.openPyro.controls.events.DropDownEvent')]
+	
+	/**
+	 * The opening event is dispatched after the drop down has appeared. Note that
+	 * the drop down may still be animating when this event is dispatched.
+	 */ 
+	
 	[Event(name='open',type='org.openPyro.controls.events.DropDownEvent')]
+	
+	/**
+	 * The opening event is dispatched when the ComboBox is about to close the 
+	 * drop down list. The ComboBox itself listens to this event to hide the drop down.
+	 * You can prevent the drop down from disappearing by calling 
+	 * <code>event.stopImmediatePropogation()</code> to cancel the event.
+	 */ 
+	[Event(name='closing',type='org.openPyro.controls.events.DropDownEvent')]
+	
+	/**
+	 * The close event is dispatched when the dropdown is closed. Note the drop down
+	 * may still be animating when the close event is dispatched.
+	 */ 
 	[Event(name='close',type='org.openPyro.controls.events.DropDownEvent')]
+	
+	/**
+	 * The change event is dispatched when a different option is selected from the 
+	 * drop down list.
+	 */ 
 	[Event(name="change", type="org.openPyro.controls.events.ListEvent")]
+	
+	/**
+	 * The itemClick event is dispatched when an item is clicked on the drop down
+	 * list.
+	 */ 
 	[Event(name="itemClick", type="org.openPyro.controls.events.ListEvent")]
 
 	public class ComboBox extends UIControl
@@ -44,6 +81,9 @@ package org.openPyro.controls
 		override public function initialize():void
 		{
 			super.initialize();
+			
+			this.addEventListener(DropDownEvent.OPENING, doOpen);
+			this.addEventListener(DropDownEvent.CLOSING, doClose);
 			
 			listHolder = new Sprite()
 			addChild(listHolder);
@@ -76,11 +116,11 @@ package org.openPyro.controls
 			{
 				_bttn.skin = cbSkin.buttonSkin;
 			}
-			
 		}
 		
 		protected var _dataProvider:Array;
 		protected var _selectedIndex:int = -1;
+		
 		public function set dataProvider(data:Array):void
 		{
 			_dataProvider = data;
@@ -130,14 +170,25 @@ package org.openPyro.controls
 		private function onButtonDown(event:Event):void{
 			if(_isOpen)
 			{
-				close()
+				dispatchEvent( new DropDownEvent(DropDownEvent.CLOSING));
 			}
 			else
 			{
-				open()
-			}
-			
+				dispatchEvent( new DropDownEvent(DropDownEvent.OPENING));
+			}	
 		}
+		
+		private function doOpen(event:DropDownEvent):void{
+			open();
+			dispatchEvent(new DropDownEvent(DropDownEvent.OPEN));
+		}
+		
+		private function doClose(event:DropDownEvent):void{
+			close();
+			dispatchEvent(new DropDownEvent(DropDownEvent.CLOSE));
+		}
+		
+		
 		
 		protected var _maxDropDownHeight:Number = NaN;
 		
@@ -241,6 +292,10 @@ package org.openPyro.controls
 		
 		public function get selectedIndex():int{
 			return _selectedIndex;
+		}
+		
+		public function set selectedIndex(idx:int):void{
+			_selectedIndex = idx;
 		}
 		
 		public function get selectedItem():*{
