@@ -73,11 +73,17 @@ package org.openPyro.controls
 		private var _bttn:UIControl;
 		private var listHolder:Sprite;
 		private var _list:List;
-	
+		
+		/**
+		 * Constructor
+		 */ 
 		public function ComboBox() {
 			super();
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
 		override public function initialize():void
 		{
 			super.initialize();
@@ -107,6 +113,9 @@ package org.openPyro.controls
 			}
 		}
 		
+		/**
+		 * @inheritDoc
+		 */ 
 		override public function set skin(skinImpl:ISkin):void
 		{
 			super.skin = skinImpl;
@@ -132,7 +141,14 @@ package org.openPyro.controls
 		}
 		
 		public var _bttnLabelFunction:Function = StringUtil.toStringLabel;
-			
+		
+		/**
+		 * Sets the button that will be used to listen to trigger the drop down.
+		 * This is optional. If no button is set, an instance of 
+		 * <code>org.openPyro.controls.Button</code> will be created and used.
+		 * If the button assigned has not been added as a child to a displayObject,
+		 * it will be attached to the ComboBox instance whereever that is placed.
+		 */ 	
 		public function set button(bttn:UIControl):void{
 			if(_bttn){
 				_bttn.removeEventListener(MouseEvent.MOUSE_DOWN, onButtonDown);	
@@ -144,6 +160,11 @@ package org.openPyro.controls
 			_bttn.addEventListener(MouseEvent.MOUSE_DOWN, onButtonDown)
 		}
 		
+		/**
+		 * Sets the list that will be used to display the options in the dataProvider.
+		 * This is optional and if no list is provided, an instance of 
+		 * <code> org.openPyro.controls.List</code> will be created and used.
+		 */ 
 		public function set list(l:List):void{
 			if(_list){
 				_list.removeEventListener(ListEvent.ITEM_CLICK,onListItemClick);
@@ -157,6 +178,9 @@ package org.openPyro.controls
 			_list.addEventListener(ListEvent.CHANGE, onListChange);
 		}
 		
+		/**
+		 * @private
+		 */ 
 		protected var _isOpen:Boolean = false;
 		
 		/**
@@ -167,7 +191,12 @@ package org.openPyro.controls
 			return _isOpen;
 		}
 		
-		private function onButtonDown(event:Event):void{
+		/**
+		 * Dispatches the <code>org.openPyro.controls.events.DropDownEvent</code> with type
+		 * "opening" or "closing". If that event is cancelled by calling event.stopImmediatePropagation,
+		 * the drop down will not open or close.
+		 */ 
+		protected function onButtonDown(event:Event):void{
 			if(_isOpen)
 			{
 				dispatchEvent( new DropDownEvent(DropDownEvent.CLOSING));
@@ -317,8 +346,6 @@ package org.openPyro.controls
 				_list.visible = false;
 			});
 		}
-		
-		
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
