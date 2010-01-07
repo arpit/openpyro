@@ -46,7 +46,7 @@ package org.openPyro.layout
 		
 		
 		
-		protected public function calculatePositions(children:Array):Array{
+		override public function calculatePositions(children:Array):Array{
 			
 			layoutDescriptors = [];
 			
