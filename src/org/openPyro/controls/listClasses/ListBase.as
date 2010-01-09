@@ -368,6 +368,7 @@ package org.openPyro.controls.listClasses
 			if(isNaN(_rowHeight)){
 				if(_rendererPool){
 					var testWithRenderer:DisplayObject = DisplayObject(_rendererPool.getObject());
+					
 					_rowHeight = testWithRenderer.height;
 					_rendererPool.returnToPool(testWithRenderer);
 				}
@@ -448,6 +449,9 @@ package org.openPyro.controls.listClasses
 			if(_selectedIndex == val) return;
 			if(!initialized){
 				_selectedIndex = val;
+				if(_dataProviderCollection){
+					_selectedItem = _dataProviderCollection.getItemAt(_selectedIndex);
+				}
 				return;
 			}
 			for(var uid:String in visibleRenderersMap){

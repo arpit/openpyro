@@ -92,7 +92,9 @@ package org.openPyro.controls.listClasses
 		
 		protected function mouseOverHandler(event:MouseEvent):void
 		{
-			drawHighlightCursor();
+			if(! this._selected){
+				drawHighlightCursor();
+			}
 		}
 		
 		protected function mouseOutHandler(event:MouseEvent):void
@@ -152,6 +154,7 @@ package org.openPyro.controls.listClasses
 		}
 		
 		protected function drawHighlightCursor():void{
+			
 			_highlightCursorSprite.graphics.clear();
 			_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
 			_highlightCursorSprite.visible = true;
