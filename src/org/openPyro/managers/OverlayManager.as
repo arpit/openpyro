@@ -6,6 +6,8 @@ package org.openPyro.managers
 	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import org.openPyro.core.UIControl;
+	
 	public class OverlayManager
 	{
 		public function OverlayManager()
@@ -83,6 +85,10 @@ package org.openPyro.managers
 			
 		}
 		
+		/**
+		 * Shows the object DisplayObject at the x and y coordinates of the target DisplayObject.
+		 * If the target is not supplied, the object is positioned at 0,0.
+		 */ 
 		public function showOnOverlay(object:DisplayObject, target:DisplayObject=null):void{
 			_overlayDisplayObject.addChild(object);
 			if(target){
@@ -93,6 +99,10 @@ package org.openPyro.managers
 				object.y = pt.y
 			}
 			
+			var xp:Number = object.stage.stageWidth - (object.x+object.width+10);
+			if(xp < 0){
+				object.x += xp; 
+			}
 		}
 		
 		public function remove(popup:DisplayObject):void{

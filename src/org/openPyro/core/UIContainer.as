@@ -994,7 +994,9 @@ package org.openPyro.core{
 		 */ 
 		public function set dropShadowEnabled(val:Boolean):void{
 			if(val){
-				dropShadowSprite = new Sprite();
+				if(!dropShadowSprite){
+					dropShadowSprite = new Sprite();
+				}
 				dropShadowSprite.graphics.beginFill(0xffffff);
 				dropShadowSprite.graphics.drawRect(0,0,100,100);
 				$addChildAt(dropShadowSprite,0);

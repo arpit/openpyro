@@ -100,7 +100,7 @@ package org.openPyro.controls.treeClasses
 			this.invalidateDisplayList()
 		}
 		
-		private function onRotatorClick(event:MouseEvent):void{
+		protected function onRotatorClick(event:MouseEvent):void{
 			event.stopImmediatePropagation()
 			event.preventDefault();
 			var treeEvent:TreeEvent = new TreeEvent(TreeEvent.ROTATOR_CLICK);

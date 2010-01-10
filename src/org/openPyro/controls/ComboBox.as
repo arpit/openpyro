@@ -71,7 +71,7 @@ package org.openPyro.controls
 		public var bindButtonLabelToSelectedItem:Boolean = true;
 		
 		private var _bttn:UIControl;
-		private var listHolder:Sprite;
+		private var listHolder:UIControl;
 		private var _list:List;
 		
 		/**
@@ -91,7 +91,7 @@ package org.openPyro.controls
 			this.addEventListener(DropDownEvent.OPENING, doOpen);
 			this.addEventListener(DropDownEvent.CLOSING, doClose);
 			
-			listHolder = new Sprite()
+			listHolder = new UIControl()
 			addChild(listHolder);
 			
 			if(!_bttn){
@@ -268,16 +268,17 @@ package org.openPyro.controls
 			} else{
 				_list.selectedIndex = _selectedIndex;
 			}	
-			
-			listHolder.addChildAt(_list,0);
+			listHolder.addChild(_list);
 			var overlayManager:OverlayManager = OverlayManager.getInstance();
 			if(!overlayManager.overlayContainer){
 				var sprite:Sprite = new Sprite();
 				this.stage.addChild(sprite);
 				overlayManager.overlayContainer = sprite;
 			}
+			listHolder.width  = _list.width = this.width;
+		
 			overlayManager.showOnOverlay(listHolder, this._bttn);
-			_list.width = this.width;
+			
 			
 			if(!isNaN(_maxDropDownHeight))
 			{
