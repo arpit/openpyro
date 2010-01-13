@@ -6,7 +6,7 @@ package org.openPyro.managers
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	import org.openPyro.core.UIControl;
+	import org.openPyro.utils.DisplayObjectUtils;
 	
 	public class OverlayManager
 	{
@@ -111,6 +111,13 @@ package org.openPyro.managers
 			
 			popup.parent.removeChild(popup);
 			bgSprite.visible = false;
+		}
+		
+		
+		public function removeAll():void{
+			while(_overlayDisplayObject.numChildren > 0){
+				_overlayDisplayObject.removeChildAt(0);
+			}
 		}
 		
 		private function onBaseStageResize(event:Event):void{

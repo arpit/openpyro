@@ -6,8 +6,10 @@ package org.openPyro.controls.listClasses
 	import flash.text.TextFormat;
 	
 	import org.openPyro.core.UIControl;
+	import org.openPyro.managers.SkinManager;
 	import org.openPyro.painters.FillPainter;
 	import org.openPyro.painters.IPainter;
+	import org.openPyro.skins.ISkin;
 	
 	public class DefaultListRenderer extends UIControl implements IListDataRenderer
 	{
@@ -20,6 +22,9 @@ package org.openPyro.controls.listClasses
 		
 		public function DefaultListRenderer() {
 			super();
+			if(!_styleName){
+				_styleName = "defaultListRenderer";
+			}
 		}
 		
 		override protected function createChildren():void
@@ -40,6 +45,13 @@ package org.openPyro.controls.listClasses
 			if(_data && _baseListData && _baseListData.list){
 				_labelField.text = _baseListData.list.labelFunction(_data);
 			}
+			
+			var sk:Object = SkinManager.getInstance().getSkinForStyleName(_styleName);
+		
+			if(sk && sk.hasOwnProperty("rollOverBackgroundPainter")){
+				_rollOverBackgroundPainter = new FillPainter(sk.rollOverBackgroundPainter)
+			}
+			
 			
 			if(!_rollOverBackgroundPainter){
 				_rollOverBackgroundPainter = new FillPainter(0x559DE6)

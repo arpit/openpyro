@@ -256,7 +256,7 @@ package org.openPyro.controls
 				_list.selectedIndex = _selectedIndex;
 				_list.skin = new AuroraContainerSkin();
 				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer);
-				renderers.properties = {percentWidth:100, height:25};
+				renderers.properties = {percentWidth:100, height:25, styleName:"comboBoxListItemRenderer"};
 				_list.itemRenderer = renderers;
 				
 				/*
