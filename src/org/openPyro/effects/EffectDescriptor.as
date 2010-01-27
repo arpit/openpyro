@@ -30,6 +30,13 @@ package org.openPyro.effects
 			this.beforeStart = beforeStart;
 			this.onComplete = onComplete;
 		}
+		
+		public function setProperty(pty:String, value:*):void{
+			if(!properties){
+				properties = {};
+			}
+			properties[pty] = value;
+		}
 
 	}
 }

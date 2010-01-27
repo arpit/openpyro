@@ -4,6 +4,7 @@ package org.openPyro.effects{
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Shape;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.filters.DropShadowFilter;
@@ -129,6 +130,7 @@ package org.openPyro.effects{
 			return moveY(this._target.y+value, duration);
 		}
 		
+		
 		public function moveX(value:Number, duration:Number=1):Effect{
 		    _effectQueue.push(new EffectDescriptor(this._target, duration, {x:value}));
 		    invalidateEffectQueue();
@@ -147,6 +149,17 @@ package org.openPyro.effects{
 			this.invalidateEffectQueue();
 			return this;
 		}
+		
+		public function animateProperty(propertyName:String, value:Number, duration:Number=1):Effect{
+			
+			var o:Object = {};
+			o[propertyName] = value;
+			
+		    _effectQueue.push(new EffectDescriptor(this._target, duration, o));
+		    invalidateEffectQueue();
+		    return this;
+		}
+		
 		
 		public function fadeIn(duration:Number=1):Effect{
 		    var hadFilters:Boolean = _target.filters.length > 0;
@@ -276,17 +289,58 @@ package org.openPyro.effects{
 		
 		private var _areEffectsPlaying:Boolean = false;
 		
+		private var currentlyConfigurableEffect:EffectDescriptor;
+		
+		
 		/**
 		 * Invalidates the effect queue. If an effect is playing,
 		 * it doesnt do anything at all, but if none are playing
-		 * it triggers the playNextEffect() function.
+		 * it triggers the playNextEffect() function after waiting a frame.
+		 * 
+		 * The wait is to allow methods like withEasing() etc to modify
+		 * the EffectDescriptors as needed.
 		 * 
 		 */ 
 		public function invalidateEffectQueue():void{
-			if(!_areEffectsPlaying && !_isWaiting){
-				_currentlyAnimatingTargets[this._target] = this;
-				playNextEffect();
+			currentlyConfigurableEffect  = _effectQueue[_effectQueue.length-1];
+			
+			if(!_isWaiting){
+				// There are no effects playing, so wait a frame for all properties to be set
+				// before beginning 
+				// This is needed for the setting of the withProperty() type instructions
+				if(!_areEffectsPlaying){
+					var self:Effect = this;
+					this._target.addEventListener(Event.ENTER_FRAME, function(event:Event):void{
+						_target.removeEventListener(Event.ENTER_FRAME, arguments.callee);
+						_currentlyAnimatingTargets[_target] = self;
+						playNextEffect();
+					})
+						
+				}
+				else{
+					_currentlyAnimatingTargets[_target] = this;
+					playNextEffect();
+				}
+				
 			}
+		}
+		
+		/**
+		 * Takes an easing String to use as the easing on a previously declared
+		 * Effect.
+		 * 
+		 * Usage: Effect.on(target).moveX(500).withEasing("linear");
+		 * 
+		 * @see http://hosted.zeh.com.br/tweener/docs/en-us/misc/transitions.html
+		 */ 
+		public function withEasing(easing:String):Effect{
+			currentlyConfigurableEffect.setProperty("transition", easing);
+			return this;
+		}
+		
+		public function withProperty(propertyName:String, value:*):Effect{
+			currentlyConfigurableEffect.setProperty(propertyName, value);
+			return this;
 		}
 		
 		private var _currentEffectDescriptor:EffectDescriptor;
@@ -296,18 +350,23 @@ package org.openPyro.effects{
 		 */ 
 		private function playNextEffect():void{
 			var self:Effect = this;
+			
 			if(_effectQueue.length == 0){
 				delete(_currentlyAnimatingTargets[this._target]);
 				if(_onComplete != null){
-					_onComplete();
+					_onComplete(self);
 				}
 				_currentEffectDescriptor = null;
 				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
 				_areEffectsPlaying = false;
 				return;
 			}
+			
 			_areEffectsPlaying = true;
 			_currentEffectDescriptor = EffectDescriptor(_effectQueue.shift());
+			
+			
+			
 			var props:Object = _currentEffectDescriptor.properties;
 			if(!props){
 				props = {};
@@ -315,16 +374,16 @@ package org.openPyro.effects{
 			if(props.onComplete){
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
-					fn();
+					fn(self);
 					if(_currentEffectDescriptor.onComplete != null){
-						_currentEffectDescriptor.onComplete();
+						_currentEffectDescriptor.onComplete(self);
 					}
 					playNextEffect();
 				}
 			}
 			else if(_currentEffectDescriptor.onComplete != null){
 				props.onComplete = function():void{
-					_currentEffectDescriptor.onComplete();
+					_currentEffectDescriptor.onComplete(self);
 					playNextEffect();
 				}
 			}
@@ -337,6 +396,8 @@ package org.openPyro.effects{
 			}
 			
 			props.time = _currentEffectDescriptor.duration;
+			
+			
 			
 			Tweener.addTween(_currentEffectDescriptor.target,props);
 		}		

@@ -7,8 +7,8 @@ package org.openPyro.layout
 	public class ColumnGridLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper
 	{
 		
-		private var _initX:Number = 0;
-		private var _initY:Number = 0;
+		protected var _initX:Number = 0;
+		protected var _initY:Number = 0;
 		
 		protected var _numRows:uint;
 		protected var _columnWidth:Number = NaN;
