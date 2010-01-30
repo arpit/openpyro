@@ -6,8 +6,6 @@ package org.openPyro.layout
 	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ListEvent;
 	import org.openPyro.effects.Effect;
-	
-	import org.openPyro.core.IDataRenderer;
 
 	public class TreeLayout extends VListLayout
 	{
@@ -68,7 +66,7 @@ package org.openPyro.layout
 				firstTime = false;
 		}
 		
-		private function dispatchComplete():void{
+		private function dispatchComplete(effect:Effect):void{
 			for (var a:String in _listBase.visibleRenderersMap){
 				if (Effect.isPlayingOn(_listBase.visibleRenderersMap[a])){
 					return;

@@ -17,6 +17,7 @@ package org.openPyro.effects
 		public var properties:Object
 		public var beforeStart:Function;
 		public var onComplete:Function;
+		public var onCancel:Function;
 		
 		public function EffectDescriptor(target:DisplayObject = null, 
 										duration:Number = NaN, 

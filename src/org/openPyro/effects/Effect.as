@@ -54,12 +54,17 @@ package org.openPyro.effects{
 			return _currentlyAnimatingTargets[ob] != null;
 		}
 		
+		
+		protected var _onCancel:Function;
 		/**
 		 * Cancels the currently playing effect defined in
 		 * the <code>_currentEffectDescriptor</code>
 		 */ 
 		public function cancelCurrent():Effect{
 			Tweener.removeTweens(this._target);
+			if(_onCancel != null){
+				_onCancel(this);
+			}
 			_currentEffectDescriptor = null;
 			_areEffectsPlaying = false;
 			delete(_currentlyAnimatingTargets[this._target]);
@@ -165,7 +170,7 @@ package org.openPyro.effects{
 		    var hadFilters:Boolean = _target.filters.length > 0;
 			_effectQueue.push(new EffectDescriptor(this._target, 
 							
-							duration, {alpha:1, visible:true, onComplete:function():void{
+							duration, {alpha:1, visible:true, onComplete:function(eff:Effect=null):void{
 								if(!hadFilters){
 									_target.filters = [];
 								}	
@@ -196,15 +201,19 @@ package org.openPyro.effects{
 				_target.y = -(_target.height);
 				
 			}
-			_effectQueue.push(new EffectDescriptor(this._target, duration, 
-								{y:originalY, onComplete:removeEffectMask},prepareSlideDown));
+			var descriptor:EffectDescriptor = new EffectDescriptor(this._target, duration, 
+								{y:originalY, onComplete:removeEffectMask},prepareSlideDown)
+			descriptor.onCancel = removeEffectMask;
+			_effectQueue.push(descriptor);
 			invalidateEffectQueue();
 			return this;
 		}
 		
 		public function slideUp(duration:Number=1):Effect{
-			_effectQueue.push(new EffectDescriptor(this._target, duration, 
-								{y:-this._target.height, onComplete:removeEffectMask},createEffectMask));
+			var descriptor:EffectDescriptor = new EffectDescriptor(this._target, duration, 
+								{y:-this._target.height, onComplete:removeEffectMask},createEffectMask)
+			descriptor.onCancel = removeEffectMask;
+			_effectQueue.push(descriptor);
 			invalidateEffectQueue();
 			return this;
 		}
@@ -229,7 +238,7 @@ package org.openPyro.effects{
 									discriptor.target = _effectMask;
 									_effectMask.height = 0;
 								})
-			
+			discriptor.onCancel = removeEffectMask;
 			_effectQueue.push(discriptor);
 			invalidateEffectQueue();
 			return this;
@@ -242,12 +251,12 @@ package org.openPyro.effects{
 			 set the target to a null value.
 			 */
 			var discriptor:EffectDescriptor = new EffectDescriptor(null, duration, 
-								{height:0, onComplete:removeEffectMask}, function():void{
+								{height:10, onComplete:removeEffectMask}, function():void{
 									createEffectMask();
 									discriptor.target = _effectMask;
 									_effectMask.height = _target.height;
 								})
-			
+			discriptor.onCancel = removeEffectMask;
 			_effectQueue.push(discriptor);
 			invalidateEffectQueue();
 			return this;
@@ -262,6 +271,7 @@ package org.openPyro.effects{
 		 */ 
 		private function createEffectMask():Shape{
 			var mask:Shape = new Shape();
+			mask.name = this+"_mask"
 			mask.graphics.beginFill(0xff0000);
 			mask.graphics.drawRect(-5,-5,_target.width+10, _target.height+10);
 			mask.graphics.endFill();
@@ -280,10 +290,17 @@ package org.openPyro.effects{
 			return mask;
 		}
 		
-		private function removeEffectMask():void{
-			_target.mask = null;	
-			_effectMask.parent.removeChild(_effectMask);
-			_effectMask = null;					
+		private function removeEffectMask(effect:Effect):void{
+			//return;
+			if(_target){
+				_target.mask = null;
+			}	
+			if(_effectMask){
+				if(_effectMask.parent){
+					_effectMask.parent.removeChild(_effectMask);
+				}
+				_effectMask = null;
+			}					
 		}
 		
 		
@@ -356,7 +373,7 @@ package org.openPyro.effects{
 				if(_onComplete != null){
 					_onComplete(self);
 				}
-				_currentEffectDescriptor = null;
+				//_currentEffectDescriptor = null;
 				dispatchEvent(new EffectEvent(EffectEvent.COMPLETE));
 				_areEffectsPlaying = false;
 				return;
@@ -364,8 +381,7 @@ package org.openPyro.effects{
 			
 			_areEffectsPlaying = true;
 			_currentEffectDescriptor = EffectDescriptor(_effectQueue.shift());
-			
-			
+			_onCancel = _currentEffectDescriptor.onCancel;
 			
 			var props:Object = _currentEffectDescriptor.properties;
 			if(!props){
@@ -396,8 +412,6 @@ package org.openPyro.effects{
 			}
 			
 			props.time = _currentEffectDescriptor.duration;
-			
-			
 			
 			Tweener.addTween(_currentEffectDescriptor.target,props);
 		}		

@@ -253,6 +253,7 @@ package org.openPyro.controls
 			if(!_list)
 			{
 				_list = new List();
+				_list.name = this.name+"_dropdownList";
 				_list.selectedIndex = _selectedIndex;
 				_list.skin = new AuroraContainerSkin();
 				var renderers:ClassFactory = new ClassFactory(DefaultListRenderer);
@@ -293,7 +294,7 @@ package org.openPyro.controls
 			
 			_list.y = _bttn.height+2;
 			_list.visible = true;
-			Effect.on(_list).slideDown(1).onComplete(function():void{
+			Effect.on(_list).cancelCurrent().slideDown(.5).onComplete(function(eff:Effect):void{
 					overlayManager.overlayContainer.stage.addEventListener(MouseEvent.CLICK, onStageClick)
 			});
 		}
@@ -343,7 +344,7 @@ package org.openPyro.controls
 			if(!_isOpen) return;
 			OverlayManager.getInstance().overlayContainer.stage.removeEventListener(MouseEvent.CLICK, onStageClick)
 			_isOpen = false;
-			Effect.on(_list).wipeUp(.5).onComplete(function():void{
+			Effect.on(_list).cancelCurrent().slideUp(.5).onComplete(function(eff:Effect):void{
 				_list.visible = false;
 			});
 		}
