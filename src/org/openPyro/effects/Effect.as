@@ -374,7 +374,7 @@ package org.openPyro.effects{
 			if(props.onComplete){
 				var fn:Function = props.onComplete;
 				props.onComplete = function():void{
-					fn(self);
+					fn( self );
 					if(_currentEffectDescriptor.onComplete != null){
 						_currentEffectDescriptor.onComplete(self);
 					}
