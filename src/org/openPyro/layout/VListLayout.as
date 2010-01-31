@@ -70,9 +70,9 @@ package org.openPyro.layout
 			
 			var newRenderersData:Array = []
 			
-			
 			var sourceCollection:ICollection = _listBase.dataProviderCollection;
-			var iterator:IIterator = sourceCollection.iterator;
+			
+			/*var iterator:IIterator = sourceCollection.iterator;
 			iterator.cursorIndex = newTopRendererIndex;
 			
 			for(var i:int=0; i<numberOfRenderersNeededForDisplay; i++){
@@ -82,7 +82,19 @@ package org.openPyro.layout
 				}
 				newRenderersData.push(itemUID);
 				iterator.cursorIndex++;	
+			}*/
+			
+			var iteratorIndex:Number = newTopRendererIndex;
+			
+			for(var i:int=0; i<numberOfRenderersNeededForDisplay; i++){
+				var itemUID:String = sourceCollection.getUIDForItemAtIndex(iteratorIndex);
+				if(itemUID == null){
+					break;
+				}
+				newRenderersData.push(itemUID);
+				iteratorIndex++;	
 			}
+			
 			return newRenderersData;
 		}
 		

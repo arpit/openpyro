@@ -16,6 +16,7 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.ObjectPool;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.effects.Effect;
 	import org.openPyro.events.PyroEvent;
 	import org.openPyro.layout.ILayout;
 	import org.openPyro.layout.IVirtualizedLayout;
@@ -520,7 +521,7 @@ package org.openPyro.controls.listClasses
 		 * is the one visible as the first renderer or the list is at
 		 * maximum scroll.
 		 */ 
-		public function scrollToItemAtIndex(index:int):void{
+		public function scrollToItemAtIndex(index:int, animate:Boolean=true):void{
 			/*
 			 Right now the presence or absence of a 
 			 scrollbar is a metric of whether or not
@@ -530,7 +531,13 @@ package org.openPyro.controls.listClasses
 			if(! this._verticalScrollBar) return;
 			var yval:Number = index*_rowHeight;
 			var percent:Number = Math.min(yval/(_contentHeight-height), 1);
-			_verticalScrollBar.value = percent;
+			
+			if(!animate){
+				_verticalScrollBar.value = percent;
+			}
+			else{
+				Effect.on(_verticalScrollBar).animateProperty("value", percent, 1);
+			}
 		}
 		
 	}
