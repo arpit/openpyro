@@ -118,7 +118,9 @@ package org.openPyro.managers
 			while(_overlayDisplayObject.numChildren > 1){
 				_overlayDisplayObject.removeChildAt(1);
 			}
-			bgSprite.visible = false;
+			if(bgSprite){
+				bgSprite.visible = false;
+			}
 		}
 		
 		private function onBaseStageResize(event:Event):void{
