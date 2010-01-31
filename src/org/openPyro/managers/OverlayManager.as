@@ -115,9 +115,10 @@ package org.openPyro.managers
 		
 		
 		public function removeAll():void{
-			while(_overlayDisplayObject.numChildren > 0){
-				_overlayDisplayObject.removeChildAt(0);
+			while(_overlayDisplayObject.numChildren > 1){
+				_overlayDisplayObject.removeChildAt(1);
 			}
+			bgSprite.visible = false;
 		}
 		
 		private function onBaseStageResize(event:Event):void{
