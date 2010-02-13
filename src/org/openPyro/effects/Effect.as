@@ -121,8 +121,20 @@ package org.openPyro.effects{
 		
 		private var _onComplete:Function;
 		
-		public function onComplete(fn:Function):void{
+		public function onComplete(fn:Function):Effect{
 			this._onComplete = fn;	
+			return this;
+		}
+		
+		private var _onEffectInstanceUpdate:Function;
+		
+		/**
+		* Listener for the effect instance updates. Note this
+		* listener only executes for one effect object in the 
+		* effect queue
+		*/
+		public function onEffectInstanceUpdate(fn:Function):void{
+			_onEffectInstanceUpdate = fn;
 		}
 		
 		public function moveY(value:Number, duration:Number=1):Effect{
@@ -131,6 +143,9 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		/**
+		* Moves the Y by a certain number of pixels.
+		*/
 		public function moveYBy(value:Number, duration:Number=-1):Effect{
 			return moveY(this._target.y+value, duration);
 		}
@@ -144,6 +159,19 @@ package org.openPyro.effects{
 		
 		public function moveXBy(value:Number, duration:Number=1):Effect{
 			_effectQueue.push(new EffectDescriptor(this._target, duration, {x:_target.x+value}));
+			invalidateEffectQueue();
+			return this;
+		}
+		
+		public function move(x:Number, y:Number, duration:Number):Effect{
+			_effectQueue.push(new EffectDescriptor(this._target, duration, {x:Number, y:Number}));
+			invalidateEffectQueue();
+			return this;
+		}
+		
+		public function moveBy(x:Number, y:Number, duration:Number):Effect{
+			_effectQueue.push(new EffectDescriptor(this._target, duration, {x:getCurrentProperty("x")+x, 
+									y:getCurrentProperty("y")+y}));
 			invalidateEffectQueue();
 			return this;
 		}
@@ -262,6 +290,7 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		
 		private var _effectMask:Shape;
 		
 		/**
@@ -360,6 +389,10 @@ package org.openPyro.effects{
 			return this;
 		}
 		
+		public function getCurrentProperty(pty:String):*{
+			return _target[pty];
+		}
+		
 		private var _currentEffectDescriptor:EffectDescriptor;
 		
 		/**
@@ -406,6 +439,8 @@ package org.openPyro.effects{
 			else{
 				props.onComplete = playNextEffect;	
 			}
+			
+			props.onUpdate = _onEffectInstanceUpdate;
 			
 			if(_currentEffectDescriptor.beforeStart != null){
 				_currentEffectDescriptor.beforeStart();
