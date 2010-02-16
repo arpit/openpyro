@@ -83,8 +83,10 @@ package org.openPyro.effects{
 			Tweener.removeTweens(this._target);
 			if(_currentEffectDescriptor){
 				for(var a:String in this._currentEffectDescriptor.properties){
-					if(!(_currentEffectDescriptor.properties[a] is Function) && a != "time"){
-						this._target[a] = _currentEffectDescriptor.properties[a];
+					if(!(_currentEffectDescriptor.properties[a] is Function) && a != "time" && a != "onUpdate" ){
+						if(this._target[a] != null){
+							this._target[a] = _currentEffectDescriptor.properties[a];
+						}
 					}
 				}
 			}

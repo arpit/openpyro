@@ -80,6 +80,8 @@ package org.openPyro.core
 			this.validateSize();
 			this.validateDisplayList();
 		}
+		
+		public static var IN_DEBUG_MODE:Boolean = false;
 
 	}
 }

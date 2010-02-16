@@ -21,11 +21,19 @@ package org.openPyro.controls
 			setTextFieldProperties()
 			addChild(_textField);
 			if(!_format){
-				_format = new TextFormat("Arial", 12);
+				_format = new TextFormat("Arial", 12, _textColor);
 			}
 			_textField.defaultTextFormat = _format;
 			if(_text){
 				_textField.text = _text
+			}
+		}
+		
+		private var _textColor:Number = 0x333333
+		public function set textColor(color:uint):void{
+			_textColor = color;
+			if(_textField){
+				_textField.textColor = color;
 			}
 		}
 		
