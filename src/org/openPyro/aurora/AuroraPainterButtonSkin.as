@@ -98,6 +98,7 @@ package org.openPyro.aurora{
 				if(!bttn.label) return;
 				if(!label){
 					label = new Label();
+					label.embedFonts = _embedFonts;
 					label.textFormat = _labelFormat;
 					addChild(label);
 					
@@ -108,6 +109,14 @@ package org.openPyro.aurora{
 				}
 			}
 			//this.invalidateDisplayList();
+		}
+		
+		private var _embedFonts:Boolean = false;
+		public function set embedFonts(val:Boolean):void{
+			_embedFonts = val;
+			if(label){
+				label.embedFonts = val;
+			}
 		}
 		
 		private var _labelAlign:String = "center";
