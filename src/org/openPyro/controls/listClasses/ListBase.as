@@ -540,5 +540,9 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
+		public function setFocus():void{
+			
+		}
+		
 	}
 }

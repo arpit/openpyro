@@ -32,6 +32,7 @@ package org.openPyro.core{
 		
 		public function UIControl() {
 			super();
+			this.tabEnabled=false;
 		}
 		
 		/**

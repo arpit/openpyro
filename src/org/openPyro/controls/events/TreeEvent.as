@@ -5,8 +5,8 @@ package org.openPyro.controls.events
 	public class TreeEvent extends ListEvent
 	{
 		public static const ROTATOR_CLICK:String = "rotatorClick";
-		public static const ITEM_OPEN:String = "itemOpen";
-		public static const ITEM_CLOSE:String = "itemClose";
+		public static const ITEM_OPENING:String = "itemOpening";
+		public static const ITEM_CLOSING:String = "itemClosing";
 		
 		
 		public var nodeDescriptor:XMLNodeDescriptor;

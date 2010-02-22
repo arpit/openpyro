@@ -13,9 +13,6 @@ package org.openPyro.controls
 	public class Tree extends List
 	{
 		
-		public static const ITEM_OPENING:String = "treeItemOpening";
-		public static const ITEM_CLOSING:String = "treeItemClosing";
-		
 		
 		public function Tree()
 		{
@@ -73,14 +70,17 @@ package org.openPyro.controls
 			});
 			
 			if(nodeDescriptor.open){
-				treeState = ITEM_CLOSING;
+				treeState = TreeEvent.ITEM_CLOSING;
 				TreeCollection(this.dataProviderCollection).closeNode(nodeDescriptor);
 				
 			}
 			else{
-				treeState = ITEM_OPENING;
+				treeState = TreeEvent.ITEM_OPENING;
 				TreeCollection(this.dataProviderCollection).openNode(nodeDescriptor);
 			}
+			
+			dispatchEvent(new TreeEvent(treeState))
+			
 			this.sizeInvalidated = true;
 			this.forceInvalidateDisplayList = true;
 			this.invalidateSize();
@@ -98,6 +98,15 @@ package org.openPyro.controls
 		public function closeNode(des:XMLNodeDescriptor):void{
 			if(!_dataProviderCollection) return;
 			TreeCollection(_dataProviderCollection).closeNode(des);
+		}
+		
+		override public function itemToItemRenderer(item:*):DisplayObject{
+			for(var a:String in visibleRenderersMap){
+				if(visibleRenderersMap[a].data.node == item){
+					return visibleRenderersMap[a]
+				}
+			}
+			return null;
 		}
 	}
 }

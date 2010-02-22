@@ -48,6 +48,7 @@ package org.openPyro.core{
 			contentPane.name = "contentPane_"+this.name;
 			focusRectHolder = new Sprite();
 			focusRectHolder.mouseEnabled = false;
+			this.tabChildren = true
 			
 		}
 		

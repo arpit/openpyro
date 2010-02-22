@@ -5,6 +5,7 @@ package org.openPyro.layout
 	
 	import org.openPyro.controls.Tree;
 	import org.openPyro.controls.events.ListEvent;
+	import org.openPyro.controls.events.TreeEvent;
 	import org.openPyro.effects.Effect;
 
 	public class TreeLayout extends VListLayout
@@ -22,7 +23,7 @@ package org.openPyro.layout
 			var firstNewRenderer:DisplayObject = null;
 			
 			// decide whether the new renderers animate from the top or bottom
-			var appearFromTop:Boolean = (Tree(_listBase).treeState == Tree.ITEM_OPENING);
+			var appearFromTop:Boolean = (Tree(_listBase).treeState == TreeEvent.ITEM_OPENING);
 								
 			var newRenderersGroupSize:Number = newlyCreatedRenderers.length*_listBase.rowHeight - _listBase.rowHeight;
 			

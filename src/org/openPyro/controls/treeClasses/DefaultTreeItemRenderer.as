@@ -56,6 +56,7 @@ package org.openPyro.controls.treeClasses
 				}
 				if(!rotatorButton){
 					rotatorButton = new Sprite();
+					rotatorButton.tabEnabled=false;
 					rotatorButton.graphics.beginFill(0x000000,0)
 					rotatorButton.graphics.drawRect(0,0, 20,20);
 					rotatorButton.graphics.endFill()
@@ -101,8 +102,8 @@ package org.openPyro.controls.treeClasses
 		}
 		
 		protected function onRotatorClick(event:MouseEvent):void{
-			event.stopImmediatePropagation()
-			event.preventDefault();
+			//event.stopImmediatePropagation()
+			//event.preventDefault();
 			var treeEvent:TreeEvent = new TreeEvent(TreeEvent.ROTATOR_CLICK);
 			treeEvent.nodeDescriptor = XMLNodeDescriptor(_data);
 			dispatchEvent(treeEvent);
