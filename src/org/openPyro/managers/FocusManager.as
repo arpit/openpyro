@@ -76,7 +76,7 @@ package org.openPyro.managers
 		public function registerFocusChild(child:DisplayObject):void{
 			child.addEventListener(MouseEvent.MOUSE_DOWN, function(event:MouseEvent):void{
 				if(_focussedChild != child){
-					setFocus(child);
+					setFocus(child, false);
 				}
 			})
 		}
@@ -118,13 +118,15 @@ package org.openPyro.managers
 		private var _focussedChildIndex:Number = NaN;
 		private var _focussedChild:DisplayObject;
 		
-		public function setFocus(child:DisplayObject):void{
+		public function setFocus(child:DisplayObject, drawRect:Boolean=true):void{
 			_focussedChildIndex = _focusChildren.indexOf(child);
 			_focussedChild = child;
 			if(child.hasOwnProperty("setFocus")){
 				child["setFocus"]()
 			}
-			drawFocus(child);
+			if(drawRect){
+				drawFocus(child);
+			}
 		}
 		
 		
