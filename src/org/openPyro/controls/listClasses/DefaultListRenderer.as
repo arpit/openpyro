@@ -32,16 +32,9 @@ package org.openPyro.controls.listClasses
 			super.createChildren();
 			this.addEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler)
 			this.addEventListener(MouseEvent.MOUSE_OUT, mouseOutHandler)
-			_labelField = new TextField()
-			_labelField.selectable=false;
 			
-			if(!_labelFormat){
-				_labelField.defaultTextFormat= new TextFormat("Arial",12)
-			} 
-			else{
-				_labelField.defaultTextFormat = _labelFormat;
-			}
-			addChild(_labelField);
+			createLabelField();
+			
 			if(_data && _baseListData && _baseListData.list){
 				_labelField.text = _baseListData.list.labelFunction(_data);
 			}
@@ -62,6 +55,19 @@ package org.openPyro.controls.listClasses
 			}
 			_highlightCursorSprite = new Sprite();
 			addChildAt(_highlightCursorSprite,0);
+		}
+		
+		protected function createLabelField():void{
+			_labelField = new TextField()
+			_labelField.selectable=false;
+			
+			if(!_labelFormat){
+				_labelField.defaultTextFormat= new TextFormat("Arial",12)
+			} 
+			else{
+				_labelField.defaultTextFormat = _labelFormat;
+			}
+			addChild(_labelField);
 		}
 		
 		protected var _baseListData:BaseListData;
