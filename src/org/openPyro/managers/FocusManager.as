@@ -119,6 +119,9 @@ package org.openPyro.managers
 		private var _focussedChild:DisplayObject;
 		
 		public function setFocus(child:DisplayObject, drawRect:Boolean=true):void{
+			if(!child) return;
+			_stage.focus = null;
+			
 			_focussedChildIndex = _focusChildren.indexOf(child);
 			_focussedChild = child;
 			if(child.hasOwnProperty("setFocus")){
@@ -144,7 +147,9 @@ package org.openPyro.managers
 			}
 			
 			focusStroke.apply(focusRect.graphics);
-			//focusRect.graphics.beginFill(0xff0000,0.4);
+			if(isNaN(child.width) || isNaN(child.height)){
+				return;
+			}
 			focusRect.graphics.drawRect(0,0, child.width, child.height);
 			
 			_stage.addChild(focusRect);

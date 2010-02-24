@@ -10,6 +10,10 @@ package org.openPyro.controls
 			//_textField.border = true
 		}
 		
+		public function setFocus():void{
+			stage.focus = _textField;
+		}
+		
 		override protected function setTextFieldProperties():void{
 			_textField.autoSize = "left"
 			_textField.wordWrap = true;
