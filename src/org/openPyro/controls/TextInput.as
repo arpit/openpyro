@@ -29,6 +29,7 @@ package org.openPyro.controls
 			_textField.addEventListener(FocusEvent.FOCUS_OUT, onTextFieldFocusOut);
 			_textField.wordWrap = true;
 			_textField.multiline = false;
+			_textField.displayAsPassword = _displayAsPassword;
 			
 			this.addEventListener(PyroEvent.CREATION_COMPLETE, function(event:Event):void{
 				removeEventListener(PyroEvent.CREATION_COMPLETE, arguments.callee);
@@ -71,6 +72,9 @@ package org.openPyro.controls
 		private var _displayAsPassword:Boolean = false;
 		public function set password(b:Boolean):void{
 			_displayAsPassword = b;
+			if(_textField){
+				_textField.displayAsPassword = true;
+			}
 		}
 		
 		protected function onTextInputChange(event:Event):void{

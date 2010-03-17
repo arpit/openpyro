@@ -162,23 +162,22 @@ package org.openPyro.aurora{
 		
 		public function changeState(fromState:String, toState:String):void
 		{
-			if(toState==ButtonEvent.UP)
-			{
-				this.backgroundPainter = upPainter;
-			}
 			
-			else if(toState==ButtonEvent.OVER)
-			{
-				this.backgroundPainter = overPainter;
-			}
-			
-			else if(toState == ButtonEvent.DOWN)
-			{
-				this.backgroundPainter = downPainter;
-			}
-			else
-			{
-				this.backgroundPainter = upPainter;
+			switch(toState){
+				case (ButtonEvent.UP):		backgroundPainter = upPainter;
+									  		break;
+				case (ButtonEvent.OVER):	backgroundPainter = overPainter;
+									  		break;
+				case (ButtonEvent.DOWN):	backgroundPainter = downPainter;
+									  		break;
+				case (ButtonEvent.TOGGLED_ON):backgroundPainter = downPainter;
+									  		break;
+				case (ButtonEvent.TOGGLED_OFF):backgroundPainter = upPainter;
+									 		break;
+				default 					:backgroundPainter = upPainter;
+									 		break;
+				
+					
 			}
 		}
 		

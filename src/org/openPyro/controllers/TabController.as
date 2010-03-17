@@ -35,6 +35,16 @@ package org.openPyro.controllers
 			var idx:int = indexOf(event.currentTarget as DisplayObject);
 			if(idx == -1) return;
 			
+			if(_selectedTabViewPair && _selectedTabViewPair.button.hasOwnProperty("selected")){
+				Object(_selectedTabViewPair.button).selected = false;
+			}
+			
+			var tab:Object = event.currentTarget as Object;
+			if(tab.hasOwnProperty("selected")){
+				tab.selected = true;
+			}
+			
+			
 			if(_viewStack){
 				_selectedTabViewPair = TabViewPair(tabs[idx]);
 				_viewStack.selectedChild = UIContainer(_selectedTabViewPair.view);

@@ -158,6 +158,7 @@ package org.openPyro.controls{
 		
 		private function onMouseOver(event:MouseEvent):void
 		{
+			if(_selected) return;
 			changeState(this.currentState,ButtonEvent.OVER);
 			this.currentState = ButtonEvent.OVER;
 			dispatchEvent(new ButtonEvent(ButtonEvent.OVER));
@@ -185,6 +186,7 @@ package org.openPyro.controls{
 		}
 		
 		private function onMouseUp(event:MouseEvent):void{
+			if(_selected) return;
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseUpOutside);
 			_isPressed = false;
 			if(_buttonSkin  && _buttonSkin is IStateFulClient){
