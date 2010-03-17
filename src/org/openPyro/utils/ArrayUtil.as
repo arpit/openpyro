@@ -140,5 +140,13 @@ package org.openPyro.utils{
 			return arr;
 		}
 		
+		public static function pad(arr:Array, size:Number, char:* = "0"):Array{
+			var diff:Number = size - arr.length
+			for(var i:int=0; i<diff; i++){
+				arr.push(char);
+			}
+			return arr;
+		}
+		
 	}
 }
