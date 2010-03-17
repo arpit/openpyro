@@ -1,5 +1,7 @@
 package org.openPyro.controls.events
 {
+	import flash.display.DisplayObject;
+	
 	import org.openPyro.collections.XMLNodeDescriptor;
 
 	public class TreeEvent extends ListEvent
@@ -10,6 +12,7 @@ package org.openPyro.controls.events
 		
 		
 		public var nodeDescriptor:XMLNodeDescriptor;
+		public var sourceItemRenderer:DisplayObject
 		
 		public function TreeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false)
 		{

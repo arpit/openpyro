@@ -79,7 +79,9 @@ package org.openPyro.controls
 				TreeCollection(this.dataProviderCollection).openNode(nodeDescriptor);
 			}
 			
-			dispatchEvent(new TreeEvent(treeState))
+			var treeEvent:TreeEvent = new TreeEvent(treeState);
+			treeEvent.sourceItemRenderer = event.target as DisplayObject;
+			dispatchEvent(treeEvent)
 			
 			this.sizeInvalidated = true;
 			this.forceInvalidateDisplayList = true;
