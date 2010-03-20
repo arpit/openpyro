@@ -1,6 +1,5 @@
 package org.openPyro.controls.listClasses
 {
-	import org.openPyro.controls.List;
 	import org.openPyro.core.IDataRenderer;
 	
 	public interface IListDataRenderer extends IDataRenderer

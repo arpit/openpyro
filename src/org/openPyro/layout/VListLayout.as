@@ -4,7 +4,6 @@ package org.openPyro.layout
 	import flash.utils.Dictionary;
 	
 	import org.openPyro.collections.ICollection;
-	import org.openPyro.collections.IIterator;
 	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.effects.Effect;
 
