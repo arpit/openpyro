@@ -7,9 +7,6 @@ package org.openPyro.layout
 	public class RowGridLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper
 	{
 		
-		private var _initX:Number = 0;
-		private var _initY:Number = 0;
-		
 		protected var _numColumns:uint;
 		protected var _rowHeight:Number = NaN;
 		protected var _rowGap:Number;
@@ -21,21 +18,6 @@ package org.openPyro.layout
 			_rowHeight = rowHeight;
 			_rowGap = rowGap
 			_columnGap = columnGap
-		}
-		
-		private var _prepare:Function;
-		public function set prepare(f:Function):void{
-			_prepare = f;
-		}
-
-		public function set initX(n:Number):void
-		{
-			_initX = n;
-		}
-		
-		public function set initY(n:Number):void
-		{
-			_initY = n;
 		}
 		
 		private var _container:UIContainer

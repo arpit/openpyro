@@ -1,13 +1,12 @@
 package org.openPyro.layout{
 	import flash.display.DisplayObject;
 	
-	import org.openPyro.controls.listClasses.ListBase;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIContainer;
 /*	import org.openPyro.effects.EffectDescriptor;
 	import org.openPyro.effects.PyroEffect;*/
 
-	public class VLayout implements ILayout, IContainerMeasurementHelper{
+	public class VLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper{
 		
 		private var _vGap:Number = 0;
 		
@@ -19,19 +18,6 @@ package org.openPyro.layout{
 		public function set container(container:UIContainer):void
 		{
 			_container = container;
-		}
-		
-		protected var _initY:Number = 0;
-		protected var _initX:Number = 0;
-		
-		public function set initX(n:Number):void
-		{
-			_initX = n;	
-		}
-		
-		public function set initY(n:Number):void
-		{
-			_initY = n;
 		}
 		
 		public function getMaxWidth(children:Array):Number
@@ -59,18 +45,19 @@ package org.openPyro.layout{
 			return nowY-_vGap;
 		}
 		
-		public var animationDuration:Number = 0;
-		
-		public function layout(children:Array):void{
+		override public function calculatePositions(children:Array):Array{
+			super.calculatePositions(children);
 			var nowY:Number=_initY;
+			var child:DisplayObject
 			for(var i:uint=0; i<children.length; i++){
-				var c:DisplayObject = children[i] as DisplayObject;
-				c.x = _initX;
-				c.y = nowY;
-				nowY+=c.height;
-				nowY+=this._vGap;
+				child = children[i] as DisplayObject;
+				var descriptor:LayoutDescriptor = new LayoutDescriptor(child, _initX, nowY);				
+				layoutDescriptors.push(descriptor);
+				nowY += child.height+_vGap;
 			}
+			return layoutDescriptors;	
 		}
+		
 		
 		/**		
 		*Find all the children with explicitWidth/ explicit Height set

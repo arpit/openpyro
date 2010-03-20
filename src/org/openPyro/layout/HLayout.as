@@ -4,7 +4,7 @@ package org.openPyro.layout{
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIContainer;
 	
-	public class HLayout implements ILayout, IContainerMeasurementHelper{
+	public class HLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper{
 		
 		
 		private var _hGap:Number;
@@ -24,25 +24,6 @@ package org.openPyro.layout{
 		public function set container(container:UIContainer):void
 		{
 			_container = container;
-		}
-		
-		private var _initY:Number = 0;
-		private var _initX:Number = 0;
-		
-		public function set initX(n:Number):void{
-			_initX = n;	
-		}
-		
-		public function get initX():Number{
-			return _initX;
-		}
-		
-		public function set initY(n:Number):void{
-			_initY = n;
-		}
-		
-		public function get initY():Number{
-			return _initY;
 		}
 		
 		/**		
@@ -95,14 +76,18 @@ package org.openPyro.layout{
 			return maxH;
 		}
 		
-		public function layout(children:Array):void{
+		override public function calculatePositions(children:Array):Array{
+			super.calculatePositions(children);
 			var nowX:Number=_initX;
+			var child:DisplayObject
 			for(var i:uint=0; i<children.length; i++){
-				var c:DisplayObject = children[i] as DisplayObject;
-				c.x = nowX;
-				c.y = _initY;
-				nowX+=c.width+_hGap;
-			}		
+				child = children[i] as DisplayObject;
+				var descriptor:LayoutDescriptor = new LayoutDescriptor(child, nowX, _initY);				
+				layoutDescriptors.push(descriptor);
+				nowX+=child.width+_hGap;
+			}
+			return layoutDescriptors;	
 		}
+		
 	}
 }

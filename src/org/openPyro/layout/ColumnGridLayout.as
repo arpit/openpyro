@@ -7,9 +7,6 @@ package org.openPyro.layout
 	public class ColumnGridLayout extends AbstractLayout implements ILayout, IContainerMeasurementHelper
 	{
 		
-		protected var _initX:Number = 0;
-		protected var _initY:Number = 0;
-		
 		protected var _numRows:uint;
 		protected var _columnWidth:Number = NaN;
 		protected var _rowGap:Number;
@@ -23,16 +20,6 @@ package org.openPyro.layout
 			_columnGap = columnGap
 		}
 
-		public function set initX(n:Number):void
-		{
-			_initX = n;
-		}
-		
-		public function set initY(n:Number):void
-		{
-			_initY = n;
-		}
-		
 		private var _container:UIContainer
 		public function set container(c:UIContainer):void
 		{
@@ -75,11 +62,6 @@ package org.openPyro.layout
 		{
 			//TODO: stub ... this needs to cahnge to actually use a calculation
 			return 300;
-		}
-		
-		private var _prepare:Function;
-		public function set prepare(f:Function):void{
-			_prepare = f;
 		}
 		
 		public function calculateSizes(children:Array, container:UIContainer):void

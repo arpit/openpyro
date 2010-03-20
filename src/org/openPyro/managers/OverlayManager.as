@@ -6,8 +6,6 @@ package org.openPyro.managers
 	import flash.events.Event;
 	import flash.geom.Point;
 	
-	import org.openPyro.utils.DisplayObjectUtils;
-	
 	public class OverlayManager
 	{
 		public function OverlayManager()
