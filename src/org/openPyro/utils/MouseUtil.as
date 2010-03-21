@@ -10,6 +10,7 @@ package org.openPyro.utils
 		}
 	
 		public static function isMouseOver(obj:DisplayObject):Boolean{
+			if(!obj.stage) return false;
 			var pt:Point = new Point(obj.stage.mouseX, obj.stage.mouseY);
 			obj.globalToLocal(pt);
 			return obj.hitTestPoint(pt.x, pt.y);
