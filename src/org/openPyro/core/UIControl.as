@@ -68,6 +68,7 @@ package org.openPyro.core{
 				control.addEventListener(PyroEvent.SIZE_CHANGED, queueValidateDisplayList);
 				control.doOnAdded()
 			}
+			forceInvalidateDisplayList=true;
 			this.invalidateSize()
 			return ch
 		}

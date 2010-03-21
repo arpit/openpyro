@@ -32,6 +32,7 @@ package org.openPyro.containers
 			this._selectedChild = viewChildren[_selectedIndex];
 			viewsChanged = true;
 			if(this.initialized){
+				forceInvalidateDisplayList=true;
 				invalidateDisplayList();
 			}
 		}

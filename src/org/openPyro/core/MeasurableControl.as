@@ -536,12 +536,26 @@ package org.openPyro.core{
 		 */ 
 		public var displayListInvalidated:Boolean=true;
 		
-		public var forceInvalidateDisplayList:Boolean=false;
+		protected var _forceInvalidateDisplayList:Boolean=false;
+		protected var forceUpdateDisplayList:Boolean = false;
+		
+		
+		public function set forceInvalidateDisplayList(val:Boolean):void{
+			_forceInvalidateDisplayList = val;
+			forceUpdateDisplayList = val;	
+		}
+		
+		public function get forceInvalidateDisplayList():Boolean{
+			return _forceInvalidateDisplayList;
+		}
+		
+		
 		
 		protected function invalidateDisplayList():void{
 			if(!initialized) return;
-			if((!this.sizeInvalidated && !displayListInvalidated) || forceInvalidateDisplayList){
-				forceInvalidateDisplayList=false;
+			
+			if((!this.sizeInvalidated && !displayListInvalidated) || _forceInvalidateDisplayList){
+				_forceInvalidateDisplayList=false;
 				displayListInvalidated=true;
 				queueValidateDisplayList();
 				
@@ -598,8 +612,9 @@ package org.openPyro.core{
 				if(!child) continue;
 				child.validateDisplayList()
 			}
-			this.updateDisplayList(this.getExplicitOrMeasuredWidth(), this.getExplicitOrMeasuredHeight());
-			if(dimensionsChanged){
+			if(dimensionsChanged || forceUpdateDisplayList){
+				forceUpdateDisplayList = false;
+				this.updateDisplayList(this.getExplicitOrMeasuredWidth(), this.getExplicitOrMeasuredHeight());
 				dimensionsChanged = false;
 				resizeHandler();
 			}

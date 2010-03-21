@@ -22,7 +22,7 @@ package org.openPyro.core{
 	 * Event dispatched when content resizing causes the scrollbars to 
 	 * change (either appear or disappear)
 	 */ 
-	[Event(name="scrollBarsChanged", type="org.openPyro.events.PyroEvent")]
+	[Event(name="_scrollBarsChanged", type="org.openPyro.events.PyroEvent")]
 	
 	/**
 	 * UIContainers extend UIControls and introduce
@@ -488,7 +488,16 @@ package org.openPyro.core{
 			}
 		}
 		
-		protected var scrollBarsChanged:Boolean = false;
+		protected var _scrollBarsChanged:Boolean = false;
+		
+		protected function set scrollBarsChanged(val:Boolean):void{
+			_scrollBarsChanged = val;
+			forceInvalidateDisplayList=true;
+		}
+		protected function get scrollBarsChanged():Boolean{
+			return _scrollBarsChanged;
+		}
+		
 		
 		protected function checkRevalidation():void
 		{
@@ -546,9 +555,9 @@ package org.openPyro.core{
 			}
 			
 			
-			if(scrollBarsChanged)
+			if(_scrollBarsChanged)
 			{
-				scrollBarsChanged = false;
+				_scrollBarsChanged = false;
 				dispatchEvent(new PyroEvent(PyroEvent.SCROLLBARS_CHANGED));
 				validateSize();
 			}
