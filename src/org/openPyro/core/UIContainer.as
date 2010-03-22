@@ -178,6 +178,7 @@ package org.openPyro.core{
 				control.doOnAdded()
 			}
 			displayListInvalidated = true;
+			forceInvalidateDisplayList=true;
 			invalidateSize();
 			return ch;
 			
