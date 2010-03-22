@@ -147,7 +147,7 @@ package org.openPyro.containers
 			
 			leftUIC.enableMouseEvents()
 			rightUIC.enableMouseEvents();
-			
+			forceUpdateDisplayList = true;
 		}
 		
 		/**
