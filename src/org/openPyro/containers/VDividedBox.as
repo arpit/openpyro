@@ -131,7 +131,8 @@ package org.openPyro.containers
 						currChild.percentUnusedHeight = currChild.percentUnusedHeight*unallocatedHeight/newUnallocatedHeight;
 					}
 				}
-			}	
+			}
+			forceInvalidateDisplayList=true;	
 		}
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
