@@ -102,8 +102,8 @@ package org.openPyro.controls.treeClasses
 		}
 		
 		protected function onRotatorClick(event:MouseEvent):void{
-			//event.stopImmediatePropagation()
-			//event.preventDefault();
+			event.stopImmediatePropagation()
+			event.preventDefault();
 			var treeEvent:TreeEvent = new TreeEvent(TreeEvent.ROTATOR_CLICK);
 			treeEvent.nodeDescriptor = XMLNodeDescriptor(_data);
 			dispatchEvent(treeEvent);
