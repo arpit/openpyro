@@ -11,6 +11,13 @@ package org.openPyro.controls.listClasses
 	import org.openPyro.painters.IPainter;
 	import org.openPyro.skins.ISkin;
 	
+	/**
+	 * The default list item renderer. Creates a _labelField of height 20px that is 
+	 * centered no matter how tall the renderer is. It should be noted that the 
+	 * creation of the labelField is pretty nicely encapsulated in the 
+	 * <code>createLabelField</code> function that can be overridden in your own 
+	 * subclass.
+	 */ 	
 	public class DefaultListRenderer extends UIControl implements IListDataRenderer
 	{
 		
@@ -67,6 +74,7 @@ package org.openPyro.controls.listClasses
 			else{
 				_labelField.defaultTextFormat = _labelFormat;
 			}
+			_labelField.height = 20;
 			addChild(_labelField);
 		}
 		
@@ -165,10 +173,9 @@ package org.openPyro.controls.listClasses
 			if(_highlightCursorSprite.visible){
 				drawHighlightCursor();
 			}
-			_labelField.x = _labelField.y = 5;
+			_labelField.y = (unscaledHeight-_labelField.height)/2
+			_labelField.x = 5
 			_labelField.width = unscaledWidth-10
-			_labelField.height = Math.max(unscaledHeight-10,20);
-			
 		}
 		
 		protected function drawHighlightCursor():void{
