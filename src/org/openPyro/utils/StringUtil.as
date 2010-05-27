@@ -1,6 +1,9 @@
 package org.openPyro.utils{
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.xml.XMLDocument;
+	import flash.xml.XMLNode;
+	import flash.xml.XMLNodeType;
 	
 	/**
 	 * A collection of Utility methods for working with Strings
@@ -107,6 +110,17 @@ package org.openPyro.utils{
 			var part1:String = originalString.substring(0, index);
 			var part2:String = originalString.substring(index+1, originalString.length);
 			return part1+stringToInsert+part2;
-		} 
+		}
+		
+		public static function htmlUnescape(str:String):String{
+			if(!str || str == "") return "";
+			return new XMLDocument(str).firstChild.nodeValue;
+		}
+		
+		public static function htmlEscape(str:String):String{
+			if(!str || str == "") return "";
+			return XML( new XMLNode( XMLNodeType.TEXT_NODE, str ) ).toXMLString();
+		}
+		
  	}
 }
