@@ -5,6 +5,7 @@ package org.openPyro.containers
 	import flash.geom.Rectangle;
 	import flash.utils.getQualifiedClassName;
 	
+	import org.openPyro.containers.events.DividerEvent;
 	import org.openPyro.core.ClassFactory;
 	import org.openPyro.core.MeasurableControl;
 	import org.openPyro.core.UIControl;
@@ -148,6 +149,7 @@ package org.openPyro.containers
 			leftUIC.enableMouseEvents()
 			rightUIC.enableMouseEvents();
 			forceUpdateDisplayList = true;
+			dispatchEvent(new DividerEvent(DividerEvent.DIVIDER_DROP));
 		}
 		
 		/**

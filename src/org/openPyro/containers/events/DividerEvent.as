@@ -8,6 +8,7 @@ package org.openPyro.containers.events
 		
 		public static const DIVIDER_DOUBLE_CLICK:String = "dividerDoubleClick";
 		public static const DIVIDER_CLICK:String = "dividerClick";
+		public static const DIVIDER_DROP:String = "dividerDrop";
 		
 		public var divider:DisplayObject;
 		public var dividerIndex:Number;

@@ -281,6 +281,9 @@ package org.openPyro.controls.listClasses
 			
 		}
 		
+		/**
+		 * @private
+		 */ 
 		public var positionAnchorRenderer:DisplayObject = null;
 		
 		/**
@@ -346,7 +349,7 @@ package org.openPyro.controls.listClasses
 			return newRenderer;
 		}
 		
-		protected function renderListItems():void{
+		public function renderListItems():void{
 			var visibleRendererData:Array = IVirtualizedLayout(this.layout).visibleRenderersData;
 			createNewRenderersAndMap(visibleRendererData);
 			IVirtualizedLayout(layout).positionRendererMap(this.visibleRenderersMap, newlyCreatedRenderers, animateRenderers);

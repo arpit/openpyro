@@ -986,14 +986,24 @@ package org.openPyro.core{
 		
 		public var debugScrollRect:Boolean = false
 		public function setScrollRect(rect:Rectangle):void{
+			if(isNaN(rect.x)){
+				rect.x = 0;
+			}
+			if(isNaN(rect.y)){
+				rect.y = 0;
+			}
 			if(!debugScrollRect){
 				this.contentPane.scrollRect = rect;
-				
 			}
 			else{
+				
 				this.focusRectHolder.graphics.clear();
 				this.focusRectHolder.graphics.beginFill(0xff0000,.4);
-				this.focusRectHolder.graphics.drawRect(rect.left, rect.top, rect.width, rect.height);
+				try{
+					this.focusRectHolder.graphics.drawRect(rect.left, rect.top, rect.width, rect.height);
+				}catch(e:Error){
+					trace("[UIContainer] Error drawing on graphics in setScrollRect");
+				}
 			}
 		}
 		
