@@ -108,7 +108,9 @@ package org.openPyro.managers
 			if(!popup || !popup.parent) return;
 			
 			popup.parent.removeChild(popup);
-			bgSprite.visible = false;
+			if(bgSprite){
+				bgSprite.visible = false;
+			}
 		}
 		
 		
