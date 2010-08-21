@@ -196,8 +196,12 @@ package org.openPyro.aurora{
 			if(label){
 				
 				label.textField.autoSize = "left";
-				label.y = (unscaledHeight-label.height)/2+_padding.top;
-				
+				if(label.textField && label.textField.text){
+					label.y = (unscaledHeight-label.textField.textHeight)/2+_padding.top;
+				}
+				else{
+					label.y = (unscaledHeight-label.height)/2+_padding.top;
+				}
 				if(this._labelAlign == "center"){
 					label.x = (unscaledWidth-label.width)/2;
 				}

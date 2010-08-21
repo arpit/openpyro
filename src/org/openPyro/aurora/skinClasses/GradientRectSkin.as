@@ -9,10 +9,15 @@ package org.openPyro.aurora.skinClasses{
 		protected var _gradientRotation:Number = 0;
 		protected var gradientFill:GradientFillPainter;
 		
-		public function GradientRectSkin()
+		public function GradientRectSkin(gradientFill:GradientFillPainter = null)
 		{
-			gradientFill = new GradientFillPainter([0x999999,0xdfdfdf],[.6,1],[1,255],_gradientRotation)
-			this.backgroundPainter = gradientFill;
+			if(!gradientFill){
+				this.gradientFill = new GradientFillPainter([0x999999,0xdfdfdf],[.6,1],[1,255],_gradientRotation);
+			}
+			else{
+				this.gradientFill = gradientFill;
+			}
+			this.backgroundPainter = this.gradientFill;
 		}
 		
 		public function set gradientRotation(r:Number):void

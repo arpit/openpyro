@@ -122,5 +122,30 @@ package org.openPyro.utils{
 			return XML( new XMLNode( XMLNodeType.TEXT_NODE, str ) ).toXMLString();
 		}
 		
+		/**
+		 * Borrowed from gSkinner's StringUtil class
+		 * @see http://www.gskinner.com/blog/archives/2007/04/free_extension.html
+		 */ 
+		public static function truncate(p_string:String, p_len:uint, p_suffix:String = "..."):String {
+			if (p_string == null) { return ''; }
+			p_len -= p_suffix.length;
+			var trunc:String = p_string;
+			if (trunc.length > p_len) {
+				trunc = trunc.substr(0, p_len);
+				if (/[^\s]/.test(p_string.charAt(p_len))) {
+					trunc = trimRight(trunc.replace(/\w+$|\s+$/, ''));
+				}
+				trunc += p_suffix;
+			}
+			
+			return trunc;
+		}
+		
+		public static function trimRight(p_string:String):String {
+			if (p_string == null) { return ''; }
+			return p_string.replace(/\s+$/, '');
+		}
+
+		
  	}
 }

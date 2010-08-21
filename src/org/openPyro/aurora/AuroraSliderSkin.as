@@ -28,11 +28,18 @@ package org.openPyro.aurora{
 		
 		public function get trackSkin():ISkin
 		{
-			track =  new GradientRectSkin();
-			track.stroke = new Stroke(1,0xcccccc)
-			track.gradientRotation = trackGradientRotation;
+			if(!track){
+				track =  new GradientRectSkin();
+				track.stroke = new Stroke(1,0xcccccc)
+				track.gradientRotation = trackGradientRotation;
+			}
 			return track;
 		}
+		
+		public function set trackSkin(gr:ISkin):void{
+			this.track = GradientRectSkin(gr);
+		}
+		
 		public function dispose():void
 		{
 			if(_thumbSkin.parent)
