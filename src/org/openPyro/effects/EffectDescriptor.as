@@ -18,6 +18,7 @@ package org.openPyro.effects
 		public var beforeStart:Function;
 		public var onComplete:Function;
 		public var onCancel:Function;
+		public var transition:String = "linear";
 		
 		public function EffectDescriptor(target:DisplayObject = null, 
 										duration:Number = NaN, 

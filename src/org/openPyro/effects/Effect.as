@@ -122,9 +122,20 @@ package org.openPyro.effects{
 		}
 		
 		private var _onComplete:Function;
-		
+		/**
+		 * Sets the function to be called after the current effect has played to completion
+		 * 
+		 * @param fn	The function to be executed
+		 * @return 
+		 */
 		public function onComplete(fn:Function):Effect{
 			this._onComplete = fn;	
+			return this;
+		}
+		
+		private var _beforeStart:Function;
+		public function beforeStart(fn:Function):Effect{
+			this._beforeStart = fn;
 			return this;
 		}
 		
@@ -267,7 +278,7 @@ package org.openPyro.effects{
 									createEffectMask();
 									discriptor.target = _effectMask;
 									_effectMask.height = 0;
-								})
+								});
 			discriptor.onCancel = removeEffectMask;
 			_effectQueue.push(discriptor);
 			invalidateEffectQueue();
@@ -281,7 +292,7 @@ package org.openPyro.effects{
 			 set the target to a null value.
 			 */
 			var discriptor:EffectDescriptor = new EffectDescriptor(null, duration, 
-								{height:10, onComplete:removeEffectMask}, function():void{
+								{height:0, onComplete:removeEffectMask}, function():void{
 									createEffectMask();
 									discriptor.target = _effectMask;
 									_effectMask.height = _target.height;
@@ -446,6 +457,9 @@ package org.openPyro.effects{
 			
 			if(_currentEffectDescriptor.beforeStart != null){
 				_currentEffectDescriptor.beforeStart();
+				if(_beforeStart != null){
+					_beforeStart();
+				}
 			}
 			
 			props.time = _currentEffectDescriptor.duration;
