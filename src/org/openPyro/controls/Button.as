@@ -20,7 +20,7 @@ package org.openPyro.controls{
 	 */ 
 	[Event(name="change", type="flash.events.Event")]
 
-	public class Button extends UIControl{
+	public class Button extends UIControl implements IToggleControl{
 		
 		private var _buttonSkin:ISkin;
 		
