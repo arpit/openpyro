@@ -179,6 +179,9 @@ package org.openPyro.controls.listClasses
 		}
 		
 		protected function drawHighlightCursor():void{
+			if(isNaN(width) || isNaN(height)){
+				return;
+			}
 			
 			_highlightCursorSprite.graphics.clear();
 			_rollOverBackgroundPainter.draw(_highlightCursorSprite.graphics,width, height);
