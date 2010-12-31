@@ -4,6 +4,7 @@ package org.openPyro.containers
 	
 	import org.openPyro.controls.scrollBarClasses.ScrollPolicy;
 	import org.openPyro.core.UIContainer;
+	import org.openPyro.layout.ILayout;
 	import org.openPyro.utils.ArrayUtil;
 
 	public class ViewStack extends UIContainer{
@@ -104,7 +105,11 @@ package org.openPyro.containers
 		
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
-			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			super.updateDisplayList(unscaledWidth-padding.left- padding.right, unscaledHeight-padding.top - padding.bottom);
+			for each(var ch:DisplayObject in this.layoutChildren){
+				ch.y = padding.top;
+				ch.x = padding.right;
+			}
 			if(viewsChanged){
 				viewsChanged = false;
 				showSelectedChild()

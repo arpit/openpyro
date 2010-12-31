@@ -108,13 +108,13 @@ package org.openPyro.containers
 			if(_transitionDirection == Direction.HORIZONTAL){
 				_selectedChild.x = -1*transitionDirectionMultiplier*this.width;
 				oldViewEffectDescriptor.properties = {x:transitionDirectionMultiplier*this.width, transition:"easeOutQuart"}
-				newViewEffectDescriptor.properties = {x:0, transition:"easeOutQuart"}	
+				newViewEffectDescriptor.properties = {x:padding.left, transition:"easeOutQuart"}	
 			}
 			else if(_transitionDirection == Direction.VERTICAL)
 			{
 				_selectedChild.y = -1*transitionDirectionMultiplier*this.height;
 				oldViewEffectDescriptor.properties = {y:transitionDirectionMultiplier*this.height, transition:"easeOutQuart"}
-				newViewEffectDescriptor.properties = {y:0, transition:"easeOutQuart"}
+				newViewEffectDescriptor.properties = {y:padding.top, transition:"easeOutQuart"}
 			}
 			Effect.play(oldViewEffectDescriptor);
 			Effect.play(newViewEffectDescriptor);
