@@ -138,6 +138,9 @@ package org.openPyro.controls
 			{
 				_bttn["label"] = _bttnLabelFunction(data[0]);
 			}
+			if(_list){
+				_list.dataProvider = data;
+			}
 		}
 		
 		public var _bttnLabelFunction:Function = StringUtil.toStringLabel;
