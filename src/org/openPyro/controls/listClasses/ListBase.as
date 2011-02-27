@@ -543,6 +543,27 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
+		public function scrollYBy(delta:Number):void{
+			/*
+			Right now the presence or absence of a 
+			scrollbar is a metric of whether or not
+			the list is scrollable. This needs to be fixed for
+			cases for example when ScrollPolicy is set to None
+			*/
+			if(! this._verticalScrollBar) return;
+			
+			_verticalScrollBar
+			var yval:Number = delta;
+			var percent:Number = yval/(_contentHeight-height);
+			percent += _verticalScrollBar.value;
+			
+			percent = Math.min(percent, 1);
+			percent = Math.max(percent, 0);
+			_verticalScrollBar.value = percent;
+			_verticalScrollBar.visible = true;
+					
+		}
+		
 		public function setFocus():void{
 			
 		}
