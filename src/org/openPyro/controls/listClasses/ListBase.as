@@ -4,6 +4,7 @@ package org.openPyro.controls.listClasses
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	
 	import org.openPyro.collections.CollectionHelpers;
 	import org.openPyro.collections.ICollection;
@@ -325,7 +326,8 @@ package org.openPyro.controls.listClasses
 		protected function createNewRenderer(newRendererUID:String,rowIndex:Number):DisplayObject{
 			var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 			newlyCreatedRenderers.push(newRenderer);
-			newRenderer.addEventListener(MouseEvent.CLICK, handleRendererMouseClick);
+			newRenderer.addEventListener(MouseEvent.MOUSE_DOWN, handleRendererMouseDown);
+			newRenderer.addEventListener(MouseEvent.MOUSE_UP, handleRendererMouseUp);
 			contentPane.addChildAt(newRenderer,0);
 			if(newRenderer is MeasurableControl){
 				MeasurableControl(newRenderer).doOnAdded();
@@ -411,10 +413,26 @@ package org.openPyro.controls.listClasses
 			}
 		}
 		
+		private var wasMouseDownWithinClickThreshold:Boolean = true;
+		protected function handleRendererMouseDown(event:MouseEvent):void{
+			wasMouseDownWithinClickThreshold = true;
+		}
+		
+		public function set scrolling(b:Boolean):void{
+			if(b){
+				wasMouseDownWithinClickThreshold = false;
+			}
+		}
+		
 		/**
 		 * Function invoked when an itemRenderer is clicked
 		 */ 
-		protected function handleRendererMouseClick(event:MouseEvent):void{
+		protected function handleRendererMouseUp(event:MouseEvent):void{
+			
+			if(!wasMouseDownWithinClickThreshold){
+				return;
+			}
+			
 			for (var uid:String in visibleRenderersMap){
 				if(visibleRenderersMap[uid] == event.currentTarget){
 					//_selectedItem = rendererData;
