@@ -114,7 +114,15 @@ package org.openPyro.utils{
 		
 		public static function htmlUnescape(str:String):String{
 			if(!str || str == "") return "";
-			return new XMLDocument(str).firstChild.nodeValue;
+			var ret:String;
+			try{
+				ret = new XMLDocument(str).firstChild.nodeValue;
+			}
+			catch(e:Error){
+				ret = str;
+			}
+			return ret;
+			
 		}
 		
 		public static function htmlEscape(str:String):String{
