@@ -326,8 +326,8 @@ package org.openPyro.controls.listClasses
 		protected function createNewRenderer(newRendererUID:String,rowIndex:Number):DisplayObject{
 			var newRenderer:DisplayObject = rendererPool.getObject() as DisplayObject;
 			newlyCreatedRenderers.push(newRenderer);
-			newRenderer.addEventListener(MouseEvent.MOUSE_DOWN, handleRendererMouseDown);
-			newRenderer.addEventListener(MouseEvent.MOUSE_UP, handleRendererMouseUp);
+			this.addEventListener(MouseEvent.MOUSE_DOWN, handleMouseDown);
+			newRenderer.addEventListener(MouseEvent.MOUSE_UP, handleMouseUp);
 			contentPane.addChildAt(newRenderer,0);
 			if(newRenderer is MeasurableControl){
 				MeasurableControl(newRenderer).doOnAdded();
@@ -414,7 +414,7 @@ package org.openPyro.controls.listClasses
 		}
 		
 		private var wasMouseDownWithinClickThreshold:Boolean = true;
-		protected function handleRendererMouseDown(event:MouseEvent):void{
+		protected function handleMouseDown(event:MouseEvent):void{
 			wasMouseDownWithinClickThreshold = true;
 		}
 		
@@ -427,12 +427,11 @@ package org.openPyro.controls.listClasses
 		/**
 		 * Function invoked when an itemRenderer is clicked
 		 */ 
-		protected function handleRendererMouseUp(event:MouseEvent):void{
-			
+		protected function handleMouseUp(event:MouseEvent):void{
 			if(!wasMouseDownWithinClickThreshold){
 				return;
 			}
-			
+			wasMouseDownWithinClickThreshold = true;
 			for (var uid:String in visibleRenderersMap){
 				if(visibleRenderersMap[uid] == event.currentTarget){
 					//_selectedItem = rendererData;
