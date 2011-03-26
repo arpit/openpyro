@@ -1,14 +1,20 @@
 package org.openPyro.containers
 {
 	import flash.display.DisplayObject;
+	import flash.events.Event;
 	
 	import org.openPyro.core.Direction;
 	import org.openPyro.core.UIContainer;
 	import org.openPyro.effects.Effect;
 	import org.openPyro.effects.EffectDescriptor;
 	
+	[Event(name="selectedItemChanging", type="flash.events.Event")]
+	
 	public class SlidePane extends ViewStack
 	{
+		
+		public static const SELECTED_ITEM_CHANGING:String = "selectedItemChanging";
+		
 		 protected var _transitionDirection:String = Direction.HORIZONTAL;
 		 protected var transitionDirectionMultiplier:int = 1;
 		 
@@ -118,6 +124,11 @@ package org.openPyro.containers
 			}
 			Effect.play(oldViewEffectDescriptor);
 			Effect.play(newViewEffectDescriptor);
+			
+			
+			var event:Event = new Event(SELECTED_ITEM_CHANGING);
+			
+			dispatchEvent(event)
 		 }
 		 
 	}
