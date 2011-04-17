@@ -2,6 +2,7 @@ package org.openPyro.controls.listClasses
 {
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.Timer;
@@ -414,14 +415,22 @@ package org.openPyro.controls.listClasses
 		}
 		
 		private var wasMouseDownWithinClickThreshold:Boolean = true;
+		
 		protected function handleMouseDown(event:MouseEvent):void{
 			wasMouseDownWithinClickThreshold = true;
+			trace("mousedown on list")
 		}
 		
 		public function set scrolling(b:Boolean):void{
 			if(b){
 				wasMouseDownWithinClickThreshold = false;
 			}
+			this._scrollingVertically = b;
+			
+		}
+		
+		public function get scrolling():Boolean{
+			return _scrollingVertically;
 		}
 		
 		/**
@@ -432,6 +441,7 @@ package org.openPyro.controls.listClasses
 				return;
 			}
 			wasMouseDownWithinClickThreshold = true;
+			_scrollingVertically = false;
 			for (var uid:String in visibleRenderersMap){
 				if(visibleRenderersMap[uid] == event.currentTarget){
 					//_selectedItem = rendererData;

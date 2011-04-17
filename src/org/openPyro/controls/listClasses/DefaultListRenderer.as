@@ -118,14 +118,19 @@ package org.openPyro.controls.listClasses
 		
 		protected function mouseOverHandler(event:MouseEvent):void
 		{
-			if(! this._selected){
-				drawHighlightCursor();
-			}
+			drawDifferedHighlight = true;
+			doLater(function():void{
+				if(! _selected && !baseListData.list.scrolling && drawDifferedHighlight){
+					drawHighlightCursor();
+				}
+			}, 10);
 		}
 		
+		protected var drawDifferedHighlight:Boolean = false;
 		protected function mouseOutHandler(event:MouseEvent):void
 		{
 			if(!_selected){
+				drawDifferedHighlight = false;
 				_highlightCursorSprite.visible=false;	
 			}
 		}
